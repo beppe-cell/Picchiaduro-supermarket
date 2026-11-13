@@ -130,7 +130,42 @@ window.PF = window.PF || {};
     px(ctx, x - w / 2, y - w / 2, w, w, color);
   }
 
-  // Torso a V: vita stretta, petto ampio, spalle larghe (proporzioni da lottatore)
+  // Luce: velatura chiara per spigoli esposti (shading 16-bit)
+  function hi(ctx, x, y, w, h) {
+    px(ctx, x, y, w, h, 'rgba(255,255,255,0.22)');
+  }
+
+  // Ombra: velatura scura per volumi
+  function sh(ctx, x, y, w, h) {
+    px(ctx, x, y, w, h, 'rgba(0,0,0,0.30)');
+  }
+
+  // Outline 16-bit: contorno scuro attorno alla silhouette (post-process)
+  function addOutline(ctx, w, h) {
+    if (typeof ctx.getImageData !== 'function' || typeof ctx.putImageData !== 'function') return;
+    let img;
+    try { img = ctx.getImageData(0, 0, w, h); } catch (e) { return; }
+    if (!img || !img.data) return;
+    const d = img.data;
+    const solid = new Uint8Array(w * h);
+    for (let i = 0; i < w * h; i++) solid[i] = d[i * 4 + 3] > 40 ? 1 : 0;
+    const need = new Uint8Array(w * h);
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const i = y * w + x;
+        if (solid[i]) continue;
+        if ((x > 0 && solid[i - 1]) || (x < w - 1 && solid[i + 1]) ||
+            (y > 0 && solid[i - w]) || (y < h - 1 && solid[i + w])) need[i] = 1;
+      }
+    }
+    for (let i = 0; i < w * h; i++) {
+      if (!need[i]) continue;
+      d[i * 4] = 24; d[i * 4 + 1] = 18; d[i * 4 + 2] = 30; d[i * 4 + 3] = 255;
+    }
+    ctx.putImageData(img, 0, 0);
+  }
+
+  // Torso a V con muscoli: vita stretta, pettorali, addominali, shading laterale
   function drawTorso(ctx, ch, hip, neck) {
     const p = ch.palette, b = ch.body;
     const dx = neck.x - hip.x, dy = neck.y - hip.y;
@@ -142,12 +177,23 @@ window.PF = window.PF || {};
       else if (t < 0.7) w = b.torsoW - 3 + (t - 0.2) * 6.6; // petto
       else w = b.torsoW + 1;                                 // spalle
       w = Math.round(Math.max(4, w));
-      px(ctx, hip.x + dx * t - w / 2, Math.round(hip.y + dy * t), w, 1, p.main);
+      const cx = hip.x + dx * t, cy = Math.round(hip.y + dy * t);
+      px(ctx, cx - w / 2, cy, w, 1, p.main);
+      px(ctx, cx - w / 2, cy, 1, 1, p.mainDark);                    // lato schiena in ombra
+      if (i % 3 === 1) hi(ctx, cx + w / 2 - 1, cy, 1, 1);           // luce sul petto
     }
-    // massa pettorale e ombra sotto le clavicole
+    // clavicole
     px(ctx, neck.x - (b.torsoW + 1) / 2, neck.y - 1, b.torsoW + 1, 3, p.main);
     px(ctx, neck.x - (b.torsoW + 1) / 2, neck.y + 1, b.torsoW + 1, 1, p.mainDark);
-    px(ctx, hip.x + dx * 0.72, hip.y + dy * 0.72, 1, 2, p.mainDark);
+    // pettorali: solco centrale + arco inferiore
+    const pecX = hip.x + dx * 0.62, pecY = Math.round(hip.y + dy * 0.62);
+    const pecW = Math.max(5, b.torsoW - 1);
+    px(ctx, Math.round(pecX), pecY, 1, 2, p.mainDark);
+    px(ctx, Math.round(pecX - pecW / 2) + 1, pecY + 1, pecW - 2, 1, p.mainDark);
+    // addominali
+    const abX = Math.round(hip.x + dx * 0.3), abY = Math.round(hip.y + dy * 0.3);
+    px(ctx, abX, abY, 1, 1, p.mainDark);
+    px(ctx, abX, abY + 3, 1, 1, p.mainDark);
   }
 
   // Punto medio con piega perpendicolare (gomito / ginocchio)
@@ -165,80 +211,102 @@ window.PF = window.PF || {};
     const p = ch.palette, b = ch.body;
     const hw = b.headW, hh = 8;
     const x = Math.round(hx - hw / 2), y = Math.round(hy - hh / 2);
+    const face = pose.face || 'calm';
 
-    // collo
+    // collo (trapezio con luce)
     px(ctx, hx - 1, y + hh - 2, 3, 3, p.skinDark);
+    px(ctx, hx, y + hh - 2, 1, 3, p.skin);
 
-    // testa: cranio + mandibola rastremata (non un rettangolo)
+    // cranio + mandibola rastremata
     px(ctx, x, y, hw, hh - 2, p.skin);
     px(ctx, x + 1, y + hh - 2, hw - 3, 2, p.skin);
     px(ctx, x + 1, y + hh - 1, hw - 4, 1, p.skinDark);
-    px(ctx, x + hw - 1, y + 3, 1, 2, p.skinDark); // naso (profilo 3/4)
-    px(ctx, x, y + 2, 1, 3, p.skinDark);          // orecchio
+    px(ctx, x, y + 2, 1, 3, p.skinDark);            // orecchio
+    px(ctx, x + hw - 1, y + 3, 1, 2, p.skinDark);   // naso (profilo 3/4)
+    hi(ctx, x + 1, y, hw - 3, 1);                    // luce sul fronte
 
-    // occhi (guarda avanti)
+    // occhi ed espressioni
     const ex = x + hw - 3;
     if (ch.hairStyle === 'ninja') {
-      // fessura occhi da ninja
+      // maschera: fessura occhi
       px(ctx, x + 1, y + 3, hw - 2, 3, p.mainDark);
+      px(ctx, ex, y + 4, 2, 1, face === 'roar' ? p.accent : p.eye);
+    } else if (face === 'ouch' || face === 'ko') {
+      // occhi chiusi
       px(ctx, ex, y + 4, 2, 1, p.eye);
+      px(ctx, ex - 3, y + 4, 1, 1, p.eye);
     } else {
-      px(ctx, ex, y + 3, 2, 2, p.eye);
-      px(ctx, ex - 3, y + 3, 1, 2, p.eye);
+      // occhi: bianco + pupilla avanti
+      px(ctx, ex, y + 3, 2, 2, '#ffffff');
+      px(ctx, ex + 1, y + 3, 1, 2, p.eye);
+      px(ctx, ex - 3, y + 3, 1, 2, '#ffffff');
+      px(ctx, ex - 3, y + 3, 1, 1, p.eye);
+    }
+    // sopracciglia (aggrottate sotto sforzo)
+    if (ch.hairStyle !== 'ninja') {
+      px(ctx, ex - 1, y + 2, 3, 1, p.hairDark);
+      if (face === 'strain' || face === 'roar') px(ctx, ex - 2, y + 3, 1, 1, p.hairDark);
+    }
+    // bocca secondo espressione
+    const my = y + hh - 2;
+    if (face === 'roar') {
+      px(ctx, x + hw - 5, my - 1, 3, 2, '#5a2020');  // grido
+    } else if (face === 'strain' || face === 'ouch') {
+      px(ctx, x + hw - 5, my, 2, 1, '#5a2020');
+    } else if (face === 'smile') {
+      px(ctx, x + hw - 5, my, 2, 1, '#8a4a3a');
+      px(ctx, x + hw - 6, my - 1, 1, 1, '#8a4a3a');
+    } else if (face === 'ko') {
+      px(ctx, x + hw - 5, my, 2, 1, '#5a2020');
+    } else {
+      px(ctx, x + hw - 5, my, 1, 1, p.skinDark);
     }
 
-    // capelli
+    // capelli (due tonalità + ciocche)
     switch (ch.hairStyle) {
       case 'messy': {
-        // capelli neri corti e spettinati
         px(ctx, x - 1, y - 2, hw + 2, 3, p.hair);
+        px(ctx, x - 1, y - 2, hw + 2, 1, p.hairDark);
         const w = Math.sin(tick * 0.15) > 0 ? 0 : 1;
         px(ctx, x - 2, y - 1 + w, 2, 2, p.hairDark);
         px(ctx, x + 2, y - 4, 2, 3, p.hair);
+        px(ctx, x + 2, y - 4, 1, 2, p.hairDark);
         px(ctx, x + 5, y - 3 - w, 2, 2, p.hairDark);
         px(ctx, x + hw - 1, y, 2, 2, p.hair);
         px(ctx, x - 1, y + 1, 2, 3, p.hairDark); // basette
         break;
       }
       case 'bald': {
-        // cranio lucido + barba folta
         px(ctx, x + 1, y + 1, 2, 1, '#f0c8a0');
+        hi(ctx, x + 1, y, 3, 1);
         px(ctx, x, y - 1, hw, 1, p.skinDark);
         px(ctx, x + 1, y + hh - 3, hw - 2, 3, p.hair);
+        px(ctx, x + 1, y + hh - 3, hw - 2, 1, p.hairDark);
         px(ctx, x + hw - 3, y + 4, 3, 4, p.hair);
+        px(ctx, x + hw - 3, y + 6, 3, 2, p.hairDark);
         break;
       }
       case 'cap': {
         px(ctx, x - 1, y - 1, hw + 2, 2, p.hair); // capelli sotto il cappellino
         px(ctx, x - 1, y - 3, hw + 2, 3, p.cap);
         px(ctx, x - 1, y - 3, hw + 2, 1, p.capDark);
+        px(ctx, x + 1, y - 2, 2, 1, 'rgba(255,255,255,0.30)'); // riflesso
         px(ctx, x + hw - 2, y - 1, 4, 2, p.cap);  // visiera avanti
+        px(ctx, x + hw - 2, y, 4, 1, p.capDark);
+        px(ctx, x + 1, y - 3, 1, 1, p.capDark);   // bottone
         break;
       }
       case 'ninja': {
-        // cappuccio
         px(ctx, x - 1, y - 2, hw + 2, 5, p.main);
         px(ctx, x - 1, y - 2, hw + 2, 2, p.mainDark);
         px(ctx, x - 1, y + 2, 2, hh - 2, p.main);
+        hi(ctx, x + 1, y - 2, hw - 3, 1);
+        // mascherina sul basso viso
+        px(ctx, x + 1, y + hh - 3, hw - 2, 2, p.mainDark);
         // sciarpa (mossa dal vento)
         const t = Math.round(Math.sin(tick * 0.18) * 2);
         px(ctx, x - 4, y + hh - 2 + t, 4, 2, p.accent);
         px(ctx, x - 7, y + hh - 1 + t, 3, 1, p.accent);
-        break;
-      }
-      case 'mohawk': {
-        px(ctx, x + 2, y - 4, 4, 4, p.hair);
-        px(ctx, x + 3, y - 5, 2, 1, p.hairDark);
-        px(ctx, x, y - 1, hw, 2, p.hairDark); // rasato
-        px(ctx, x + hw - 3, y + 5, 3, 2, p.hairDark); // barba
-        break;
-      }
-      case 'spiky': {
-        px(ctx, x, y - 2, hw, 3, p.hair);
-        px(ctx, x + 1, y - 4, 2, 2, p.hair);
-        px(ctx, x + 4, y - 5, 2, 3, p.hairDark);
-        px(ctx, x + 7, y - 3, 2, 2, p.hair);
-        px(ctx, x - 1, y + 1, 2, 3, p.hairDark);
         break;
       }
     }
@@ -267,41 +335,53 @@ window.PF = window.PF || {};
     const kneeF = joint(hipF.x, hipF.y, footF.x, footF.y, pose.kneeF, 3);
     const kneeB = joint(hipB.x, hipB.y, footB.x, footB.y, pose.kneeB, 3);
 
-    // braccio dietro: bicipite rastremato + avambraccio
+    // braccio dietro: deltoide, bicipite rastremato, avambraccio, pugno
+    px(ctx, shoulderB.x - 2, shoulderB.y - 2, 4, 3, p.mainDark);
     taperedLimb(ctx, shoulderB.x, shoulderB.y, elbowB.x, elbowB.y, b.armW + 1, b.armW, p.mainDark);
     taperedLimb(ctx, elbowB.x, elbowB.y, handB.x, handB.y, b.armW, b.armW - 1, p.mainDark);
     bulge(ctx, shoulderB.x, shoulderB.y, elbowB.x, elbowB.y, 0.45, 1, p.mainDark);
+    sh(ctx, elbowB.x - 1, elbowB.y, 2, 1);
     px(ctx, handB.x - 1, handB.y - 1, 3, 3, p.glove);
     px(ctx, handB.x, handB.y - 2, 2, 1, p.glove);
+    sh(ctx, handB.x - 1, handB.y + 1, 3, 1);
 
-    // gamba dietro: coscia, polpaccio, piede con punta
+    // gamba dietro: coscia, polpaccio, stivale con suola
     taperedLimb(ctx, hipB.x, hipB.y, kneeB.x, kneeB.y, b.legW + 2, b.legW, p.pantsDark);
     taperedLimb(ctx, kneeB.x, kneeB.y, footB.x, footB.y, b.legW, b.legW - 1, p.pantsDark);
     bulge(ctx, kneeB.x, kneeB.y, footB.x, footB.y, 0.35, 1, p.pantsDark);
     px(ctx, footB.x - 2, footB.y - 1, 6, 3, p.boots);
     px(ctx, footB.x + 3, footB.y, 2, 2, p.boots);
+    sh(ctx, footB.x - 2, footB.y + 1, 8, 1);
 
     // torso a V con dettagli
     drawTorso(ctx, ch, hip, neck);
     px(ctx, hip.x - (b.torsoW - 3) / 2, hip.y - 2, b.torsoW - 3, 3, p.accent); // cintura sulla vita
     drawTorsoDetails(ctx, ch, hip, neck);
 
-    // gamba fronte
+    // gamba fronte: coscia, ginocchio, polpaccio, stivale con suola e laccio
     taperedLimb(ctx, hipF.x, hipF.y, kneeF.x, kneeF.y, b.legW + 2, b.legW, p.pants);
     taperedLimb(ctx, kneeF.x, kneeF.y, footF.x, footF.y, b.legW, b.legW - 1, p.pants);
     bulge(ctx, kneeF.x, kneeF.y, footF.x, footF.y, 0.35, 1, p.pants);
+    hi(ctx, hipF.x + (kneeF.x - hipF.x) * 0.3 - 1, hipF.y + (kneeF.y - hipF.y) * 0.3, 1, 2);
     px(ctx, footF.x - 2, footF.y - 1, 6, 3, p.boots);
     px(ctx, footF.x + 3, footF.y, 2, 2, p.boots);
+    px(ctx, footF.x, footF.y - 1, 1, 1, p.pantsDark); // laccio
+    sh(ctx, footF.x - 2, footF.y + 1, 8, 1);          // suola
 
     // testa
     drawHead(ctx, ch, head.x, head.y, pose, tick);
 
-    // braccio fronte
+    // braccio fronte: deltoide, bicipite, avambraccio, pugno
+    px(ctx, shoulderF.x - 1, shoulderF.y - 2, 4, 3, p.main);
+    sh(ctx, shoulderF.x - 1, shoulderF.y, 4, 1);
     taperedLimb(ctx, shoulderF.x, shoulderF.y, elbowF.x, elbowF.y, b.armW + 1, b.armW, p.main);
     taperedLimb(ctx, elbowF.x, elbowF.y, handF.x, handF.y, b.armW, b.armW - 1, p.main);
     bulge(ctx, shoulderF.x, shoulderF.y, elbowF.x, elbowF.y, 0.45, 1, p.main);
+    hi(ctx, shoulderF.x + (elbowF.x - shoulderF.x) * 0.3, shoulderF.y + (elbowF.y - shoulderF.y) * 0.3 - 1, 2, 1);
+    sh(ctx, elbowF.x - 1, elbowF.y, 2, 1);
     px(ctx, handF.x - 1, handF.y - 1, 3, 3, p.glove);
     px(ctx, handF.x, handF.y - 2, 2, 1, p.glove);
+    sh(ctx, handF.x - 1, handF.y + 1, 3, 1);
 
     // effetti per-personaggio su pose speciali
     drawCharFx(ctx, ch, pose, handF, handB, tick);
@@ -377,7 +457,7 @@ window.PF = window.PF || {};
     limb(ctx, 28, y - 1, 22, y - 5, b.armW, p.main);
     px(ctx, 21, y - 6, 3, 3, p.glove);
     // testa
-    drawHead(ctx, ch, 17, y - 1, { hipY: y }, 0);
+    drawHead(ctx, ch, 17, y - 1, { hipY: y, face: 'ko' }, 0);
   }
 
   // ---------------- Generazione sheet ----------------
@@ -399,6 +479,7 @@ window.PF = window.PF || {};
         if (anim === 'punch' && ch.id === 'blaze') pose.extra = 'punchfire';
         if (anim === 'punch2' && ch.id === 'blaze') pose.extra = 'punchfire';
         drawFrame(ctx, ch, pose, i * 7);
+        addOutline(ctx, FRAME_W, FRAME_H);
         frames.push(c);
       }
       FRAMES[ch.id][anim] = frames;
@@ -414,48 +495,68 @@ window.PF = window.PF || {};
     const p = ch.palette;
     px(ctx, 0, 0, 32, 32, '#0c0c1e');
     px(ctx, 0, 0, 32, 2, p.main);
-    // spalle
-    px(ctx, 6, 24, 20, 8, p.main);
-    px(ctx, 6, 24, 20, 2, p.mainDark);
-    px(ctx, 14, 22, 4, 3, p.skinDark);
+    // busto: vestiti con ombre
+    px(ctx, 5, 24, 22, 8, p.main);
+    px(ctx, 5, 24, 22, 2, p.mainDark);
+    px(ctx, 5, 24, 2, 8, p.mainDark);
+    hi(ctx, 22, 25, 4, 6);
+    px(ctx, 14, 21, 4, 4, p.skinDark);
+    px(ctx, 15, 21, 2, 4, p.skin);
     // testa grande
-    px(ctx, 9, 6, 14, 15, p.skin);
-    px(ctx, 9, 18, 14, 3, p.skinDark);
-    px(ctx, 9, 6, 14, 1, p.mainDark);
-    // occhi
+    px(ctx, 9, 5, 14, 14, p.skin);
+    px(ctx, 10, 19, 12, 2, p.skin);
+    px(ctx, 10, 20, 11, 1, p.skinDark);
+    px(ctx, 9, 5, 1, 12, p.skinDark);
+    px(ctx, 22, 10, 1, 3, p.skinDark);   // naso
+    px(ctx, 9, 8, 1, 3, p.skinDark);     // orecchio
+    hi(ctx, 10, 5, 11, 1);
+    // occhi dettagliati con sopracciglia
     if (ch.hairStyle === 'ninja') {
-      px(ctx, 10, 12, 12, 3, p.mainDark);
-      px(ctx, 18, 13, 2, 1, p.eye);
-      px(ctx, 13, 13, 2, 1, p.eye);
+      px(ctx, 10, 11, 12, 3, p.mainDark);
+      px(ctx, 18, 12, 2, 1, p.eye);
+      px(ctx, 13, 12, 2, 1, p.eye);
     } else {
-      px(ctx, 17, 12, 2, 3, p.eye);
-      px(ctx, 12, 12, 2, 3, p.eye);
+      px(ctx, 18, 11, 2, 3, '#ffffff'); px(ctx, 19, 11, 1, 3, p.eye);
+      px(ctx, 12, 11, 2, 3, '#ffffff'); px(ctx, 12, 11, 1, 3, p.eye);
+      px(ctx, 17, 9, 4, 1, p.hairDark);
+      px(ctx, 11, 9, 3, 1, p.hairDark);
     }
+    // bocca
+    px(ctx, 17, 17, 3, 1, '#8a4a3a');
     // capelli
     switch (ch.hairStyle) {
       case 'messy':
-        px(ctx, 8, 3, 16, 4, p.hair);
-        px(ctx, 10, 1, 3, 3, p.hairDark); px(ctx, 15, 0, 3, 4, p.hair); px(ctx, 20, 1, 3, 3, p.hairDark);
-        px(ctx, 8, 7, 2, 6, p.hairDark);
+        px(ctx, 8, 2, 16, 4, p.hair);
+        px(ctx, 8, 2, 16, 1, p.hairDark);
+        px(ctx, 10, 0, 3, 3, p.hairDark); px(ctx, 15, 0, 3, 3, p.hair); px(ctx, 20, 1, 3, 2, p.hairDark);
+        px(ctx, 8, 6, 2, 6, p.hairDark);
+        px(ctx, 22, 5, 2, 3, p.hair);
         break;
       case 'ninja':
-        px(ctx, 8, 2, 16, 8, p.main);
-        px(ctx, 8, 2, 16, 2, p.mainDark);
-        px(ctx, 8, 10, 2, 8, p.main);
+        px(ctx, 8, 1, 16, 8, p.main);
+        px(ctx, 8, 1, 16, 2, p.mainDark);
+        px(ctx, 8, 9, 2, 9, p.main);
+        hi(ctx, 10, 2, 12, 1);
         px(ctx, 6, 18, 5, 2, p.accent); px(ctx, 3, 20, 4, 1, p.accent);
+        px(ctx, 10, 18, 12, 2, p.mainDark);
         break;
       case 'bald':
-        px(ctx, 10, 6, 3, 1, '#f0c8a0');
-        px(ctx, 10, 17, 12, 4, p.hair);
-        px(ctx, 20, 17, 3, 4, p.hairDark);
+        px(ctx, 10, 5, 3, 1, '#f0c8a0');
+        hi(ctx, 10, 6, 2, 2);
+        px(ctx, 10, 16, 12, 5, p.hair);
+        px(ctx, 10, 19, 12, 2, p.hairDark);
+        px(ctx, 21, 16, 3, 5, p.hairDark);
         break;
       case 'cap':
-        px(ctx, 8, 2, 16, 5, p.cap);
-        px(ctx, 8, 2, 16, 1, p.capDark);
-        px(ctx, 20, 5, 6, 2, p.cap);
+        px(ctx, 8, 1, 16, 5, p.cap);
+        px(ctx, 8, 1, 16, 1, p.capDark);
+        px(ctx, 10, 2, 3, 1, 'rgba(255,255,255,0.35)');
+        px(ctx, 20, 4, 7, 2, p.cap);
+        px(ctx, 20, 5, 7, 1, p.capDark);
+        px(ctx, 15, 1, 1, 1, p.capDark);
         break;
     }
-    // dettagli torso sul busto
+    // dettagli vestito per personaggio
     if (ch.id === 'blaze') {
       px(ctx, 13, 25, 5, 1, p.accent);
       px(ctx, 13, 26, 1, 1, p.accent);
@@ -465,15 +566,18 @@ window.PF = window.PF || {};
     }
     if (ch.id === 'shadow') {
       px(ctx, 10, 26, 12, 6, '#2e5c46');
+      px(ctx, 10, 26, 12, 1, '#1f4634');
     }
     if (ch.id === 'titan') {
       px(ctx, 6, 29, 20, 2, p.accent);
+      px(ctx, 15, 21, 2, 4, p.mainDark); // bretella
     }
     if (ch.id === 'volt') {
-      px(ctx, 13, 23, 6, 2, '#f4f4f4');
-      px(ctx, 14, 25, 4, 2, p.accent);
+      px(ctx, 13, 22, 6, 2, '#f4f4f4');
+      px(ctx, 14, 24, 4, 2, p.accent);
     }
-    // cornice
+    // outline + cornice
+    addOutline(ctx, 32, 32);
     ctx.strokeStyle = p.accent;
     ctx.strokeRect(0.5, 0.5, 31, 31);
   }
