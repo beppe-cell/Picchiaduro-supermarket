@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0a14">
+<title>PIXEL FURY — 2D Pixel Art Fighting Game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <canvas id="game" width="512" height="288"></canvas>
+
+  <!-- Controlli touch (visibili solo in combattimento su touch) -->
+  <div id="touch-controls" class="hidden">
+    <div id="dpad">
+      <button class="tbtn dpad-up"    data-ctrl="up"    aria-label="Salto">▲</button>
+      <button class="tbtn dpad-left"  data-ctrl="left"  aria-label="Sinistra">◀</button>
+      <button class="tbtn dpad-right" data-ctrl="right" aria-label="Destra">▶</button>
+      <button class="tbtn dpad-down"  data-ctrl="down"  aria-label="Abbassati">▼</button>
+    </div>
+    <div id="action-pad">
+      <div class="action-grid">
+        <button class="tbtn abtn ab-punch"  data-ctrl="punch">P</button>
+        <button class="tbtn abtn ab-kick"   data-ctrl="kick">K</button>
+        <button class="tbtn abtn ab-heavy"  data-ctrl="heavy">H</button>
+        <button class="tbtn abtn ab-special" data-ctrl="special">SP</button>
+      </div>
+      <button class="tbtn abtn ab-block" data-ctrl="block">BLK</button>
+    </div>
+  </div>
+
+  <button id="btn-pause" class="hidden" aria-label="Pausa">II</button>
+
+  <!-- Overlay rotazione (solo durante il combattimento in portrait) -->
+  <div id="rotate-overlay" class="screen hidden">
+    <div class="panel rotate-panel">
+      <div class="rotate-icon">⟳</div>
+      <p class="rotate-text">Ruota il dispositivo<br>in orizzontale per combattere!</p>
+      <button class="pxbtn" id="btn-play-portrait">Gioca comunque</button>
+    </div>
+  </div>
+
+  <!-- Schermata titolo -->
+  <div id="screen-title" class="screen">
+    <div class="title-wrap">
+      <div class="logo">
+        <span class="logo-px">PIXEL</span>
+        <span class="logo-fury">FURY</span>
+      </div>
+      <div class="title-sub">ARCADE FIGHTING</div>
+      <div class="title-tag">© 2026 PIXEL FURY TEAM — INSERT COIN</div>
+      <div class="blink" id="title-press">— TOCCA O PREMI UN TASTO —</div>
+    </div>
+  </div>
+
+  <!-- Menu principale -->
+  <div id="screen-menu" class="screen hidden">
+    <div class="menu-wrap">
+      <div class="logo logo-small"><span class="logo-px">PIXEL</span><span class="logo-fury">FURY</span></div>
+      <nav class="main-nav">
+        <button class="pxbtn menu-btn" data-action="arcade">ARCADE</button>
+        <button class="pxbtn menu-btn" data-action="versus">VERSUS</button>
+        <button class="pxbtn menu-btn" data-action="training">TRAINING</button>
+        <button class="pxbtn menu-btn" data-action="controls">COMANDI</button>
+        <button class="pxbtn menu-btn" data-action="settings">IMPOSTAZIONI</button>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Character select -->
+  <div id="screen-select" class="screen hidden">
+    <div class="select-wrap">
+      <h2 class="screen-title" id="select-title">SCEGLI IL TUO LOTTATORE</h2>
+      <div id="char-grid"></div>
+      <div id="char-info">
+        <div id="char-desc"></div>
+        <div id="char-stats"></div>
+      </div>
+      <div id="select-extra"></div>
+      <div class="row-btns">
+        <button class="pxbtn" id="btn-select-back">INDIETRO</button>
+        <button class="pxbtn primary" id="btn-select-ok">CONFERMA</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comandi -->
+  <div id="screen-controls" class="screen hidden">
+    <div class="panel help-panel">
+      <h2 class="screen-title">COMANDI</h2>
+      <div class="help-cols">
+        <div class="help-col">
+          <h3>GIOCATORE 1</h3>
+          <ul>
+            <li><b>A / D</b> — Muovi</li>
+            <li><b>W</b> — Salto</li>
+            <li><b>S</b> — Abbassati</li>
+            <li><b>J</b> — Pugno</li>
+            <li><b>K</b> — Calcio</li>
+            <li><b>L</b> — Pugno Pesante</li>
+            <li><b>I</b> — Mossa Speciale</li>
+            <li><b>SPAZIO / SHIFT</b> — Parata</li>
+          </ul>
+        </div>
+        <div class="help-col">
+          <h3>GIOCATORE 2 (VERSUS)</h3>
+          <ul>
+            <li><b>← / →</b> — Muovi</li>
+            <li><b>↑</b> — Salto</li>
+            <li><b>↓</b> — Abbassati</li>
+            <li><b>,</b> — Pugno</li>
+            <li><b>.</b> — Calcio</li>
+            <li><b>/</b> — Pugno Pesante</li>
+            <li><b>SHIFT DX</b> — Mossa Speciale</li>
+            <li><b>INVIO</b> — Parata</li>
+          </ul>
+        </div>
+        <div class="help-col">
+          <h3>MOBILE</h3>
+          <ul>
+            <li>D-pad a sinistra: muovi, salta, abbassati</li>
+            <li>Pulsanti a destra: P = Pugno, K = Calcio, H = Pesante, SP = Speciale, BLK = Parata</li>
+            <li>Multitouch attivo: usa i pollici insieme</li>
+          </ul>
+          <h3>SUGGERIMENTI</h3>
+          <ul>
+            <li>Concatena P → K → H per le combo</li>
+            <li>La barra gialla carica la mossa speciale</li>
+            <li>Parando riduci il danno a 1/10</li>
+          </ul>
+        </div>
+      </div>
+      <button class="pxbtn" id="btn-controls-back">INDIETRO</button>
+    </div>
+  </div>
+
+  <!-- Impostazioni -->
+  <div id="screen-settings" class="screen hidden">
+    <div class="panel settings-panel">
+      <h2 class="screen-title">IMPOSTAZIONI</h2>
+      <label class="setting-row">
+        <span>MUSICA</span>
+        <input type="range" id="set-music" min="0" max="100" value="70">
+        <span id="val-music">70</span>
+      </label>
+      <label class="setting-row">
+        <span>EFFETTI SONORI</span>
+        <input type="range" id="set-sfx" min="0" max="100" value="80">
+        <span id="val-sfx">80</span>
+      </label>
+      <label class="setting-row">
+        <span>CONTROLLI TOUCH</span>
+        <select id="set-touch">
+          <option value="auto">AUTO</option>
+          <option value="on">SEMPRE VISIBILI</option>
+          <option value="off">NASCONDUTI</option>
+        </select>
+      </label>
+      <button class="pxbtn" id="btn-settings-back">INDIETRO</button>
+    </div>
+  </div>
+
+  <!-- Pausa -->
+  <div id="screen-pause" class="screen hidden">
+    <div class="panel pause-panel">
+      <h2 class="screen-title">PAUSA</h2>
+      <button class="pxbtn primary" id="btn-resume">RIPRENDI</button>
+      <button class="pxbtn" id="btn-quit">MENU PRINCIPALE</button>
+    </div>
+  </div>
+
+  <!-- Risultati -->
+  <div id="screen-results" class="screen hidden">
+    <div class="panel results-panel">
+      <h2 id="results-title" class="results-title">YOU WIN</h2>
+      <div class="results-stats" id="results-stats"></div>
+      <div id="results-arcade-next" class="arcade-next hidden"></div>
+      <div class="row-btns">
+        <button class="pxbtn primary" id="btn-rematch">RIVINCITA</button>
+        <button class="pxbtn" id="btn-results-menu">MENU PRINCIPALE</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HUD extra Training -->
+  <div id="training-hud" class="hidden">
+    <button class="pxbtn th-btn" id="th-dummy">MANICHINO: FERMO</button>
+    <button class="pxbtn th-btn" id="th-reset">RESET</button>
+  </div>
+</div>
+
+<script src="src/animations.js"></script>
+<script src="src/sprites.js"></script>
+<script src="src/audio.js"></script>
+<script src="src/stages.js"></script>
+<script src="src/effects.js"></script>
+<script src="src/combat.js"></script>
+<script src="src/controls.js"></script>
+<script src="src/fighter.js"></script>
+<script src="src/enemy.js"></script>
+<script src="src/ui.js"></script>
+<script src="src/game.js"></script>
+<script src="src/main.js"></script>
+</body>
+</html>
