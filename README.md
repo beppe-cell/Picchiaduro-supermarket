@@ -28,6 +28,7 @@ Poi visitare `http://localhost:8080`. Il progetto è completamente statico: pubb
 - **AI a 3 difficoltà** (Easy / Normal / Hard): avvicinamento, pokes a distanza, parate reattive, anti-air, salti, combo, uso della speciale.
 - **4 arene con parallasse** ed elementi animati: NEON CITY (insegne al neon), DOJO (lanterne e petali di sakura), WASTELAND (fumo e polvere), SUPERMARKET (scaffali, insegna luminosa, carrelli — ispirata alla reference in `docs/reference/`).
 - **Audio interamente sintetizzato** con Web Audio API: musiche chiptune (menu + battaglia), SFX per pugni, calci, speciali, KO, vittoria/sconfitta. Volumi regolabili nelle Impostazioni.
+- **Feedback aptico** sui pulsanti touch (Vibration API, disattivabile nelle Impostazioni).
 - **Mobile-first**: controlli touch multitouch con feedback visivo, safe-area per i notch, canvas a risoluzione interna fissa (512×288) con scaling pixel-perfect, nessuno scroll accidentale, pausa, suggerimento di rotazione in portrait.
 
 ## Comandi
@@ -58,6 +59,8 @@ Doppio tap su una direzione = corsa.
 | Pugno pesante | `/` |
 | Mossa speciale | `SHIFT DX` |
 | Parata | `INVIO` |
+
+> **Nota hardware (ghosting):** le tastiere a membrana economiche possono limitare il numero di tasti registrati simultaneamente (rollover): in Versus, se alcuni input si perdono quando si premono molti tasti insieme, è una limitazione fisica della tastiera, non del gioco. Su laptop/desktop con tastiere NKRO il problema non si presenta; su mobile si usano i controlli touch multitouch.
 
 ### Mobile
 D-pad a sinistra (muovi/salta/abbassati), pulsanti a destra: `P` pugno, `K` calcio, `H` pesante, `SP` speciale, `BLK` parata.

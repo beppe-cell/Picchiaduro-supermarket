@@ -325,6 +325,7 @@ window.PF = window.PF || {};
         if (atk.dash && this.attackFrame - startup <= atk.dash.frames) {
           this.vx = this.facing * atk.dash.speed;
           this.x += this.vx;
+          this.x = Math.max(24, Math.min(w.stage.width - 24, this.x));
           if (atk.dash.invulnFrom !== undefined &&
               this.attackFrame - startup >= atk.dash.invulnFrom &&
               this.attackFrame - startup <= atk.dash.invulnTo) {

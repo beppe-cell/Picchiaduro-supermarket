@@ -122,6 +122,9 @@ window.PF = window.PF || {};
         touchBuffer.press(action);
         el.classList.add('active');
         PF.AUDIO.resume();
+        if (PF.AUDIO.settings.vibra !== false && typeof navigator.vibrate === 'function') {
+          navigator.vibrate(action === 'special' || action === 'heavy' ? 18 : 10);
+        }
       };
       const up = e => {
         e.preventDefault();

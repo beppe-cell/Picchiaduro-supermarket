@@ -336,6 +336,7 @@ window.PF = window.PF || {};
 
   const FRAMES = {};   // FRAMES[charId][anim] = [canvas]
   const PORTRAITS = {};
+  let scratch = null;  // canvas riusabile per il flash dei colpi
 
   function buildCharacter(ch) {
     FRAMES[ch.id] = {};
@@ -498,12 +499,14 @@ window.PF = window.PF || {};
 
       let src = img;
       if (opts.flash > 0) {
-        const s = makeCanvas(FRAME_W, FRAME_H);
-        s.ctx.drawImage(img, 0, 0);
-        s.ctx.globalCompositeOperation = 'source-in';
-        s.ctx.fillStyle = opts.flashColor || '#ffffff';
-        s.ctx.fillRect(0, 0, FRAME_W, FRAME_H);
-        src = s.c;
+        if (!scratch) scratch = makeCanvas(FRAME_W, FRAME_H);
+        scratch.ctx.globalCompositeOperation = 'source-over';
+        scratch.ctx.clearRect(0, 0, FRAME_W, FRAME_H);
+        scratch.ctx.drawImage(img, 0, 0);
+        scratch.ctx.globalCompositeOperation = 'source-in';
+        scratch.ctx.fillStyle = opts.flashColor || '#ffffff';
+        scratch.ctx.fillRect(0, 0, FRAME_W, FRAME_H);
+        src = scratch.c;
       }
 
       ctx.save();

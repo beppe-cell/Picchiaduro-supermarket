@@ -17,7 +17,8 @@ window.PF = window.PF || {};
   const settings = {
     music: 0.7,
     sfx: 0.8,
-    touch: 'auto'
+    touch: 'auto',
+    vibra: true
   };
 
   function loadSettings() {
@@ -231,6 +232,7 @@ window.PF = window.PF || {};
       saveSettings();
     },
     setTouchMode(mode) { settings.touch = mode; saveSettings(); },
+    setVibra(v) { settings.vibra = !!v; saveSettings(); },
     loadSettings
   };
 })();

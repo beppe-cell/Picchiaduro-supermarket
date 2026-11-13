@@ -74,6 +74,7 @@ window.PF = window.PF || {};
     $('val-music').textContent = Math.round(s.music * 100);
     $('val-sfx').textContent = Math.round(s.sfx * 100);
     $('set-touch').value = s.touch;
+    $('set-vibra').checked = s.vibra !== false;
   }
 
   function initSettings() {
@@ -89,6 +90,10 @@ window.PF = window.PF || {};
     $('set-touch').addEventListener('change', e => {
       PF.AUDIO.setTouchMode(e.target.value);
       PF.Controls.updateTouchVisibility(PF.GAME.inBattle);
+    });
+    $('set-vibra').addEventListener('change', e => {
+      PF.AUDIO.setVibra(e.target.checked);
+      PF.AUDIO.sfx('menuMove');
     });
   }
 

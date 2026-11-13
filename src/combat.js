@@ -170,7 +170,7 @@ window.PF = window.PF || {};
     const contactY = hb.y + hb.h / 2;
 
     if (canBlock) {
-      const chip = Math.max(1, Math.round(baseDmg * 0.1));
+      const chip = Math.max(1, Math.round(baseDmg * 0.15));
       defender.health = Math.max(0, defender.health - chip);
       defender.blockstun = atk.blockstun;
       defender.vx = attacker.facing * atk.kb * 0.4;
