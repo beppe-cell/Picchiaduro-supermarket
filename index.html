@@ -1,216 +1,225 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0a0a14">
-<title>PIXEL FURY — 2D Pixel Art Fighting Game</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!DOCTYPE html><html lang="it"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#0a0a14"><title>Picchiaduro Supermarket</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
-<div id="app">
-  <canvas id="game" width="512" height="288"></canvas>
-
-  <!-- Controlli touch (visibili solo in combattimento su touch) -->
-  <div id="touch-controls" class="hidden">
-    <div id="dpad">
-      <button class="tbtn dpad-up"    data-ctrl="up"    aria-label="Salto">▲</button>
-      <button class="tbtn dpad-left"  data-ctrl="left"  aria-label="Sinistra">◀</button>
-      <button class="tbtn dpad-right" data-ctrl="right" aria-label="Destra">▶</button>
-      <button class="tbtn dpad-down"  data-ctrl="down"  aria-label="Abbassati">▼</button>
-    </div>
-    <div id="action-pad">
-      <div class="action-grid">
-        <button class="tbtn abtn ab-punch"  data-ctrl="punch">P</button>
-        <button class="tbtn abtn ab-kick"   data-ctrl="kick">K</button>
-        <button class="tbtn abtn ab-heavy"  data-ctrl="heavy">H</button>
-        <button class="tbtn abtn ab-special" data-ctrl="special">SP</button>
-      </div>
-      <button class="tbtn abtn ab-block" data-ctrl="block">BLK</button>
-    </div>
-  </div>
-
-  <button id="btn-pause" class="hidden" aria-label="Pausa">II</button>
-
-  <!-- Overlay rotazione (solo durante il combattimento in portrait) -->
-  <div id="rotate-overlay" class="screen hidden">
-    <div class="panel rotate-panel">
-      <div class="rotate-icon">⟳</div>
-      <p class="rotate-text">Ruota il dispositivo<br>in orizzontale per combattere!</p>
-      <button class="pxbtn" id="btn-play-portrait">Gioca comunque</button>
-    </div>
-  </div>
-
-  <!-- Schermata titolo -->
-  <div id="screen-title" class="screen">
-    <div class="title-wrap">
-      <div class="logo">
-        <span class="logo-px">PIXEL</span>
-        <span class="logo-fury">FURY</span>
-      </div>
-      <div class="title-sub">ARCADE FIGHTING</div>
-      <div class="title-tag">© 2026 PIXEL FURY TEAM — INSERT COIN</div>
-      <div class="blink" id="title-press">— TOCCA O PREMI UN TASTO —</div>
-    </div>
-  </div>
-
-  <!-- Menu principale -->
-  <div id="screen-menu" class="screen hidden">
-    <div class="menu-wrap">
-      <div class="logo logo-small"><span class="logo-px">PIXEL</span><span class="logo-fury">FURY</span></div>
-      <nav class="main-nav">
-        <button class="pxbtn menu-btn" data-action="arcade">ARCADE</button>
-        <button class="pxbtn menu-btn" data-action="versus">VERSUS</button>
-        <button class="pxbtn menu-btn" data-action="training">TRAINING</button>
-        <button class="pxbtn menu-btn" data-action="controls">COMANDI</button>
-        <button class="pxbtn menu-btn" data-action="settings">IMPOSTAZIONI</button>
-      </nav>
-    </div>
-  </div>
-
-  <!-- Character select -->
-  <div id="screen-select" class="screen hidden">
-    <div class="select-wrap">
-      <h2 class="screen-title" id="select-title">SCEGLI IL TUO LOTTATORE</h2>
-      <div id="char-grid"></div>
-      <div id="char-info">
-        <div id="char-desc"></div>
-        <div id="char-stats"></div>
-      </div>
-      <div id="select-extra"></div>
-      <div class="row-btns">
-        <button class="pxbtn" id="btn-select-back">INDIETRO</button>
-        <button class="pxbtn primary" id="btn-select-ok">CONFERMA</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Comandi -->
-  <div id="screen-controls" class="screen hidden">
-    <div class="panel help-panel">
-      <h2 class="screen-title">COMANDI</h2>
-      <div class="help-cols">
-        <div class="help-col">
-          <h3>GIOCATORE 1</h3>
-          <ul>
-            <li><b>A / D</b> — Muovi</li>
-            <li><b>W</b> — Salto</li>
-            <li><b>S</b> — Abbassati</li>
-            <li><b>J</b> — Pugno</li>
-            <li><b>K</b> — Calcio</li>
-            <li><b>L</b> — Pugno Pesante</li>
-            <li><b>I</b> — Mossa Speciale</li>
-            <li><b>SPAZIO / SHIFT</b> — Parata</li>
-          </ul>
-        </div>
-        <div class="help-col">
-          <h3>GIOCATORE 2 (VERSUS)</h3>
-          <ul>
-            <li><b>← / →</b> — Muovi</li>
-            <li><b>↑</b> — Salto</li>
-            <li><b>↓</b> — Abbassati</li>
-            <li><b>,</b> — Pugno</li>
-            <li><b>.</b> — Calcio</li>
-            <li><b>/</b> — Pugno Pesante</li>
-            <li><b>SHIFT DX</b> — Mossa Speciale</li>
-            <li><b>INVIO</b> — Parata</li>
-          </ul>
-        </div>
-        <div class="help-col">
-          <h3>MOBILE</h3>
-          <ul>
-            <li>D-pad a sinistra: muovi, salta, abbassati</li>
-            <li>Pulsanti a destra: P = Pugno, K = Calcio, H = Pesante, SP = Speciale, BLK = Parata</li>
-            <li>Multitouch attivo: usa i pollici insieme</li>
-          </ul>
-          <h3>SUGGERIMENTI</h3>
-          <ul>
-            <li>Concatena P → K → H per le combo</li>
-            <li>La barra gialla carica la mossa speciale</li>
-            <li>Parando riduci il danno a 1/10</li>
-          </ul>
-        </div>
-      </div>
-      <button class="pxbtn" id="btn-controls-back">INDIETRO</button>
-    </div>
-  </div>
-
-  <!-- Impostazioni -->
-  <div id="screen-settings" class="screen hidden">
-    <div class="panel settings-panel">
-      <h2 class="screen-title">IMPOSTAZIONI</h2>
-      <label class="setting-row">
-        <span>MUSICA</span>
-        <input type="range" id="set-music" min="0" max="100" value="70">
-        <span id="val-music">70</span>
-      </label>
-      <label class="setting-row">
-        <span>EFFETTI SONORI</span>
-        <input type="range" id="set-sfx" min="0" max="100" value="80">
-        <span id="val-sfx">80</span>
-      </label>
-      <label class="setting-row">
-        <span>CONTROLLI TOUCH</span>
-        <select id="set-touch">
-          <option value="auto">AUTO</option>
-          <option value="on">SEMPRE VISIBILI</option>
-          <option value="off">NASCONDUTI</option>
-        </select>
-      </label>
-      <label class="setting-row">
-        <span>VIBRAZIONE</span>
-        <input type="checkbox" id="set-vibra" checked>
-      </label>
-      <button class="pxbtn" id="btn-settings-back">INDIETRO</button>
-    </div>
-  </div>
-
-  <!-- Pausa -->
-  <div id="screen-pause" class="screen hidden">
-    <div class="panel pause-panel">
-      <h2 class="screen-title">PAUSA</h2>
-      <button class="pxbtn primary" id="btn-resume">RIPRENDI</button>
-      <button class="pxbtn" id="btn-quit">MENU PRINCIPALE</button>
-    </div>
-  </div>
-
-  <!-- Risultati -->
-  <div id="screen-results" class="screen hidden">
-    <div class="panel results-panel">
-      <h2 id="results-title" class="results-title">YOU WIN</h2>
-      <div class="results-stats" id="results-stats"></div>
-      <div id="results-arcade-next" class="arcade-next hidden"></div>
-      <div class="row-btns">
-        <button class="pxbtn primary" id="btn-rematch">RIVINCITA</button>
-        <button class="pxbtn" id="btn-results-menu">MENU PRINCIPALE</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- HUD extra Training -->
-  <div id="training-hud" class="hidden">
-    <button class="pxbtn th-btn" id="th-dummy">MANICHINO: FERMO</button>
-    <button class="pxbtn th-btn" id="th-reset">RESET</button>
-  </div>
-</div>
-
-<script src="src/animations.js"></script>
-<script src="src/sprites.js"></script>
-<script src="src/audio.js"></script>
-<script src="src/stages.js"></script>
-<script src="src/effects.js"></script>
-<script src="src/combat.js"></script>
-<script src="src/controls.js"></script>
-<script src="src/fighter.js"></script>
-<script src="src/enemy.js"></script>
-<script src="src/ui.js"></script>
-<script src="src/game.js"></script>
-<script src="src/main.js"></script>
-</body>
-</html>
+<style>
+:root{color-scheme:dark;--r:#d42a2a;--c:#35e0ff;--m:#ff3df0;--y:#ffd23f}
+*{box-sizing:border-box;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#05070f;color:#fff;font-family:'Press Start 2P',ui-monospace,monospace;overflow:hidden}
+#app{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+#wrap{position:relative;aspect-ratio:16/9;width:min(100%,177.78vh);container-type:inline-size}
+#g{width:100%;height:100%;image-rendering:pixelated;display:block}
+.scr{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:3cqw;background:rgba(5,8,20,.8);text-align:center;font-size:2cqw;line-height:1.6;padding:2cqw}
+.scr.on{display:flex}
+h1,h2{margin:0;color:#fff;text-shadow:-.4cqw 0 var(--r),.4cqw 0 var(--r),0 -.4cqw var(--r),0 .4cqw var(--r),.4cqw .6cqw 0 #000;line-height:1.3}
+h1{font-size:5cqw}h2{font-size:3cqw}
+.b{font:inherit;color:#fff;background:var(--r);border:.4cqw solid #fff;box-shadow:0 .6cqw #5a0f0f;padding:1cqw 2.4cqw;cursor:pointer;min-width:24cqw}
+.b:active{transform:translateY(.4cqw);box-shadow:0 .2cqw #5a0f0f}
+.b.alt{background:#1b2a55;box-shadow:0 .6cqw #0a1230}
+.blink{animation:bl 1s steps(2) infinite;color:var(--y)}@keyframes bl{50%{opacity:0}}
+#grid{display:flex;flex-wrap:wrap;gap:1.4cqw;justify-content:center;max-width:90cqw}
+#grid .b{min-width:0;width:14cqw;padding:.8cqw;font-size:1.5cqw}
+#grid canvas{width:100%;image-rendering:pixelated;background:#2a3358;display:block;margin-bottom:.6cqw}
+.row{display:flex;gap:2cqw;align-items:center;font-size:1.8cqw}
+input[type=range]{width:22cqw;accent-color:var(--r)}
+.small{font-size:1.4cqw;color:#cfd6ff;max-width:84cqw}
+#tc{position:absolute;inset:0;display:none;pointer-events:none}
+#tc.on{display:block}
+#tc button{pointer-events:auto;position:absolute;font:inherit;color:#fff;background:rgba(10,14,32,.5);border:.3cqw solid rgba(255,255,255,.75);width:8cqw;height:8cqw;font-size:2cqw;border-radius:50%;padding:0}
+#tc button.on{background:rgba(212,42,42,.8)}
+#tc [data-k=u]{left:9cqw;bottom:17cqw}#tc [data-k=l]{left:1.5cqw;bottom:9cqw}#tc [data-k=r]{left:16.5cqw;bottom:9cqw}#tc [data-k=d]{left:9cqw;bottom:1cqw}
+#tc [data-k=p]{right:17cqw;bottom:9cqw}#tc [data-k=k]{right:9cqw;bottom:17cqw}#tc [data-k=h]{right:1.5cqw;bottom:9cqw}#tc [data-k=s]{right:9cqw;bottom:1cqw}#tc [data-k=b]{right:19cqw;bottom:.8cqw;width:7cqw;height:7cqw;font-size:1.5cqw}
+#pz{right:1cqw!important;top:1cqw;width:5cqw!important;height:5cqw!important;font-size:1.6cqw!important}
+#rot{position:fixed;inset:0;background:#05070f;display:none;flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:9;text-align:center;font-size:12px;line-height:1.8;padding:20px}
+@media(orientation:portrait) and (max-width:700px){#rot{display:flex}}
+</style></head><body>
+<div id="app"><div id="wrap"><canvas id="g" width="480" height="270"></canvas>
+<div id="tc"><button data-k="u">▲</button><button data-k="l">◀</button><button data-k="r">▶</button><button data-k="d">▼</button><button data-k="p">P</button><button data-k="k">K</button><button data-k="h">H</button><button data-k="s">SP</button><button data-k="b">BLK</button><button id="pz">II</button></div>
+<div class="scr on" id="s-title"><h1>PICCHIADURO<br>SUPERMARKET</h1><div class="blink">TOCCA O PREMI UN TASTO</div></div>
+<div class="scr" id="s-menu"><h2>MENU</h2><button class="b" data-go="arc">ARCADE</button><button class="b" data-go="tor">TORNEO</button><button class="b alt" data-go="set">IMPOSTAZIONI</button></div>
+<div class="scr" id="s-sel"><h2>SCEGLI IL DIPENDENTE</h2><div id="grid"></div><button class="b alt" data-go="menu">INDIETRO</button></div>
+<div class="scr" id="s-set"><h2>IMPOSTAZIONI</h2>
+<label class="row">MUSICA <input type="range" id="o-mus" min="0" max="100"></label>
+<label class="row">EFFETTI <input type="range" id="o-sfx" min="0" max="100"></label>
+<div class="row">TOUCH <button class="b alt" id="o-touch" style="min-width:18cqw">AUTO</button> VIBRAZIONE <button class="b alt" id="o-vib" style="min-width:10cqw">SI</button></div>
+<div class="small">A/D muovi · W salta · S abbassati · J pugno · K calcio · L pesante · I speciale (barra gialla piena) · SPAZIO/SHIFT para (danno /10) · ESC pausa. Pugni ripetuti fanno meno danno: alterna le mosse.</div>
+<button class="b" data-go="menu">INDIETRO</button></div>
+<div class="scr" id="s-pause"><h2>PAUSA</h2><button class="b" id="b-res">RIPRENDI</button><button class="b alt" data-go="menu">MENU</button></div>
+<div class="scr" id="s-end"><h2 id="e-t"></h2><div id="e-s" class="small"></div><button class="b" id="b-nx"></button><button class="b alt" data-go="menu">MENU</button></div>
+</div></div>
+<div id="rot"><div style="font-size:30px">⟳</div>Ruota il telefono in orizzontale per combattere!<button class="b" style="font-size:11px;min-width:0" onclick="this.parentNode.style.display='none'">GIOCA COMUNQUE</button></div>
+<script>
+const W=480,H=270,FY=240,cv=document.getElementById('g');let c=cv.getContext('2d');
+const $=s=>document.querySelector(s),FT='"Press Start 2P",monospace';
+const S5=["01110","10000","01110","00001","11110"];
+const CH=[
+{n:'BEPPE',sk:'#e2a977',h:'#15110f',hs:'spike',sh:'#d42a2a',pa:'#16161c',bt:'#4a2f1c',lg:1,sp:1.5,pw:1},
+{n:'VLAD',sk:'#f1cfae',h:'#5b3a22',hs:'short',sh:'#d42a2a',pa:'#16161c',bt:'#4a2f1c',lg:1,sp:1.65,pw:.95},
+{n:'LUIS',sk:'#b27a4c',h:'#0d0b0a',hs:'short',sh:'#d42a2a',pa:'#16161c',bt:'#4a2f1c',lg:1,sp:1.4,pw:1.1},
+{n:'ZANI',sk:'#e9bf98',h:'#8a6a3a',hs:'bald',sh:'#d42a2a',pa:'#16161c',bt:'#4a2f1c',lg:1,ac:'beard',sp:1.5,pw:1},
+{n:'MATTEO',sk:'#efc9a4',h:'#f2f2f2',hs:'curl',sh:'#d42a2a',pa:'#16161c',bt:'#4a2f1c',lg:1,ac:'gl',sp:1.5,pw:1.05},
+{n:'FALSA',sk:'#f3d2b4',h:'#f1d36a',hs:'long',sh:'#f4f4f4',pa:'#2a3a6a',bt:'#222',sp:1.8,pw:.9},
+{n:'ANGEL',sk:'#eac4a0',h:'#6b4a2b',hs:'short',sh:'#f4f4f4',pa:'#2b2b33',bt:'#222',ac:'wing',sp:1.6,pw:1},
+{n:'PAULUX',sk:'#dba37a',h:'#0d0b0a',hs:'slick',sh:'#16161c',pa:'#e8821e',bt:'#2a1a10',ac:'beard',sp:1.3,pw:1.3,big:1}];
+const TOR=[6,5,7],TLV=[2,3,5];
+const AR=[{n:'REPARTO ALIMENTARI',p:['#e8c24a','#4aa0e0','#6bbf59','#d9582b','#9b59b6']},{n:'REPARTO DETERSIVI',p:['#3aa0e8','#f2f2f2','#e8503a','#58c0a0','#f0d040']},{n:'ORTOFRUTTA',p:['#d9402b','#f0a030','#6bbf59','#8a5a2a','#c0e050']},{n:'REPARTO SURGELATI',p:['#9ad8f0','#f2f2f2','#4a80d8','#e07090','#c0c8e0']}];
+/* ---------- sfondo ---------- */
+const BG=document.createElement('canvas');BG.width=W;BG.height=H;
+function mkBG(a){const g=BG.getContext('2d');let sd=a.n.length*977+7;const rnd=()=>(sd=(sd*16807)%2147483647)/2147483647;
+const Rr=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};
+Rr(0,0,W,16,'#cdbf9c');Rr(0,16,W,170,'#eadfc4');Rr(0,176,W,10,'#c9b98f');Rr(0,186,W,84,'#dccba5');
+for(const y of[190,198,208,221,238,258])Rr(0,y,W,1,'#bfae88');
+for(let i=-8;i<=8;i++){g.strokeStyle='#bfae88';g.beginPath();g.moveTo(240+i*16,186);g.lineTo(240+i*55,270);g.stroke()}
+for(const x of[30,215,390]){g.fillStyle='rgba(120,230,255,.13)';g.beginPath();g.moveTo(x,10);g.lineTo(x+90,10);g.lineTo(x+130,150);g.lineTo(x-40,150);g.fill();Rr(x,6,90,6,'#fff');Rr(x,8,90,4,'#7fe8ff')}
+const shelf=(x,y,w,rows)=>{Rr(x-3,y-4,w+6,rows*34+8,'#8f98a3');Rr(x-3,y-4,w+6,3,'#6d7581');
+for(let r=0;r<rows;r++){const yy=y+r*34;Rr(x,yy,w,32,'#59616d');let xx=x+1;
+while(xx<x+w-9){const bw=9+rnd()*7|0,bh=16+rnd()*10|0,col=a.p[rnd()*a.p.length|0];
+Rr(xx,yy+30-bh,bw+1,bh+1,'#14141c');Rr(xx+1,yy+31-bh,bw-1,bh-1,col);Rr(xx+1,yy+34-bh+(bh>>1),bw-1,3,'#fff8');xx+=bw+2}
+Rr(x-3,yy+31,w+6,3,'#b9c0c8');for(let k=x+4;k<x+w;k+=17)Rr(k,yy+32,6,2,'#ffd23f')}};
+shelf(8,70,112,3);shelf(150,70,100,3);shelf(278,70,62,3);
+Rr(58,16,2,18,'#555');Rr(160,16,2,18,'#555');Rr(52,32,116,24,'#d8c9a2');Rr(52,32,116,2,'#7a5a3a');Rr(52,54,116,2,'#7a5a3a');
+g.fillStyle='#5a3a22';g.font='7px '+FT;g.textAlign='center';g.fillText(a.n.length>16?'REP. '+a.n.slice(8):a.n,110,47);
+Rr(194,14,2,14,'#555');Rr(250,14,2,14,'#555');Rr(186,28,74,32,'#c8242a');Rr(186,28,74,2,'#fff');g.fillStyle='#fff';g.font='7px '+FT;g.fillText('ACQUISTI',223,42);g.fillText('DEL MESE',223,54);
+const gx=346,gy=40,gw=134,gh=140;const gr=g.createLinearGradient(0,gy,0,gy+gh);gr.addColorStop(0,'#08102a');gr.addColorStop(1,'#25396b');g.fillStyle=gr;g.fillRect(gx,gy,gw,gh);
+for(let i=0;i<24;i++)Rr(gx+rnd()*gw|0,gy+rnd()*60|0,1,1,'#fff');
+Rr(gx,gy+108,gw,32,'#111a33');for(const cx of[gx+8,gx+70]){Rr(cx,gy+112,44,14,'#1b2c55');Rr(cx+8,gy+104,26,10,'#223666');Rr(cx+2,gy+118,5,3,'#ffe9a0');Rr(cx+38,gy+118,5,3,'#ff5050')}
+Rr(gx-3,gy-3,gw+6,3,'#9aa3ad');Rr(gx-3,gy+gh,gw+6,4,'#9aa3ad');Rr(gx-3,gy-3,3,gh+6,'#9aa3ad');Rr(gx+66,gy,3,gh,'#9aa3ad');
+Rr(gx+3,gy+10,128,22,'#0c1230');g.strokeStyle='#35e0ff';g.lineWidth=2;g.strokeRect(gx+4,gy+11,126,20);g.lineWidth=1;g.fillStyle='#ff6bf0';g.shadowColor='#ff3df0';g.shadowBlur=6;g.font='9px '+FT;g.fillText('SUPERMERCATO',gx+67,gy+26);g.shadowBlur=0;
+Rr(440,150,40,40,'#a85a36');Rr(440,148,40,4,'#d98a5a');Rr(448,134,18,14,'#889');Rr(450,136,14,8,'#2a6');
+Rr(0,196,58,38,'#9aa3ad');for(let i=0;i<5;i++)Rr(2+i*11,198,9,8,['#e8503a','#f0a030','#6bbf59','#c0e050','#e8503a'][i]);Rr(2,206,54,1,'#556');Rr(4,234,6,6,'#222');Rr(46,234,6,6,'#222');
+for(let i=0;i<3;i++){Rr(392,214+i*5,32,6,'#14141c');Rr(393,215+i*5,30,4,'#1f7a4a')}
+Rr(432,200,44,38,'#14141c');Rr(434,202,40,34,'#c8482a');Rr(444,214,20,10,'#fff');Rr(446,216,16,6,'#d42a2a');for(let i=0;i<6;i++)Rr(436+i*6,196,4,6,'#8a1a1a')}
+/* ---------- fighter ---------- */
+function R(x,y,w,h,col){c.fillStyle='#07070c';c.fillRect(x-1,y-1,w+2,h+2);c.fillStyle=col;c.fillRect(x,y,w,h)}
+function draw(f,x,y,pose,sc){const L=f.L,s=pose||f.st,t=f.t,e=f.ext||0;sc=(sc||1)*(L.big?1.12:1);
+c.save();c.translate(x|0,y|0);c.scale(f.face*sc,sc);
+if(s=='ko'){c.translate(0,-8);c.rotate(-1.5)}else if(s=='hit')c.rotate(-.12);
+if(f.cr&&s!='atk')c.scale(1,.75);
+const air=s=='jump'?7:0,wk=s=='walk'?((t/6|0)%2)*5-2:0;
+if(s=='atk'&&f.atk=='s'){c.fillStyle='rgba(255,210,63,.35)';c.fillRect(-18,-64,50,70)}
+if(L.ac=='wing'){R(-24,-54,15,28,'#fff');R(-32,-62,12,22,'#dfe8f6')}
+R(-9+wk,-24,8,18-air,L.pa);R(1-wk,-24,8,18-air,L.pa);R(-10+wk,-6-air,10,6,L.bt);
+if(s=='atk'&&f.atk=='k'){const l=6+e*24;R(2,-27,l,8,L.pa);R(l-2,-30,10,9,L.bt)}else{R(1-wk,-6-air,11,6,L.bt)}
+R(-10,-44,20,22,L.sh);
+if(L.lg){R(0,-38,7,7,'#fff');for(let j=0;j<5;j++)for(let i=0;i<5;i++)if(S5[j][i]=='1'){c.fillStyle='#d42a2a';c.fillRect(1+i,-37+j,1,1)}}
+R(-5,-57,12,13,L.sk);c.fillStyle='#fff';c.fillRect(2,-52,3,2);c.fillStyle='#000';c.fillRect(4,-52,1,2);c.fillRect(1,-55,5,1);
+if(s=='hit'||s=='ko'){c.fillStyle='#000';c.fillRect(3,-47,3,2)}
+const h=L.h;({spike:()=>{R(-6,-63,14,7,h);R(-2,-67,4,5,h);R(4,-66,4,5,h)},short:()=>R(-6,-61,14,6,h),bald:()=>R(-5,-59,5,2,h),curl:()=>{R(-6,-62,14,7,h);R(0,-67,5,5,h)},long:()=>{R(-9,-60,17,6,h);R(-10,-56,5,24,h)},slick:()=>R(-6,-61,14,5,h)})[L.hs]();
+if(L.ac=='beard')R(-3,-48,8,4,h=='#f2f2f2'?'#ddd':'#2a1a10');
+if(L.ac=='gl'){c.fillStyle='#111';c.fillRect(1,-54,7,1);c.fillRect(1,-54,1,4);c.fillRect(5,-54,3,4);R(-2,-47,6,3,'#ddd')}
+if(s=='block'){R(4,-54,7,22,L.sh);R(6,-56,7,7,L.sk)}
+else if(s=='atk'&&f.atk=='p'){R(6,-42,6+e*22,6,L.sh);R(10+e*22,-44,8,9,L.sk)}
+else if(s=='atk'&&f.atk=='h'){c.translate(e*3,0);R(6,-44,8+e*24,8,L.sh);R(12+e*24,-47,10,12,L.sk);R(-8,-40,8,6,L.sh)}
+else if(s=='atk'&&f.atk=='s'){R(6,-44,12+e*10,7,L.sh);R(16+e*10,-47,9,10,'#ffd23f');R(6,-36,12+e*10,6,L.sh)}
+else{R(4,-40,9,5,L.sh);R(11,-42,6,7,L.sk);R(-9,-38,8,5,L.sh)}
+c.restore()}
+/* ---------- audio ---------- */
+let AC,pl=false,mst=0,O={mus:70,sfx:80,touch:0,vib:1};
+function au(){if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();if(AC.state=='suspended')AC.resume()}
+function tone(f,d,ty,v,sl){if(!AC||v<=0)return;const o=AC.createOscillator(),g=AC.createGain(),n=AC.currentTime;o.type=ty;o.frequency.setValueAtTime(f,n);if(sl)o.frequency.exponentialRampToValueAtTime(sl,n+d);g.gain.setValueAtTime(v,n);g.gain.exponentialRampToValueAtTime(.001,n+d);o.connect(g).connect(AC.destination);o.start();o.stop(n+d)}
+const SF={hit:[180,.1,'square',.3,60],blk:[500,.06,'triangle',.25],whf:[260,.07,'sawtooth',.08,120],sp:[300,.4,'sawtooth',.3,900],ko:[400,.7,'square',.3,40],ui:[660,.07,'square',.2],jp:[200,.12,'triangle',.15,500]};
+function sfx(n){const s=SF[n];if(s)tone(s[0],s[1],s[2],s[3]*O.sfx/100,s[4])}
+setInterval(()=>{if(!AC||!pl)return;const q=(mst/12|0)%2?5:0,n=[0,3,7,12,7,3][mst%6]+q;tone(110*2**(n/12),.15,'square',.05*O.mus/100);if(mst%2==0)tone(55*2**(q/12),.2,'triangle',.09*O.mus/100);mst++},170);
+/* ---------- gioco ---------- */
+const MV={p:{su:3,ac:4,re:8,d:5,r:30,st:11,kb:2},k:{su:5,ac:5,re:11,d:7,r:36,st:13,kb:3},h:{su:10,ac:5,re:18,d:13,r:34,st:22,kb:7},s:{su:9,ac:2,re:16}};
+let G=null,T=0,mode='arc',tour=0,pickI=0,keys={},TR={},PS=[],PJ=[],last=0,acc=0,demo=[{L:CH[0],x:150,face:1,st:'idle',t:0,ext:0,y:0},{L:CH[7],x:330,face:-1,st:'idle',t:0,ext:0,y:0}],arena=AR[0];
+function mk(L,x,face,ai,lv){return{L,x,y:0,vx:0,vy:0,face,hp:100,tr:100,sp:0,st:'idle',t:0,atk:null,did:0,stun:0,blk:0,cr:0,rep:{m:'',n:0,t:-999},ai,lv,ob:0,hd:{},wins:0,ext:0}}
+function sh(id){document.querySelectorAll('.scr').forEach(e=>e.classList.toggle('on',e.id==id));$('#tc').classList.toggle('on',id==''&&touchOn())}
+const touchOn=()=>O.touch==2?false:O.touch==1||matchMedia('(pointer:coarse)').matches;
+function spark(x,y,col){for(let i=0;i<9;i++)PS.push({x,y,vx:(Math.random()-.5)*4,vy:-Math.random()*3,l:14,col})}
+function newRound(){const a=G.a,b=G.b;a.x=150;b.x=330;for(const f of[a,b]){f.y=0;f.vx=f.vy=0;f.hp=100;f.tr=100;f.sp=0;f.st='idle';f.atk=null;f.stun=0;f.rep.n=0}a.face=1;b.face=-1;G.ph='intro';G.pt=100;G.tm=3600;PJ=[]}
+function startMatch(pi,oi,lv){arena=AR[Math.random()*4|0];mkBG(arena);G={a:mk(CH[pi],150,1),b:mk(CH[oi],330,-1,1,lv),rd:1,pi,oi,lv,hs:0,sh:0,pz:0};newRound();sh('');pl=true;sfx('ui')}
+function pin(){const i={};for(const k of'lrudbpkhs')i[k]=!!(keys[k]||tk[k]||TR[k]);for(const k in TR)TR[k]=0;return i}
+const tk={};
+function hitchk(a,d,m){const dx=(d.x-a.x)*a.face,dy=Math.abs(a.y-d.y);if(dx<-6||dx>m.r+8||dy>28)return;if(a.atk=='p'&&d.cr&&d.y>=0)return;a.did=1;dmg(a,d,m.d*a.L.pw,m)}
+function dmg(a,d,base,m){if(G.ph!='play')return;const r=a.rep;if(r.m==a.atk&&T-r.t<110)r.n++;else r.n=0;r.m=a.atk;r.t=T;
+let v=base*Math.max(.25,Math.pow(.55,r.n));if(d.stun>0)v*=.7;
+const bl=d.blk&&(a.x-d.x)*d.face>0&&d.st!='hit';
+if(bl){v*=.1;d.vx=a.face*2;sfx('blk');spark(d.x+d.face*12,-36,'#7fe8ff')}
+else{d.stun=m.st;d.st='hit';d.t=0;d.atk=null;d.vx=a.face*m.kb;if(d.y>=0&&m.kb>5)d.vy=-3;sfx('hit');spark(d.x-a.face*4,-36,'#ffd23f');if(O.vib&&navigator.vibrate)navigator.vibrate(m.kb>5?40:15)}
+d.hp-=v;a.sp=Math.min(100,a.sp+v*1.4);d.sp=Math.min(100,d.sp+v*.8);G.hs=bl?2:m.kb>5?7:4;G.sh=bl?0:m.kb>5?10:5;
+if(d.hp<=0){d.hp=0;d.vx=a.face*3;d.vy=-4;endRound(a,'K.O.')}}
+function endRound(w,txt){if(G.ph!='play')return;G.ph='ko';G.pt=150;G.w=w;G.txt=txt;w.wins++;const l=w==G.a?G.b:G.a;l.st='ko';l.atk=null;sfx('ko')}
+function upd(f,o,i){f.t++;
+if(f.st=='ko'){f.vx*=.92;f.x+=f.vx;f.vy+=.5;f.y=Math.min(0,f.y+f.vy);if(f.y>=0)f.vy=0;return}
+const gr=f.y>=0&&f.vy>=0;
+if(f.stun>0){f.stun--;f.vx*=.85;f.st=f.stun>0?'hit':'idle'}
+else if(f.st=='atk'){const m=MV[f.atk],t=f.t;f.ext=t<m.su?t/m.su:t<m.su+m.ac?1:Math.max(0,1-(t-m.su-m.ac)/m.re);f.vx*=.8;
+if(f.atk=='s'){if(t==m.su){PJ.push({x:f.x+f.face*22,vx:f.face*3.6,o:f,a:f.atk,t:0});sfx('sp')}}
+else if(t>=m.su&&t<m.su+m.ac&&!f.did)hitchk(f,o,m);
+if(t>=m.su+m.ac+m.re){f.st='idle';f.atk=null;f.ext=0}}
+else{f.ext=0;f.blk=gr&&i.b;f.cr=gr&&i.d&&!i.b;if(gr)f.face=o.x>f.x?1:-1;
+if(f.blk||f.cr)f.vx=0;else{const sp=f.L.sp;f.vx=i.l?-sp:i.r?sp:gr?0:f.vx;if(gr&&i.u){f.vy=-8.4;sfx('jp')}}
+const k=i.s&&f.sp>=100?'s':i.h?'h':i.k?'k':i.p?'p':null;
+if(k&&!f.blk){f.st='atk';f.atk=k;f.t=0;f.did=0;f.cr=0;if(k=='s')f.sp=0;else sfx('whf')}
+else f.st=!gr?'jump':f.blk?'block':f.cr?'crouch':f.vx?'walk':'idle'}
+f.vy+=.45;f.y+=f.vy;if(f.y>=0){f.y=0;f.vy=0}f.x=Math.max(18,Math.min(W-18,f.x+f.vx))}
+function AI(f,o){if(f.ob>0){f.ob--;return{...f.hd}}
+const lv=f.lv,dx=o.x-f.x,ad=Math.abs(dx),tw=dx>0?'r':'l',aw=dx>0?'l':'r',rn=Math.random(),hd={};
+f.ob=Math.max(4,20-lv*3)+(Math.random()*8|0);
+const thr=o.st=='atk'&&ad<66,rec=o.st=='atk'&&o.t>MV[o.atk].su+MV[o.atk].ac;
+if(thr&&!rec&&rn<.22+.13*lv+(o.rep.n>1?.15:0)){hd.b=1;f.ob=12+(Math.random()*10|0)}
+else if(rec&&ad<48&&rn<.35+.12*lv){hd[rn<.5?'p':'k']=1}
+else if(ad>120){hd[tw]=1;if(f.sp>=100&&rn<.5)hd.s=1}
+else if(ad>54){if(rn<.55)hd[tw]=1;else if(rn<.65&&f.sp>=100)hd.s=1;else if(rn<.72)hd.u=1}
+else{if(rn<.38)hd.p=1;else if(rn<.6)hd.k=1;else if(rn<.7)hd.h=1;else if(rn<.84)hd[aw]=1;else hd.b=1}
+f.hd={l:hd.l,r:hd.r,d:hd.d,b:hd.b};return hd}
+function step(){T++;if(!G||G.pz||G.ph=='end')return;if(G.hs>0){G.hs--;return}
+const a=G.a,b=G.b;let ia={},ib={};
+if(G.ph=='intro'&&--G.pt<=0)G.ph='play';
+if(G.ph=='play'){ia=pin();ib=AI(b,a);if(--G.tm<=0)endRound(a.hp>=b.hp?a:b,'TEMPO!')}
+upd(a,b,ia);upd(b,a,ib);
+if(Math.abs(a.x-b.x)<16&&a.y>-20&&b.y>-20){const p=a.x<b.x?-1:1;a.x+=p;b.x-=p}
+for(let i=PJ.length-1;i>=0;i--){const p=PJ[i],o=p.o==a?b:a;p.x+=p.vx;p.t++;
+if(Math.abs(p.x-o.x)<12&&o.y>-45&&G.ph=='play'){dmg(p.o,o,18*p.o.L.pw,{st:24,kb:6});PJ.splice(i,1)}else if(p.x<-20||p.x>W+20)PJ.splice(i,1)}
+for(let i=PS.length-1;i>=0;i--){const p=PS[i];p.x+=p.vx;p.y+=p.vy;p.vy+=.2;if(--p.l<=0)PS.splice(i,1)}
+for(const f of[a,b])f.tr+=(f.hp-f.tr)*.06;
+if(G.ph=='ko'&&--G.pt<=0){const w=G.w;if(w.wins>=2)endMatch(w==a);else{G.rd++;newRound()}}
+if(G.sh>0)G.sh--}
+function endMatch(win){G.ph='end';const t=$('#e-t'),s=$('#e-s'),bn=$('#b-nx');
+if(win){if(mode=='tor'&&tour>=2){t.textContent='CAMPIONE DEL SUPERMERCATO!';s.textContent='Hai battuto tutti, anche il boss.';bn.style.display='none'}
+else{t.textContent='VITTORIA';s.textContent=mode=='tor'?'Prossimo avversario: '+CH[TOR[tour+1]].n:'';bn.style.display='';bn.textContent='PROSSIMO';bn.onclick=()=>{if(mode=='tor')tour++;nextFight()}}}
+else{t.textContent='SCONFITTA';s.textContent='';bn.style.display='';bn.textContent='RIVINCITA';bn.onclick=()=>nextFight(1)}
+sh('s-end');pl=false}
+function nextFight(again){if(mode=='tor'){startMatch(pickI,TOR[tour],TLV[tour])}else{let o=again?G.oi:Math.random()*8|0;while(o==pickI)o=Math.random()*8|0;startMatch(pickI,o,again?G.lv:2+(Math.random()*3|0))}}
+/* ---------- render ---------- */
+function Tx(s,x,y,z,col,al){c.font=z+'px '+FT;c.textAlign=al||'center';c.fillStyle='#000';c.fillText(s,x+1,y+1);c.fillStyle=col||'#fff';c.fillText(s,x,y)}
+function npc(){const nx=70+Math.sin(T/130)*40,f={L:CH[1],face:Math.cos(T/130)>0?1:-1,st:'walk',t:T,ext:0,cr:0};draw(f,nx,206,'walk',.62)}
+function hud(){for(const[f,x,d]of[[G.a,8,1],[G.b,W-8,-1]]){const w=170,x0=d>0?x:x-w;c.fillStyle='#000';c.fillRect(x0-2,10,w+4,12);c.fillStyle='#4a1010';c.fillRect(x0,12,w,8);
+const fw=f.tr/100*w,hw=f.hp/100*w;c.fillStyle='#ffd23f';c.fillRect(d>0?x0:x0+w-fw,12,fw,8);c.fillStyle='#35e04a';c.fillRect(d>0?x0:x0+w-hw,12,hw,8);
+c.fillStyle='#000';c.fillRect(x0,25,w*.6+2,6);c.fillStyle=f.sp>=100?(T%10<5?'#fff':'#ffd23f'):'#d68a00';c.fillRect(d>0?x0+1:x0+w-f.sp/100*w*.6-1+w*.0,26,f.sp/100*w*.6,4);
+Tx(f.L.n,d>0?x:x,42,7,'#fff',d>0?'left':'right');for(let i=0;i<2;i++){c.fillStyle='#000';c.fillRect(d>0?x+i*10:x-8-i*10,47,8,8);c.fillStyle=i<f.wins?'#ffd23f':'#333';c.fillRect(d>0?x+1+i*10:x-7-i*10,48,6,6)}}
+Tx(String(Math.max(0,Math.ceil(G.tm/60))),W/2,28,16,'#fff')}
+function render(){c.save();c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,W,H);
+if(G&&G.sh>0)c.translate((Math.random()-.5)*G.sh*.6,(Math.random()-.5)*G.sh*.6);
+c.drawImage(BG,0,0);npc();
+if(!G){const f=[...demo];for(const d of f){d.t++;d.st='idle'}draw(f[0],f[0].x,FY);draw(f[1],f[1].x,FY);c.restore();return}
+const a=G.a,b=G.b;c.fillStyle='rgba(0,0,0,.25)';for(const f of[a,b])c.fillRect(f.x-14+(f.y/-3),FY-2,28+f.y/3,4);
+const order=a.y<b.y?[b,a]:[a,b];for(const f of order)draw(f,f.x,FY+f.y);
+for(const p of PJ){const x=p.x,y=FY-30,d=p.vx>0?1:-1;c.save();c.translate(x,y);c.scale(d,1);c.fillStyle='rgba(255,210,63,.4)';c.fillRect(-26,-6,24,12);R(-10,-8,20,12,'#9aa3ad');R(-10,-8,20,3,'#d42a2a');R(-8,4,4,4,'#222');R(4,4,4,4,'#222');c.restore()}
+for(const p of PS){c.fillStyle=p.col;c.fillRect(p.x,FY+p.y,3,3)}
+hud();
+if(G.ph=='intro'){Tx(G.pt>40?'ROUND '+G.rd:'FIGHT!',W/2,130,G.pt>40?20:28,G.pt>40?'#fff':'#ffd23f')}
+if(G.ph=='ko')Tx(G.txt,W/2,130,28,'#ff4040');
+c.restore()}
+function loop(ts){requestAnimationFrame(loop);acc+=Math.min(50,ts-last);last=ts;while(acc>=16.67){acc-=16.67;step()}render()}
+/* ---------- UI ---------- */
+function fillSel(){const g=$('#grid');g.innerHTML='';CH.forEach((L,i)=>{if(mode=='tor'&&i>4)return;const b=document.createElement('button'),cn=document.createElement('canvas');cn.width=56;cn.height=76;b.className='b';b.appendChild(cn);b.appendChild(document.createTextNode(L.n));
+const sv=c;c=cn.getContext('2d');c.imageSmoothingEnabled=false;draw({L,face:1,st:'idle',t:0,ext:0,cr:0},26,70,'idle',1);c=sv;
+b.onclick=()=>{au();pickI=i;tour=0;if(mode=='tor')startMatch(i,TOR[0],TLV[0]);else{let o=Math.random()*8|0;while(o==i)o=Math.random()*8|0;startMatch(i,o,2+(Math.random()*3|0))}};g.appendChild(b)})}
+const GO={menu:()=>{G=null;pl=false;sh('s-menu')},arc:()=>{mode='arc';fillSel();sh('s-sel')},tor:()=>{mode='tor';fillSel();sh('s-sel')},set:()=>sh('s-set')};
+document.addEventListener('click',e=>{const t=e.target.closest('[data-go]');if(t){au();sfx('ui');GO[t.dataset.go]()}});
+$('#s-title').onclick=()=>{au();pl=true;sh('s-menu')};
+function pause(v){if(!G||G.ph=='end')return;G.pz=v;pl=!v;sh(v?'s-pause':'')}
+$('#b-res').onclick=()=>pause(0);$('#pz').onpointerdown=()=>pause(1);
+const KM={KeyA:'l',ArrowLeft:'l',KeyD:'r',ArrowRight:'r',KeyW:'u',ArrowUp:'u',KeyS:'d',ArrowDown:'d',KeyJ:'p',KeyK:'k',KeyL:'h',KeyI:'s',Space:'b',ShiftLeft:'b',ShiftRight:'b'};
+addEventListener('keydown',e=>{if($('#s-title').classList.contains('on')){$('#s-title').click();return}
+if(e.code=='Escape'||e.code=='KeyP'){pause(G&&!G.pz?1:0);return}const k=KM[e.code];if(!k)return;e.preventDefault();if(!keys[k]&&'pkhs'.includes(k))TR[k]=1;keys[k]=1});
+addEventListener('keyup',e=>{const k=KM[e.code];if(k)keys[k]=0});
+document.querySelectorAll('#tc [data-k]').forEach(b=>{const k=b.dataset.k,on=e=>{e.preventDefault();au();tk[k]=1;b.classList.add('on');if('pkhs'.includes(k))TR[k]=1},off=()=>{tk[k]=0;b.classList.remove('on')};b.addEventListener('pointerdown',on);['pointerup','pointercancel','pointerleave'].forEach(n=>b.addEventListener(n,off))});
+$('#o-mus').oninput=e=>O.mus=+e.target.value;$('#o-sfx').oninput=e=>O.sfx=+e.target.value;
+$('#o-touch').onclick=e=>{O.touch=(O.touch+1)%3;e.target.textContent=['AUTO','SEMPRE','NASCOSTI'][O.touch]};
+$('#o-vib').onclick=e=>{O.vib=!O.vib;e.target.textContent=O.vib?'SI':'NO'};
+$('#o-mus').value=O.mus;$('#o-sfx').value=O.sfx;
+mkBG(arena);document.fonts.ready.then(()=>mkBG(arena));requestAnimationFrame(loop);
+</script></body></html>
