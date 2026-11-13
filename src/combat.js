@@ -19,8 +19,8 @@ window.PF = window.PF || {};
     punch: {
       id: 'punch', anim: 'punch', label: 'PUNCH',
       dmg: 5, startup: 5, active: 4, recovery: 8,
-      hitbox: { x: 18, y: -46, w: 26, h: 14 },
-      kb: 2.4, kbUp: 0, hitstun: 16, blockstun: 9,
+      hitbox: { x: 16, y: -48, w: 20, h: 14 },
+      kb: 1.2, kbUp: 0, hitstun: 16, blockstun: 9,
       meterGain: 9, meterTaken: 5,
       cancel: ['punch2', 'kick', 'heavy', 'special'],
       low: false, knockdown: false, sfx: 'punch'
@@ -28,8 +28,8 @@ window.PF = window.PF || {};
     punch2: {
       id: 'punch2', anim: 'punch2', label: 'PUNCH',
       dmg: 6, startup: 5, active: 4, recovery: 9,
-      hitbox: { x: 18, y: -46, w: 26, h: 14 },
-      kb: 3.0, kbUp: 0, hitstun: 18, blockstun: 10,
+      hitbox: { x: 16, y: -48, w: 20, h: 14 },
+      kb: 1.6, kbUp: 0, hitstun: 18, blockstun: 10,
       meterGain: 9, meterTaken: 5,
       cancel: ['kick', 'heavy', 'special'],
       low: false, knockdown: false, sfx: 'punch'
@@ -37,7 +37,7 @@ window.PF = window.PF || {};
     heavy: {
       id: 'heavy', anim: 'heavy', label: 'HEAVY',
       dmg: 12, startup: 10, active: 5, recovery: 16,
-      hitbox: { x: 20, y: -48, w: 30, h: 18 },
+      hitbox: { x: 18, y: -50, w: 26, h: 18 },
       kb: 5.5, kbUp: -2.5, hitstun: 24, blockstun: 14,
       meterGain: 12, meterTaken: 7,
       cancel: ['special'],
@@ -46,7 +46,7 @@ window.PF = window.PF || {};
     kick: {
       id: 'kick', anim: 'kick', label: 'KICK',
       dmg: 8, startup: 8, active: 5, recovery: 12,
-      hitbox: { x: 20, y: -50, w: 28, h: 20 },
+      hitbox: { x: 14, y: -52, w: 24, h: 20 },
       kb: 3.6, kbUp: 0, hitstun: 20, blockstun: 11,
       meterGain: 10, meterTaken: 6,
       cancel: ['heavy', 'special'],
@@ -55,8 +55,8 @@ window.PF = window.PF || {};
     lowkick: {
       id: 'lowkick', anim: 'lowkick', label: 'LOW KICK',
       dmg: 6, startup: 6, active: 4, recovery: 10,
-      hitbox: { x: 16, y: -16, w: 26, h: 14 },
-      kb: 2.6, kbUp: 0, hitstun: 18, blockstun: 10,
+      hitbox: { x: 14, y: -16, w: 22, h: 14 },
+      kb: 1.4, kbUp: 0, hitstun: 18, blockstun: 10,
       meterGain: 9, meterTaken: 5,
       cancel: [],
       low: true, knockdown: false, sfx: 'kick'
@@ -64,7 +64,7 @@ window.PF = window.PF || {};
     jumpkick: {
       id: 'jumpkick', anim: 'jumpkick', label: 'JUMP KICK',
       dmg: 9, startup: 5, active: 12, recovery: 6,
-      hitbox: { x: 12, y: -34, w: 26, h: 24 },
+      hitbox: { x: 10, y: -36, w: 24, h: 24 },
       kb: 3.2, kbUp: 0, hitstun: 20, blockstun: 10,
       meterGain: 10, meterTaken: 6,
       cancel: [],
@@ -127,15 +127,17 @@ window.PF = window.PF || {};
     return { x, y, w: hb.w, h: hb.h };
   }
 
-  // Hurtbox del lottatore secondo lo stato
+  // Hurtbox del lottatore secondo lo stato, proporzionata alla corporatura
   function hurtbox(f) {
+    const bw = f.char && f.char.body ? f.char.body.torsoW : 9;
+    const w = bw + 14; // larghezza spalle incluse
     if (f.state === 'knockdown' || f.state === 'defeat' || f.state === 'getup') {
-      return { x: f.x - 18, y: f.y - 14, w: 36, h: 14 };
+      return { x: f.x - (bw + 11) / 2, y: f.y - 14, w: bw + 22, h: 14 };
     }
     if (f.crouching && !f.airborne) {
-      return { x: f.x - 11, y: f.y - 34, w: 22, h: 34 };
+      return { x: f.x - w / 2, y: f.y - 36, w, h: 36 };
     }
-    return { x: f.x - 10, y: f.y - 52, w: 20, h: 52 };
+    return { x: f.x - w / 2, y: f.y - 54, w, h: 54 };
   }
 
   function overlap(a, b) {

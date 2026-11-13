@@ -132,8 +132,8 @@ window.PF = window.PF || {};
         return;
       }
 
-      // distanza combattimento ravvicinato
-      if (dist < 58) {
+      // distanza combattimento ravvicinato (allineata alla portata reale dei colpi)
+      if (dist < 48) {
         if (r < d.aggression) {
           this.chooseAttack();
         } else if (r < d.aggression + d.retreat) {

@@ -23,7 +23,7 @@ window.PF = window.PF || {};
       specialName: 'INFERNO WAVE',
       maxHealth: 100, walkSpeed: 1.55, runSpeed: 3.0, power: 1.0, defense: 1.0,
       jumpPower: 7.6, weight: 1.0,
-      body: { torsoW: 9, armW: 3, legW: 4, headW: 9 },
+      body: { torsoW: 10, armW: 4, legW: 5, headW: 9 },
       palette: {
         skin: '#e8a06c', skinDark: '#c07a4a',
         main: '#d8402f', mainDark: '#a02418',
@@ -39,7 +39,7 @@ window.PF = window.PF || {};
       specialName: 'PHANTOM RUSH',
       maxHealth: 90, walkSpeed: 2.0, runSpeed: 3.8, power: 0.9, defense: 1.1,
       jumpPower: 8.2, weight: 0.85,
-      body: { torsoW: 8, armW: 3, legW: 4, headW: 9 },
+      body: { torsoW: 9, armW: 3, legW: 4, headW: 9 },
       palette: {
         skin: '#c8956c', skinDark: '#a07048',
         main: '#2c3358', mainDark: '#181c34',
@@ -55,7 +55,7 @@ window.PF = window.PF || {};
       specialName: 'SEISMIC SLAM',
       maxHealth: 120, walkSpeed: 1.15, runSpeed: 2.2, power: 1.35, defense: 0.78,
       jumpPower: 6.6, weight: 1.3,
-      body: { torsoW: 12, armW: 5, legW: 5, headW: 9 },
+      body: { torsoW: 14, armW: 6, legW: 6, headW: 10 },
       palette: {
         skin: '#d99a66', skinDark: '#b0763f',
         main: '#ece8de', mainDark: '#c2bcb0',
@@ -71,7 +71,7 @@ window.PF = window.PF || {};
       specialName: 'THUNDER FANG',
       maxHealth: 95, walkSpeed: 1.85, runSpeed: 3.4, power: 0.95, defense: 1.0,
       jumpPower: 8.0, weight: 0.9,
-      body: { torsoW: 8, armW: 3, legW: 4, headW: 9 },
+      body: { torsoW: 9, armW: 3, legW: 4, headW: 9 },
       palette: {
         skin: '#e8b28a', skinDark: '#c08a5c',
         main: '#f2b418', mainDark: '#c08410',
@@ -112,6 +112,44 @@ window.PF = window.PF || {};
     }
   }
 
+  // Segmento rastremato: largo alla radice, stretto in punta (niente rettangoli)
+  function taperedLimb(ctx, x1, y1, x2, y2, w1, w2, color) {
+    const dx = x2 - x1, dy = y2 - y1;
+    const steps = Math.max(Math.abs(dx), Math.abs(dy), 1);
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+      const w = Math.max(1, Math.round(w1 + (w2 - w1) * t));
+      px(ctx, x1 + dx * t - w / 2, y1 + dy * t - w / 2, w, w, color);
+    }
+  }
+
+  // Rigonfiamento muscolare lungo un segmento (bicipite / polpaccio)
+  function bulge(ctx, x1, y1, x2, y2, t, extra, color) {
+    const x = x1 + (x2 - x1) * t, y = y1 + (y2 - y1) * t;
+    const w = 2 + extra;
+    px(ctx, x - w / 2, y - w / 2, w, w, color);
+  }
+
+  // Torso a V: vita stretta, petto ampio, spalle larghe (proporzioni da lottatore)
+  function drawTorso(ctx, ch, hip, neck) {
+    const p = ch.palette, b = ch.body;
+    const dx = neck.x - hip.x, dy = neck.y - hip.y;
+    const steps = Math.max(Math.abs(dy), 1);
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+      let w;
+      if (t < 0.2) w = b.torsoW - 3;                        // vita
+      else if (t < 0.7) w = b.torsoW - 3 + (t - 0.2) * 6.6; // petto
+      else w = b.torsoW + 1;                                 // spalle
+      w = Math.round(Math.max(4, w));
+      px(ctx, hip.x + dx * t - w / 2, Math.round(hip.y + dy * t), w, 1, p.main);
+    }
+    // massa pettorale e ombra sotto le clavicole
+    px(ctx, neck.x - (b.torsoW + 1) / 2, neck.y - 1, b.torsoW + 1, 3, p.main);
+    px(ctx, neck.x - (b.torsoW + 1) / 2, neck.y + 1, b.torsoW + 1, 1, p.mainDark);
+    px(ctx, hip.x + dx * 0.72, hip.y + dy * 0.72, 1, 2, p.mainDark);
+  }
+
   // Punto medio con piega perpendicolare (gomito / ginocchio)
   function joint(ax, ay, bx, by, bend, amount) {
     const mx = (ax + bx) / 2, my = (ay + by) / 2;
@@ -131,9 +169,12 @@ window.PF = window.PF || {};
     // collo
     px(ctx, hx - 1, y + hh - 2, 3, 3, p.skinDark);
 
-    // testa
-    px(ctx, x, y, hw, hh, p.skin);
-    px(ctx, x, y + hh - 2, hw, 2, p.skinDark); // ombra mandibola
+    // testa: cranio + mandibola rastremata (non un rettangolo)
+    px(ctx, x, y, hw, hh - 2, p.skin);
+    px(ctx, x + 1, y + hh - 2, hw - 3, 2, p.skin);
+    px(ctx, x + 1, y + hh - 1, hw - 4, 1, p.skinDark);
+    px(ctx, x + hw - 1, y + 3, 1, 2, p.skinDark); // naso (profilo 3/4)
+    px(ctx, x, y + 2, 1, 3, p.skinDark);          // orecchio
 
     // occhi (guarda avanti)
     const ex = x + hw - 3;
@@ -226,34 +267,41 @@ window.PF = window.PF || {};
     const kneeF = joint(hipF.x, hipF.y, footF.x, footF.y, pose.kneeF, 3);
     const kneeB = joint(hipB.x, hipB.y, footB.x, footB.y, pose.kneeB, 3);
 
-    // braccio dietro
-    limb(ctx, shoulderB.x, shoulderB.y, elbowB.x, elbowB.y, b.armW, p.mainDark);
-    limb(ctx, elbowB.x, elbowB.y, handB.x, handB.y, b.armW, p.mainDark);
+    // braccio dietro: bicipite rastremato + avambraccio
+    taperedLimb(ctx, shoulderB.x, shoulderB.y, elbowB.x, elbowB.y, b.armW + 1, b.armW, p.mainDark);
+    taperedLimb(ctx, elbowB.x, elbowB.y, handB.x, handB.y, b.armW, b.armW - 1, p.mainDark);
+    bulge(ctx, shoulderB.x, shoulderB.y, elbowB.x, elbowB.y, 0.45, 1, p.mainDark);
     px(ctx, handB.x - 1, handB.y - 1, 3, 3, p.glove);
+    px(ctx, handB.x, handB.y - 2, 2, 1, p.glove);
 
-    // gamba dietro
-    limb(ctx, hipB.x, hipB.y, kneeB.x, kneeB.y, b.legW, p.pantsDark);
-    limb(ctx, kneeB.x, kneeB.y, footB.x, footB.y, b.legW, p.pantsDark);
-    px(ctx, footB.x - 2, footB.y - 1, 5, 3, p.boots);
+    // gamba dietro: coscia, polpaccio, piede con punta
+    taperedLimb(ctx, hipB.x, hipB.y, kneeB.x, kneeB.y, b.legW + 2, b.legW, p.pantsDark);
+    taperedLimb(ctx, kneeB.x, kneeB.y, footB.x, footB.y, b.legW, b.legW - 1, p.pantsDark);
+    bulge(ctx, kneeB.x, kneeB.y, footB.x, footB.y, 0.35, 1, p.pantsDark);
+    px(ctx, footB.x - 2, footB.y - 1, 6, 3, p.boots);
+    px(ctx, footB.x + 3, footB.y, 2, 2, p.boots);
 
-    // torso
-    limb(ctx, hip.x, hip.y, neck.x, neck.y, b.torsoW, p.main);
-    px(ctx, neck.x - b.torsoW / 2 + 1, neck.y - 1, b.torsoW - 2, 3, p.mainDark); // clavicola/ombra
-    px(ctx, hip.x - b.torsoW / 2, hip.y - 2, b.torsoW, 3, p.accent);           // cintura
+    // torso a V con dettagli
+    drawTorso(ctx, ch, hip, neck);
+    px(ctx, hip.x - (b.torsoW - 3) / 2, hip.y - 2, b.torsoW - 3, 3, p.accent); // cintura sulla vita
     drawTorsoDetails(ctx, ch, hip, neck);
 
     // gamba fronte
-    limb(ctx, hipF.x, hipF.y, kneeF.x, kneeF.y, b.legW, p.pants);
-    limb(ctx, kneeF.x, kneeF.y, footF.x, footF.y, b.legW, p.pants);
-    px(ctx, footF.x - 2, footF.y - 1, 5, 3, p.boots);
+    taperedLimb(ctx, hipF.x, hipF.y, kneeF.x, kneeF.y, b.legW + 2, b.legW, p.pants);
+    taperedLimb(ctx, kneeF.x, kneeF.y, footF.x, footF.y, b.legW, b.legW - 1, p.pants);
+    bulge(ctx, kneeF.x, kneeF.y, footF.x, footF.y, 0.35, 1, p.pants);
+    px(ctx, footF.x - 2, footF.y - 1, 6, 3, p.boots);
+    px(ctx, footF.x + 3, footF.y, 2, 2, p.boots);
 
     // testa
     drawHead(ctx, ch, head.x, head.y, pose, tick);
 
     // braccio fronte
-    limb(ctx, shoulderF.x, shoulderF.y, elbowF.x, elbowF.y, b.armW, p.main);
-    limb(ctx, elbowF.x, elbowF.y, handF.x, handF.y, b.armW, p.main);
+    taperedLimb(ctx, shoulderF.x, shoulderF.y, elbowF.x, elbowF.y, b.armW + 1, b.armW, p.main);
+    taperedLimb(ctx, elbowF.x, elbowF.y, handF.x, handF.y, b.armW, b.armW - 1, p.main);
+    bulge(ctx, shoulderF.x, shoulderF.y, elbowF.x, elbowF.y, 0.45, 1, p.main);
     px(ctx, handF.x - 1, handF.y - 1, 3, 3, p.glove);
+    px(ctx, handF.x, handF.y - 2, 2, 1, p.glove);
 
     // effetti per-personaggio su pose speciali
     drawCharFx(ctx, ch, pose, handF, handB, tick);
@@ -272,14 +320,14 @@ window.PF = window.PF || {};
       px(ctx, lx, ly + 4, 5, 1, p.accent);
     }
     if (ch.id === 'shadow') {
-      // grembiule da magazzino
-      px(ctx, hip.x - 3, neck.y + 3, 7, hip.y - neck.y - 4, '#2e5c46');
+      // grembiule da magazzino (segue la rastrematura del torso)
+      px(ctx, hip.x - 3, neck.y + 4, 6, hip.y - neck.y - 5, '#2e5c46');
       px(ctx, neck.x + 1, neck.y + 1, 2, 3, '#2e5c46');
     }
     if (ch.id === 'titan') {
-      // grembiule da macellaio: bretella + rifinitura
+      // grembiule da macellaio: bretella + rifinitura sulla vita
       px(ctx, neck.x - 1, neck.y, 3, 4, p.mainDark);
-      px(ctx, hip.x - 4, hip.y - 5, 9, 2, p.accent);
+      px(ctx, hip.x - 5, hip.y - 5, 11, 2, p.accent);
     }
     if (ch.id === 'volt') {
       // colletto bianco + fiocchetto da cassiere

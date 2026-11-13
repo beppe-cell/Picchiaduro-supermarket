@@ -22,17 +22,19 @@ window.PF = window.PF || {};
     return p;
   }
 
-  const GUARD_F = [9, -18];   // mano fronte (guardia alta)
-  const GUARD_B = [4, -13];   // mano dietro
+  const GUARD_F = [8, -12];   // mano fronte a altezza mento (guardia da boxe)
+  const GUARD_B = [3, -9];    // mano dietro vicino al petto
 
   // ---------------- Pose base ----------------
+  // Posa 3/4 da picchiaduro classico: torso leggermente in avanti,
+  // piede fronte avanzato, piede dietro a terra per la spinta.
 
   const IDLE_BASE = {
-    hipY: 34, lean: 0, headX: 0, headY: 0,
-    handF: GUARD_F.slice(), elbowF: 1,
-    handB: GUARD_B.slice(), elbowB: -1,
-    footF: [4, 22], kneeF: 1,
-    footB: [-4, 22], kneeB: -1,
+    hipY: 34, lean: 1, headX: 0, headY: 0,
+    handF: GUARD_F.slice(), elbowF: 2,
+    handB: GUARD_B.slice(), elbowB: -2,
+    footF: [6, 22], kneeF: 1,
+    footB: [-6, 22], kneeB: -1,
     flat: false, extra: null
   };
 
@@ -41,8 +43,8 @@ window.PF = window.PF || {};
   // --- IDLE (respiro, 4 frame) ---
   POSES.idle = [
     P(IDLE_BASE),
-    P(IDLE_BASE, { hipY: 35, handF: [9, -17], handB: [4, -12] }),
-    P(IDLE_BASE, { hipY: 35, headY: -1, handF: [9, -17], handB: [4, -12] }),
+    P(IDLE_BASE, { hipY: 35, handF: [8, -11], handB: [2, -8] }),
+    P(IDLE_BASE, { hipY: 35, headY: -1, handF: [8, -11], handB: [2, -8] }),
     P(IDLE_BASE, { headY: -1 })
   ];
 
@@ -130,7 +132,7 @@ window.PF = window.PF || {};
 
   // --- BLOCK (1 frame) + crouch block ---
   POSES.block = [
-    P(IDLE_BASE, { lean: -2, handF: [10, -20], elbowF: 1, handB: [9, -15], elbowB: 1 })
+    P(IDLE_BASE, { lean: -2, handF: [10, -13], elbowF: 2, handB: [8, -9], elbowB: 2 })
   ];
   POSES.crouchblock = [
     P(IDLE_BASE, { hipY: 44, headY: 2, lean: -2, handF: [10, -10], handB: [9, -6], footF: [6, 12], footB: [-6, 12], kneeF: 2, kneeB: -2 })
@@ -203,7 +205,7 @@ window.PF = window.PF || {};
 
   // --- INTRO (1 frame, pugni serrati) ---
   POSES.intro = [
-    P(IDLE_BASE, { handF: [7, -20], handB: [2, -18], headY: -1 })
+    P(IDLE_BASE, { handF: [7, -14], handB: [2, -12], headY: -1 })
   ];
 
   PF.ANIM_DATA = {
