@@ -19,23 +19,23 @@ window.PF = window.PF || {};
   PF.CHARS = {
     blaze: {
       id: 'blaze', name: 'BLAZE',
-      desc: 'Combattente equilibrato.<br>Mossa: <b>INFERNO WAVE</b> (palla di fuoco)',
+      desc: 'Il campione del supermercato, equilibrato.<br>Mossa: <b>INFERNO WAVE</b> (palla di fuoco)',
       specialName: 'INFERNO WAVE',
       maxHealth: 100, walkSpeed: 1.55, runSpeed: 3.0, power: 1.0, defense: 1.0,
       jumpPower: 7.6, weight: 1.0,
       body: { torsoW: 9, armW: 3, legW: 4, headW: 9 },
       palette: {
         skin: '#e8a06c', skinDark: '#c07a4a',
-        main: '#d8402f', mainDark: '#8e2014',
-        pants: '#3a3540', pantsDark: '#26232e',
-        boots: '#5a4a3a', hair: '#ffb02e', hairDark: '#e07018',
-        accent: '#ffe66d', eye: '#1a1a1a', glove: '#8e2014'
+        main: '#d8402f', mainDark: '#a02418',
+        pants: '#23252e', pantsDark: '#14151c',
+        boots: '#6b4a2a', hair: '#2a2a2a', hairDark: '#151515',
+        accent: '#ffe66d', eye: '#1a1a1a', glove: '#f0b080'
       },
-      hairStyle: 'flame'
+      hairStyle: 'messy'
     },
     shadow: {
       id: 'shadow', name: 'SHADOW',
-      desc: 'Ninja velocissimo, specialista di combo.<br>Mossa: <b>PHANTOM RUSH</b> (affondo spettrale)',
+      desc: 'Ninja del magazzino, specialista di combo.<br>Mossa: <b>PHANTOM RUSH</b> (affondo spettrale)',
       specialName: 'PHANTOM RUSH',
       maxHealth: 90, walkSpeed: 2.0, runSpeed: 3.8, power: 0.9, defense: 1.1,
       jumpPower: 8.2, weight: 0.85,
@@ -44,42 +44,43 @@ window.PF = window.PF || {};
         skin: '#c8956c', skinDark: '#a07048',
         main: '#2c3358', mainDark: '#181c34',
         pants: '#1c2038', pantsDark: '#12141f',
-        boots: '#10121e', hair: '#181c34', hairDark: '#10121e',
+        boots: '#3a2e22', hair: '#181c34', hairDark: '#10121e',
         accent: '#e04848', eye: '#dfe8ff', glove: '#181c34'
       },
       hairStyle: 'ninja'
     },
     titan: {
       id: 'titan', name: 'TITAN',
-      desc: 'Lento ma devastante, rocce da lancio.<br>Mossa: <b>SEISMIC SLAM</b> (onda sismica)',
+      desc: 'Il macellaio: lento ma devastante.<br>Mossa: <b>SEISMIC SLAM</b> (onda sismica)',
       specialName: 'SEISMIC SLAM',
       maxHealth: 120, walkSpeed: 1.15, runSpeed: 2.2, power: 1.35, defense: 0.78,
       jumpPower: 6.6, weight: 1.3,
       body: { torsoW: 12, armW: 5, legW: 5, headW: 9 },
       palette: {
         skin: '#d99a66', skinDark: '#b0763f',
-        main: '#c9a227', mainDark: '#8a6d14',
-        pants: '#6b7f3a', pantsDark: '#48561f',
+        main: '#ece8de', mainDark: '#c2bcb0',
+        pants: '#3a4a5c', pantsDark: '#28364a',
         boots: '#4a3b2f', hair: '#3d2f23', hairDark: '#2a1f16',
-        accent: '#8a6d14', eye: '#1a1a1a', glove: '#4a3b2f'
+        accent: '#c8342a', eye: '#1a1a1a', glove: '#d99a66'
       },
-      hairStyle: 'mohawk'
+      hairStyle: 'bald'
     },
     volt: {
       id: 'volt', name: 'VOLT',
-      desc: 'Agile e letale, colpi elettrici.<br>Mossa: <b>THUNDER FANG</b> (tripla scarica)',
+      desc: 'Cassiere fulmineo, colpi elettrici.<br>Mossa: <b>THUNDER FANG</b> (tripla scarica)',
       specialName: 'THUNDER FANG',
       maxHealth: 95, walkSpeed: 1.85, runSpeed: 3.4, power: 0.95, defense: 1.0,
       jumpPower: 8.0, weight: 0.9,
       body: { torsoW: 8, armW: 3, legW: 4, headW: 9 },
       palette: {
         skin: '#e8b28a', skinDark: '#c08a5c',
-        main: '#1f8a9c', mainDark: '#0f5563',
-        pants: '#20242e', pantsDark: '#14161d',
-        boots: '#2a2e3a', hair: '#6ef0ff', hairDark: '#2ab8d0',
-        accent: '#ffe94a', eye: '#111111', glove: '#ffe94a'
+        main: '#f2b418', mainDark: '#c08410',
+        pants: '#23252e', pantsDark: '#14151c',
+        boots: '#2a2e3a', hair: '#3a2c1e', hairDark: '#241a10',
+        accent: '#3fae6a', eye: '#111111', glove: '#2a2e3a',
+        cap: '#c8342a', capDark: '#9c2418'
       },
-      hairStyle: 'spiky'
+      hairStyle: 'cap'
     }
   };
 
@@ -147,20 +148,30 @@ window.PF = window.PF || {};
 
     // capelli
     switch (ch.hairStyle) {
-      case 'flame': {
+      case 'messy': {
+        // capelli neri corti e spettinati
         px(ctx, x - 1, y - 2, hw + 2, 3, p.hair);
-        // fiammelle spettinate
-        const w = Math.sin(tick * 0.15) > 0 ? 1 : 0;
-        px(ctx, x - 2, y - 4 + w, 2, 3, p.hairDark);
-        px(ctx, x + 2, y - 5, 2, 4, p.hair);
-        px(ctx, x + 5, y - 4 - w, 2, 3, p.hairDark);
-        px(ctx, x - 1, y + 1, 2, 4, p.hairDark); // basette
-        // fascia frontale
-        px(ctx, x, y + 1, hw, 1, p.accent);
-        // codina della fascia
-        const t = Math.round(Math.sin(tick * 0.2) * 1.5);
-        px(ctx, x - 3, y + 2 + t, 3, 1, p.accent);
-        px(ctx, x - 5, y + 3 + t, 2, 1, p.accent);
+        const w = Math.sin(tick * 0.15) > 0 ? 0 : 1;
+        px(ctx, x - 2, y - 1 + w, 2, 2, p.hairDark);
+        px(ctx, x + 2, y - 4, 2, 3, p.hair);
+        px(ctx, x + 5, y - 3 - w, 2, 2, p.hairDark);
+        px(ctx, x + hw - 1, y, 2, 2, p.hair);
+        px(ctx, x - 1, y + 1, 2, 3, p.hairDark); // basette
+        break;
+      }
+      case 'bald': {
+        // cranio lucido + barba folta
+        px(ctx, x + 1, y + 1, 2, 1, '#f0c8a0');
+        px(ctx, x, y - 1, hw, 1, p.skinDark);
+        px(ctx, x + 1, y + hh - 3, hw - 2, 3, p.hair);
+        px(ctx, x + hw - 3, y + 4, 3, 4, p.hair);
+        break;
+      }
+      case 'cap': {
+        px(ctx, x - 1, y - 1, hw + 2, 2, p.hair); // capelli sotto il cappellino
+        px(ctx, x - 1, y - 3, hw + 2, 3, p.cap);
+        px(ctx, x - 1, y - 3, hw + 2, 1, p.capDark);
+        px(ctx, x + hw - 2, y - 1, 4, 2, p.cap);  // visiera avanti
         break;
       }
       case 'ninja': {
@@ -229,10 +240,7 @@ window.PF = window.PF || {};
     limb(ctx, hip.x, hip.y, neck.x, neck.y, b.torsoW, p.main);
     px(ctx, neck.x - b.torsoW / 2 + 1, neck.y - 1, b.torsoW - 2, 3, p.mainDark); // clavicola/ombra
     px(ctx, hip.x - b.torsoW / 2, hip.y - 2, b.torsoW, 3, p.accent);           // cintura
-    if (ch.id === 'titan') { // spallacci
-      px(ctx, shoulderF.x - 2, shoulderF.y - 3, 5, 3, p.accent);
-      px(ctx, shoulderB.x - 3, shoulderB.y - 3, 5, 3, p.mainDark);
-    }
+    drawTorsoDetails(ctx, ch, hip, neck);
 
     // gamba fronte
     limb(ctx, hipF.x, hipF.y, kneeF.x, kneeF.y, b.legW, p.pants);
@@ -249,6 +257,35 @@ window.PF = window.PF || {};
 
     // effetti per-personaggio su pose speciali
     drawCharFx(ctx, ch, pose, handF, handB, tick);
+  }
+
+  // Dettagli torso per l'identità da supermercato
+  function drawTorsoDetails(ctx, ch, hip, neck) {
+    const p = ch.palette;
+    if (ch.id === 'blaze') {
+      // logo "S" giallo sulla maglia rossa
+      const lx = Math.round(neck.x - 2), ly = Math.round(neck.y + 3);
+      px(ctx, lx, ly, 5, 1, p.accent);
+      px(ctx, lx, ly + 1, 1, 1, p.accent);
+      px(ctx, lx, ly + 2, 5, 1, p.accent);
+      px(ctx, lx + 4, ly + 3, 1, 1, p.accent);
+      px(ctx, lx, ly + 4, 5, 1, p.accent);
+    }
+    if (ch.id === 'shadow') {
+      // grembiule da magazzino
+      px(ctx, hip.x - 3, neck.y + 3, 7, hip.y - neck.y - 4, '#2e5c46');
+      px(ctx, neck.x + 1, neck.y + 1, 2, 3, '#2e5c46');
+    }
+    if (ch.id === 'titan') {
+      // grembiule da macellaio: bretella + rifinitura
+      px(ctx, neck.x - 1, neck.y, 3, 4, p.mainDark);
+      px(ctx, hip.x - 4, hip.y - 5, 9, 2, p.accent);
+    }
+    if (ch.id === 'volt') {
+      // colletto bianco + fiocchetto da cassiere
+      px(ctx, neck.x - 2, neck.y + 1, 5, 2, '#f4f4f4');
+      px(ctx, neck.x - 1, neck.y + 3, 3, 2, p.accent);
+    }
   }
 
   function drawCharFx(ctx, ch, pose, handF, handB, tick) {
@@ -347,11 +384,10 @@ window.PF = window.PF || {};
     }
     // capelli
     switch (ch.hairStyle) {
-      case 'flame':
+      case 'messy':
         px(ctx, 8, 3, 16, 4, p.hair);
         px(ctx, 10, 1, 3, 3, p.hairDark); px(ctx, 15, 0, 3, 4, p.hair); px(ctx, 20, 1, 3, 3, p.hairDark);
         px(ctx, 8, 7, 2, 6, p.hairDark);
-        px(ctx, 9, 9, 14, 1, p.accent);
         break;
       case 'ninja':
         px(ctx, 8, 2, 16, 8, p.main);
@@ -359,17 +395,34 @@ window.PF = window.PF || {};
         px(ctx, 8, 10, 2, 8, p.main);
         px(ctx, 6, 18, 5, 2, p.accent); px(ctx, 3, 20, 4, 1, p.accent);
         break;
-      case 'mohawk':
-        px(ctx, 13, 0, 5, 7, p.hair);
-        px(ctx, 14, 0, 2, 2, p.hairDark);
-        px(ctx, 9, 6, 14, 2, p.hairDark);
-        px(ctx, 18, 18, 5, 3, p.hairDark);
+      case 'bald':
+        px(ctx, 10, 6, 3, 1, '#f0c8a0');
+        px(ctx, 10, 17, 12, 4, p.hair);
+        px(ctx, 20, 17, 3, 4, p.hairDark);
         break;
-      case 'spiky':
-        px(ctx, 8, 3, 16, 4, p.hair);
-        px(ctx, 10, 1, 2, 3, p.hair); px(ctx, 14, 0, 2, 4, p.hairDark); px(ctx, 19, 1, 3, 3, p.hair);
-        px(ctx, 8, 7, 2, 4, p.hairDark);
+      case 'cap':
+        px(ctx, 8, 2, 16, 5, p.cap);
+        px(ctx, 8, 2, 16, 1, p.capDark);
+        px(ctx, 20, 5, 6, 2, p.cap);
         break;
+    }
+    // dettagli torso sul busto
+    if (ch.id === 'blaze') {
+      px(ctx, 13, 25, 5, 1, p.accent);
+      px(ctx, 13, 26, 1, 1, p.accent);
+      px(ctx, 13, 27, 5, 1, p.accent);
+      px(ctx, 17, 28, 1, 1, p.accent);
+      px(ctx, 13, 29, 5, 1, p.accent);
+    }
+    if (ch.id === 'shadow') {
+      px(ctx, 10, 26, 12, 6, '#2e5c46');
+    }
+    if (ch.id === 'titan') {
+      px(ctx, 6, 29, 20, 2, p.accent);
+    }
+    if (ch.id === 'volt') {
+      px(ctx, 13, 23, 6, 2, '#f4f4f4');
+      px(ctx, 14, 25, 4, 2, p.accent);
     }
     // cornice
     ctx.strokeStyle = p.accent;

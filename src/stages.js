@@ -352,12 +352,174 @@ window.PF = window.PF || {};
   }
 
   // ============================================================
+  // SUPERMARKET
+  // ============================================================
+
+  function buildSupermarket() {
+    const layers = [];
+    const aisleSigns = [];
+    const lightPanels = [];
+
+    const PROD_COLORS = ['#e04538', '#3fae6a', '#3a6ac8', '#ffe94a', '#f2a03c', '#c84a9a', '#f2e8d8'];
+    const AISLE_TEXTS = ['REPARTO ALIMENTARI', 'ACQUISTI DEL MESE', 'FRUTTA E VERDURA', 'PANETTERIA', 'OFFERTE'];
+
+    // --- soffitto con pannelli luminosi (parallax 0) ---
+    const sky = makeCanvas(VIEW_W, VIEW_H);
+    vGradient(sky.ctx, 0, 0, VIEW_W, GROUND_Y, ['#c8ccd8', '#d4d8e2', '#dce0e8', '#e4e8ee', '#eaeef2']);
+    for (let lx = 20; lx < VIEW_W; lx += 110) {
+      lightPanels.push({ x: lx, y: 14, phase: Math.random() * 10 });
+      px(sky.ctx, lx, 14, 80, 10, '#f8f8ff');
+      px(sky.ctx, lx - 2, 12, 84, 3, '#a8b0c0');
+    }
+    layers.push({ img: sky.c, parallax: 0, y: 0 });
+
+    // --- parete fondale: insegna SUPERMERCATO + freezer (0.2) ---
+    const far = makeCanvas(STAGE_W * 0.2 + VIEW_W, VIEW_H);
+    px(far.ctx, 0, 40, far.c.width, GROUND_Y - 40, '#b8c4d4');
+    px(far.ctx, 0, 40, far.c.width, 6, '#98a8bc');
+    // zoccolo parete
+    px(far.ctx, 0, GROUND_Y - 60, far.c.width, 60, '#8ca0b4');
+    px(far.ctx, 0, GROUND_Y - 60, far.c.width, 3, '#7a8ea2');
+    // insegna grande al centro di ogni modulo
+    for (let sx = 120; sx < far.c.width - 200; sx += 480) {
+      px(far.ctx, sx, 70, 240, 44, '#c8342a');
+      px(far.ctx, sx, 70, 240, 4, '#e04538');
+      px(far.ctx, sx, 110, 240, 4, '#8e2018');
+      px(far.ctx, sx + 8, 116, 224, 3, '#8e2018');
+    }
+    // banchi freezer lungo la parete
+    for (let fx = 40; fx < far.c.width - 80; fx += 200) {
+      px(far.ctx, fx, GROUND_Y - 100, 170, 40, '#3a6ac8');
+      px(far.ctx, fx + 4, GROUND_Y - 96, 162, 26, '#7ab0e0');
+      px(far.ctx, fx + 4, GROUND_Y - 96, 162, 2, '#ffffff');
+      for (let py = 0; py < 3; py++) {
+        px(far.ctx, fx + 10 + py * 54, GROUND_Y - 90, 40, 14, '#e8f0f8');
+      }
+      px(far.ctx, fx, GROUND_Y - 62, 170, 4, '#2a4a90');
+    }
+    layers.push({ img: far.c, parallax: 0.2, y: 0 });
+
+    // --- scaffali con prodotti (0.5) ---
+    const mid = makeCanvas(STAGE_W * 0.5 + VIEW_W, VIEW_H);
+    for (let ux = 30; ux < mid.c.width - 120; ux += 190) {
+      const uw = 150;
+      px(mid.ctx, ux, GROUND_Y - 120, uw, 4, '#5c6c8c');   // traversa sup.
+      px(mid.ctx, ux, GROUND_Y - 116, 6, 116, '#3a4a6c');  // montante sx
+      px(mid.ctx, ux + uw - 6, GROUND_Y - 116, 6, 116, '#3a4a6c');
+      // 3 ripiani con prodotti colorati
+      for (let sh = 0; sh < 3; sh++) {
+        const sy = GROUND_Y - 92 + sh * 32;
+        px(mid.ctx, ux + 6, sy + 22, uw - 12, 4, '#5c6c8c');
+        let bx = ux + 10;
+        while (bx < ux + uw - 16) {
+          const bw = 8 + Math.floor(Math.random() * 10);
+          const bh = 12 + Math.floor(Math.random() * 8);
+          const col = PROD_COLORS[Math.floor(Math.random() * PROD_COLORS.length)];
+          px(mid.ctx, bx, sy + 22 - bh, bw, bh, col);
+          px(mid.ctx, bx, sy + 22 - bh, bw, 2, '#ffffff44');
+          bx += bw + 2;
+        }
+        // cartellino prezzo giallo
+        px(mid.ctx, ux + uw - 22, sy + 14, 12, 6, '#ffe94a');
+      }
+    }
+    // cartelli reparto appesi
+    for (let ax = 80; ax < mid.c.width - 100; ax += 260) {
+      aisleSigns.push({ x: ax, y: 66, text: AISLE_TEXTS[Math.floor(Math.random() * AISLE_TEXTS.length)], phase: Math.random() * 6 });
+    }
+    layers.push({ img: mid.c, parallax: 0.5, y: 0 });
+
+    // --- pavimento + oggetti (1.0) ---
+    const ground = makeCanvas(STAGE_W, VIEW_H);
+    px(ground.ctx, 0, GROUND_Y, STAGE_W, VIEW_H - GROUND_Y, '#3fae6a');
+    px(ground.ctx, 0, GROUND_Y, STAGE_W, 3, '#58c87e');
+    // piastrelle
+    for (let ty = GROUND_Y + 8; ty < VIEW_H; ty += 12) {
+      px(ground.ctx, 0, ty, STAGE_W, 1, '#2f9457');
+      const off = ((ty - GROUND_Y) / 12 | 0) % 2 === 0 ? 0 : 24;
+      for (let tx2 = off; tx2 < STAGE_W; tx2 += 48) px(ground.ctx, tx2, ty, 1, 12, '#2f9457');
+    }
+    // carrello della spesa
+    px(ground.ctx, 140, GROUND_Y - 22, 44, 14, '#c8ccd8');
+    px(ground.ctx, 144, GROUND_Y - 18, 36, 8, '#8c94a8');
+    px(ground.ctx, 146, GROUND_Y - 16, 10, 5, '#e04538');
+    px(ground.ctx, 160, GROUND_Y - 16, 10, 5, '#3fae6a');
+    px(ground.ctx, 174, GROUND_Y - 16, 8, 5, '#ffe94a');
+    px(ground.ctx, 140, GROUND_Y - 26, 4, 4, '#6c7488');
+    px(ground.ctx, 138, GROUND_Y - 8, 6, 6, '#2a2e3a');
+    px(ground.ctx, 178, GROUND_Y - 8, 6, 6, '#2a2e3a');
+    // cassette di frutta
+    px(ground.ctx, 560, GROUND_Y - 16, 40, 16, '#8a5a2a');
+    px(ground.ctx, 564, GROUND_Y - 20, 8, 6, '#e04538');
+    px(ground.ctx, 576, GROUND_Y - 21, 8, 7, '#f2a03c');
+    px(ground.ctx, 588, GROUND_Y - 20, 8, 6, '#3fae6a');
+    px(ground.ctx, 560, GROUND_Y - 30, 40, 14, '#9c6a34');
+    px(ground.ctx, 566, GROUND_Y - 34, 8, 6, '#ffe94a');
+    px(ground.ctx, 580, GROUND_Y - 34, 8, 6, '#e04538');
+    // cartellini scontati a terra
+    for (let tx3 = 240; tx3 < STAGE_W - 40; tx3 += 170) {
+      px(ground.ctx, tx3, GROUND_Y + 12, 14, 9, '#ffe94a');
+      px(ground.ctx, tx3 + 2, GROUND_Y + 14, 10, 1, '#c8342a');
+      px(ground.ctx, tx3 + 2, GROUND_Y + 17, 7, 1, '#c8342a');
+    }
+    layers.push({ img: ground.c, parallax: 1, y: 0 });
+
+    // --- primo piano: base scaffali scura (1.25) ---
+    const fg = makeCanvas(STAGE_W * 1.25 + VIEW_W, VIEW_H);
+    for (let fx2 = 0; fx2 < fg.c.width; fx2 += 220) {
+      px(fg.ctx, fx2, GROUND_Y + 24, 90, 14, '#1c2438');
+      px(fg.ctx, fx2 + 90, GROUND_Y + 24, 8, 14, '#2a3450');
+    }
+    layers.push({ img: fg.c, parallax: 1.25, y: 0, foreground: true });
+
+    return {
+      id: 'supermarket', name: 'SUPERMARKET', layers, aisleSigns, lightPanels, groundY: GROUND_Y, width: STAGE_W,
+      ambient: { type: 'dust', rate: 0.04 },
+      drawAnimated(ctx, camX, t) {
+        // pannelli luce: flicker occasionale
+        for (const lp of this.lightPanels) {
+          const flicker = Math.sin(t * 0.013 + lp.phase) > -0.97;
+          ctx.fillStyle = flicker ? 'rgba(255,255,240,0.28)' : 'rgba(255,255,240,0.10)';
+          ctx.fillRect(lp.x - 6, lp.y - 4, 92, 22);
+        }
+        // insegne SUPERMERCATO: bagliore pulsante
+        const glow = 0.18 + 0.10 * Math.sin(t * 0.004);
+        for (let sx = 120; sx < STAGE_W * 0.2 + VIEW_W - 200; sx += 480) {
+          const gx = sx - camX * 0.2;
+          if (gx < -260 || gx > VIEW_W + 20) continue;
+          ctx.fillStyle = `rgba(232,64,47,${glow})`;
+          ctx.fillRect(Math.round(gx) - 6, 64, 252, 56);
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 13px monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText('SUPERMERCATO', Math.round(gx) + 120, 98);
+        }
+        // cartelli reparto: oscillazione leggera
+        for (const s of this.aisleSigns) {
+          const sxp = s.x - camX * 0.5;
+          if (sxp < -160 || sxp > VIEW_W + 20) continue;
+          const sway = Math.sin(t * 0.02 + s.phase) * 2;
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(Math.round(sxp + sway), s.y, 150, 18);
+          ctx.fillStyle = '#c8342a';
+          ctx.fillRect(Math.round(sxp + sway), s.y, 150, 3);
+          ctx.fillRect(Math.round(sxp + sway), s.y + 15, 150, 3);
+          ctx.fillStyle = '#c8342a';
+          ctx.font = '8px monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText(s.text, Math.round(sxp + sway) + 75, s.y + 13);
+        }
+      }
+    };
+  }
+
+  // ============================================================
 
   let built = null;
 
   function buildAll() {
     if (built) return built;
-    built = [buildNeonCity(), buildDojo(), buildWasteland()];
+    built = [buildNeonCity(), buildDojo(), buildWasteland(), buildSupermarket()];
     return built;
   }
 
