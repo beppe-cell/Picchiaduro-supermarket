@@ -14,6 +14,10 @@ window.PF = window.PF || {};
   const ROUND_TIME = 60;         // secondi
   const ROUNDS_TO_WIN = 2;
   const SPRITE_SCALE = 2;
+  const ZOOM = 1.5;              // zoom camera: sprite piu' grandi su schermi piccoli
+  const VIS_W = Math.round(VIEW_W / ZOOM);   // larghezza visibile in coordinate mondo (341)
+  const VIS_H = Math.round(VIEW_H / ZOOM);   // altezza visibile in coordinate mondo (192)
+  const FLOOR_BAND = 40;         // pixel mondo di pavimento visibili sotto la linea di terra
 
   const G = {
     VIEW_W, VIEW_H,
@@ -430,20 +434,21 @@ window.PF = window.PF || {};
     }
   }
 
-  let camX = 0;
+  let camX = 0, camY = 0;
   function updateCamera() {
     const w = G.world;
     const mid = (w.p1.x + w.p2.x) / 2;
-    const target = Math.max(0, Math.min(w.stage.width - VIEW_W, mid - VIEW_W / 2));
+    const target = Math.max(0, Math.min(w.stage.width - VIS_W, mid - VIS_W / 2));
     camX += (target - camX) * 0.12;
-    if (Math.abs(target - camX) < 0.3) camX = target;
+    if (Math.abs(target - camX) < 0.3) camX = Math.round(target / 2) * 2;
+    camY = w.stage.groundY + FLOOR_BAND - VIS_H;
   }
 
   function spawnAmbient() {
     const w = G.world;
     const amb = w.stage.ambient;
     if (!amb || Math.random() > amb.rate) return;
-    const x = camX + Math.random() * VIEW_W;
+    const x = camX + Math.random() * VIS_W;
     if (amb.type === 'petal') {
       PF.EFFECTS.spawn(x, camY0() - 10, {
         vx: -0.4 - Math.random() * 0.6, vy: 0.5 + Math.random() * 0.5,
@@ -463,7 +468,7 @@ window.PF = window.PF || {};
     }
   }
 
-  function camY0() { return 0; }
+  function camY0() { return camY; }
 
   // ============================================================
   // Training
@@ -630,13 +635,16 @@ window.PF = window.PF || {};
     const sx = (Math.random() - 0.5) * shake * 2;
     const sy = (Math.random() - 0.5) * shake * 2;
     const cx = Math.round(camX + sx);
-    const cy = Math.round(sy);
+    const cy = Math.round(camY + sy);
+
+    ctx.save();
+    ctx.scale(ZOOM, ZOOM);
 
     // layer di sfondo con parallasse
     for (const layer of w.stage.layers) {
       if (layer.foreground) continue;
       const lx = cx * layer.parallax;
-      const maxX = layer.img.width - VIEW_W;
+      const maxX = layer.img.width - VIS_W;
       const drawX = -Math.max(0, Math.min(maxX, lx));
       ctx.drawImage(layer.img, Math.round(drawX), layer.y - cy);
     }
@@ -671,10 +679,12 @@ window.PF = window.PF || {};
     for (const layer of w.stage.layers) {
       if (!layer.foreground) continue;
       const lx = cx * layer.parallax;
-      const maxX = layer.img.width - VIEW_W;
+      const maxX = layer.img.width - VIS_W;
       const drawX = -Math.max(0, Math.min(maxX, lx));
       ctx.drawImage(layer.img, Math.round(drawX), layer.y - cy);
     }
+
+    ctx.restore();
 
     // HUD
     drawHUD(ctx);

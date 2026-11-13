@@ -309,26 +309,26 @@ html, body {
   transform: scale(0.94);
 }
 
-#dpad .dpad-left  { left: calc(14px + var(--safe-l)); bottom: calc(64px + var(--safe-b)); width: 62px; height: 62px; }
-#dpad .dpad-right { left: calc(150px + var(--safe-l)); bottom: calc(64px + var(--safe-b)); width: 62px; height: 62px; }
-#dpad .dpad-up    { left: calc(82px + var(--safe-l)); bottom: calc(126px + var(--safe-b)); width: 62px; height: 62px; }
-#dpad .dpad-down  { left: calc(82px + var(--safe-l)); bottom: calc(8px + var(--safe-b)); width: 62px; height: 62px; }
+#dpad .dpad-left  { left: calc(12px + var(--safe-l)); bottom: calc(84px + var(--safe-b)); width: 74px; height: 74px; }
+#dpad .dpad-right { left: calc(94px + var(--safe-l)); bottom: calc(84px + var(--safe-b)); width: 74px; height: 74px; }
+#dpad .dpad-up    { left: calc(53px + var(--safe-l)); bottom: calc(166px + var(--safe-b)); width: 74px; height: 74px; }
+#dpad .dpad-down  { left: calc(53px + var(--safe-l)); bottom: calc(6px + var(--safe-b)); width: 74px; height: 74px; }
 
 #action-pad { position: absolute; inset: 0; pointer-events: none; }
 
 .action-grid {
   position: absolute;
-  right: calc(14px + var(--safe-r));
-  bottom: calc(72px + var(--safe-b));
-  width: 150px;
-  height: 150px;
+  right: calc(12px + var(--safe-r));
+  bottom: calc(70px + var(--safe-b));
+  width: 172px;
+  height: 172px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
   pointer-events: none;
 }
 
-.abtn { border-radius: 50%; font-size: 13px; }
+.abtn { border-radius: 50%; font-size: 14px; }
 
 .action-grid .abtn { position: static; width: 100%; height: 100%; pointer-events: auto; }
 
@@ -338,12 +338,12 @@ html, body {
 .ab-special { background: rgba(40, 140, 150, 0.45); border-color: rgba(90, 240, 255, 0.6); }
 
 .ab-block {
-  right: calc(60px + var(--safe-r));
-  bottom: calc(10px + var(--safe-b));
-  width: 96px;
-  height: 48px;
+  right: calc(56px + var(--safe-r));
+  bottom: calc(8px + var(--safe-b));
+  width: 112px;
+  height: 52px;
   border-radius: 12px;
-  font-size: 11px;
+  font-size: 12px;
   background: rgba(70, 70, 110, 0.45);
 }
 

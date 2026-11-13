@@ -223,7 +223,10 @@ window.PF = window.PF || {};
     px(ctx, x + 1, y + hh - 1, hw - 4, 1, p.skinDark);
     px(ctx, x, y + 2, 1, 3, p.skinDark);            // orecchio
     px(ctx, x + hw - 1, y + 3, 1, 2, p.skinDark);   // naso (profilo 3/4)
+    px(ctx, x + hw - 2, y + 5, 1, 1, p.skinDark);    // ombra sotto il naso
+    px(ctx, x + 1, y + hh - 2, 1, 1, p.skinDark);    // linea mandibola
     hi(ctx, x + 1, y, hw - 3, 1);                    // luce sul fronte
+    hi(ctx, x + hw - 4, y + 5, 1, 1);                // luce sulla guancia
 
     // occhi ed espressioni
     const ex = x + hw - 3;
@@ -366,6 +369,7 @@ window.PF = window.PF || {};
     px(ctx, footF.x - 2, footF.y - 1, 6, 3, p.boots);
     px(ctx, footF.x + 3, footF.y, 2, 2, p.boots);
     px(ctx, footF.x, footF.y - 1, 1, 1, p.pantsDark); // laccio
+    px(ctx, footF.x - 2, footF.y - 2, 6, 1, p.boots);   // risvolto
     sh(ctx, footF.x - 2, footF.y + 1, 8, 1);          // suola
 
     // testa
@@ -381,6 +385,7 @@ window.PF = window.PF || {};
     sh(ctx, elbowF.x - 1, elbowF.y, 2, 1);
     px(ctx, handF.x - 1, handF.y - 1, 3, 3, p.glove);
     px(ctx, handF.x, handF.y - 2, 2, 1, p.glove);
+    px(ctx, handF.x - 2, handF.y - 1, 1, 2, p.accent);   // polsino
     sh(ctx, handF.x - 1, handF.y + 1, 3, 1);
 
     // effetti per-personaggio su pose speciali
@@ -398,21 +403,38 @@ window.PF = window.PF || {};
       px(ctx, lx, ly + 2, 5, 1, p.accent);
       px(ctx, lx + 4, ly + 3, 1, 1, p.accent);
       px(ctx, lx, ly + 4, 5, 1, p.accent);
+      // colletto + pieghe del tessuto + fibbia della cintura
+      px(ctx, neck.x - 3, neck.y + 1, 2, 2, p.mainDark);
+      px(ctx, hip.x - 4, neck.y + 7, 1, 3, p.mainDark);
+      px(ctx, hip.x + 3, neck.y + 9, 1, 3, p.mainDark);
+      px(ctx, hip.x, hip.y - 2, 1, 3, '#e8c840');
     }
     if (ch.id === 'shadow') {
       // grembiule da magazzino (segue la rastrematura del torso)
       px(ctx, hip.x - 3, neck.y + 4, 6, hip.y - neck.y - 5, '#2e5c46');
       px(ctx, neck.x + 1, neck.y + 1, 2, 3, '#2e5c46');
+      // bretella incrociata, tasca e pieghe
+      px(ctx, hip.x - 3, neck.y + 4, 6, 1, '#24503c');
+      px(ctx, hip.x - 2, hip.y - 7, 4, 3, '#24503c');
+      px(ctx, hip.x + 2, neck.y + 6, 1, 4, '#24503c');
+      px(ctx, hip.x - 3, hip.y - 3, 1, 2, '#24503c');
     }
     if (ch.id === 'titan') {
-      // grembiule da macellaio: bretella + rifinitura sulla vita
+      // grembiule da macellaio: bretelle + tasca + nodo sul fianco
       px(ctx, neck.x - 1, neck.y, 3, 4, p.mainDark);
       px(ctx, hip.x - 5, hip.y - 5, 11, 2, p.accent);
+      px(ctx, hip.x - 4, hip.y - 9, 4, 3, '#e8e8e0');
+      px(ctx, hip.x + 4, neck.y + 4, 2, 2, p.mainDark);
+      px(ctx, hip.x - 5, hip.y - 4, 1, 1, p.mainDark);
     }
     if (ch.id === 'volt') {
       // colletto bianco + fiocchetto da cassiere
       px(ctx, neck.x - 2, neck.y + 1, 5, 2, '#f4f4f4');
       px(ctx, neck.x - 1, neck.y + 3, 3, 2, p.accent);
+      // zip e bottoni del gilet + taschino
+      px(ctx, neck.x, neck.y + 5, 1, hip.y - neck.y - 7, p.mainDark);
+      px(ctx, hip.x - 4, neck.y + 7, 1, 1, p.mainDark);
+      px(ctx, hip.x + 2, neck.y + 8, 3, 2, p.mainDark);
     }
   }
 

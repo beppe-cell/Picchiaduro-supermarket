@@ -11,7 +11,7 @@ window.PF = window.PF || {};
   'use strict';
 
   const VIEW_W = 512, VIEW_H = 288;
-  const STAGE_W = 960;          // larghezza arena
+  const STAGE_W = 640;          // larghezza arena (compatta: inquadrata con zoom camera 1.5x)
   const GROUND_Y = 248;
 
   function makeCanvas(w, h) {

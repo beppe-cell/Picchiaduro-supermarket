@@ -204,9 +204,9 @@ window.PF = window.PF || {};
       ctx.globalAlpha = 1;
     }
 
-    // testi
+    // testi (screen-space: non subiscono la camera)
     for (const t of texts) {
-      const sx = t.x - camX, sy = t.y - camY;
+      const sx = t.x, sy = t.y;
       const pop = t.age < 6 ? 1.4 : 1;
       ctx.save();
       ctx.globalAlpha = t.age > t.life - 10 ? (t.life - t.age) / 10 : 1;

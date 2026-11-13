@@ -29,7 +29,7 @@ Poi visitare `http://localhost:8080`. Il progetto è completamente statico: pubb
 - **4 arene con parallasse** ed elementi animati: NEON CITY (insegne al neon), DOJO (lanterne e petali di sakura), WASTELAND (fumo e polvere), SUPERMARKET (scaffali, insegna luminosa, carrelli — ispirata alla reference in `docs/reference/`).
 - **Audio interamente sintetizzato** con Web Audio API: musiche chiptune (menu + battaglia), SFX per pugni, calci, speciali, KO, vittoria/sconfitta. Volumi regolabili nelle Impostazioni.
 - **Feedback aptico** sui pulsanti touch (Vibration API, disattivabile nelle Impostazioni).
-- **Mobile-first**: controlli touch multitouch con feedback visivo, safe-area per i notch, canvas a risoluzione interna fissa (512×288) con scaling pixel-perfect, nessuno scroll accidentale, pausa, suggerimento di rotazione in portrait.
+- **Mobile-first**: controlli touch multitouch oversize (74px dpad, griglia azioni 172px) con feedback visivo e aptico, safe-area per i notch, canvas a risoluzione interna fissa (512×288) con **zoom camera 1.5×** (lottatori ~48% dell'altezza schermo, stile arcade classico) e scaling pixel-perfect, nessuno scroll accidentale, pausa, suggerimento di rotazione in portrait.
 
 ## Comandi
 
