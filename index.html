@@ -91,7 +91,15 @@ for(let i=0;i<3;i++){Rr(392,214+i*5,32,6,'#14141c');Rr(393,215+i*5,30,4,'#1f7a4a
 Rr(432,200,44,38,'#14141c');Rr(434,202,40,34,'#c8482a');Rr(444,214,20,10,'#fff');Rr(446,216,16,6,'#d42a2a');for(let i=0;i<6;i++)Rr(436+i*6,196,4,6,'#8a1a1a')}
 /* ---------- fighter ---------- */
 function R(x,y,w,h,col){c.fillStyle='#07070c';c.fillRect(x-1,y-1,w+2,h+2);c.fillStyle=col;c.fillRect(x,y,w,h)}
+/* sprite personalizzati (PNG in assets/characters/custom/): fallback = disegno procedurale */
+const SPR={};
+['idle','walk','punch','kick','heavy'].forEach(a=>{const im=new Image();im.onload=()=>{SPR[a]=im};im.src='assets/characters/custom/BEPPE_'+a+'.png'});
 function draw(f,x,y,pose,sc){const L=f.L,s=pose||f.st,t=f.t,e=f.ext||0;sc=(sc||1)*(L.big?1.12:1);
+const spr=L.n=='BEPPE'?SPR[s=='atk'?f.atk:s]:null;
+if(spr){const nf=Math.max(1,Math.round(spr.width/32)),fw=spr.width/nf;let fi=0;
+if(s=='walk')fi=(t/6|0)%nf;
+else if(s=='atk'){const m=MV[f.atk],tt=f.t;fi=tt<m.su?0:tt<m.su+m.ac?1+Math.min(nf-2,(tt-m.su)/Math.max(1,m.ac)*(nf-2)|0):nf-1}
+c.save();c.imageSmoothingEnabled=false;c.translate(x|0,y|0);c.scale(f.face*sc,sc);c.drawImage(spr,fi*fw,0,fw,spr.height,-fw/2,-spr.height,fw,spr.height);c.restore();return}
 c.save();c.translate(x|0,y|0);c.scale(f.face*sc,sc);
 if(s=='ko'){c.translate(0,-8);c.rotate(-1.5)}else if(s=='hit')c.rotate(-.12);
 if(f.cr&&s!='atk')c.scale(1,.75);
