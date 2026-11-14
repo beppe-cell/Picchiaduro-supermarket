@@ -95,20 +95,26 @@ for(let i=0;i<3;i++){Rr(392,214+i*5,32,6,'#14141c');Rr(393,215+i*5,30,4,'#1f7a4a
 Rr(432,200,44,38,'#14141c');Rr(434,202,40,34,'#c8482a');Rr(444,214,20,10,'#fff');Rr(446,216,16,6,'#d42a2a');for(let i=0;i<6;i++)Rr(436+i*6,196,4,6,'#8a1a1a')}
 /* ---------- fighter ---------- */
 function R(x,y,w,h,col){c.fillStyle='#07070c';c.fillRect(x-1,y-1,w+2,h+2);c.fillStyle=col;c.fillRect(x,y,w,h)}
-/* sprite personalizzati: beppe-idle-walk.png = 1 riga, 4 frame uguali (0-1 idle, 2-3 camminata); attacco: BEPPE_punch/kick/heavy.png (4 frame) */
-const SPR={},SPRMAP={p:'punch',k:'kick',h:'heavy'};
-{const im=new Image();im.onload=()=>{SPR.sheet=im};im.src='assets/characters/custom/beppe-idle-walk.png?v=3'}
-['punch','kick','heavy'].forEach(a=>{const im=new Image();im.onload=()=>{SPR[a]=im};im.src='assets/characters/custom/BEPPE_'+a+'.png?v=3'});
-const BGI=new Image();BGI.src='assets/backgrounds/arena-supermercato.png?v=3';
-const SPR_H=0.45*384/2; /* altezza sprite ~45% del canvas, in coordinate mondo */
+/* sprite BEPPE (da Google Drive): 1 riga per animazione in assets/characters/beppe/, corpo in piedi normalizzato a 400px, piedi sul bordo inferiore, rivolti a destra */
+const SPR={},SPRB=400,SPRN={idle:2,walk:2,punch:3,kick:3,heavy:3,jump:3,block:1,crouch:1,special:3};
+for(const a of Object.keys(SPRN)){const im=new Image();im.onload=()=>{SPR[a]=im};im.src='assets/characters/beppe/beppe-'+a+'.png?v=4'}
+const PAL=new Image();PAL.src='assets/characters/beppe/pallet.png?v=4';
+const BGI=new Image();BGI.src='assets/backgrounds/arena-supermercato.png?v=4';
+const SPR_H=0.45*384/2, SPRK=SPR_H/SPRB; /* altezza sprite ~45% del canvas, in coordinate mondo */
 function draw(f,x,y,pose,sc){const L=f.L,s=pose||f.st,t=f.t,e=f.ext||0;sc=(sc||1)*(L.big?1.12:1);
-if(L.n=='BEPPE'&&SPR.sheet){let src=SPR.sheet,fw=src.width/4,fh=src.height,fi=0;
-if(s=='walk')fi=2+((t/8|0)%2);
-else if(s=='idle')fi=((t/30|0)%2);
-else if(s=='atk'&&SPR[SPRMAP[f.atk]]){src=SPR[SPRMAP[f.atk]];fw=src.width/4;fh=src.height;const m=MV[f.atk];fi=t<m.su?0:t<m.su+m.ac?1+Math.min(2,(t-m.su)/m.ac*3|0):3}
-/* parata, colpo, K.O.: frame idle finché non arrivano le altre righe */
-const k=SPR_H/fh;
-c.save();c.imageSmoothingEnabled=false;c.translate(x|0,y|0);c.scale(f.face*sc,sc);c.drawImage(src,fi*fw,0,fw,fh,-fw*k/2,-fh*k,fw*k,fh*k);c.restore();return}
+if(L.n=='BEPPE'&&SPR.idle){let name='idle',fi=0;
+if(s=='walk'){name='walk';fi=(t/8|0)%SPRN.walk}
+else if(s=='idle')fi=(t/30|0)%SPRN.idle;
+else if(s=='jump'){name='jump';fi=f.vy<-3?0:f.vy<3?1:2}
+else if(s=='block')name='block';
+else if(s=='crouch')name='crouch';
+else if(s=='atk'){name=f.atk=='s'?'special':f.atk=='p'?'punch':f.atk=='k'?'kick':'heavy';if(!SPR[name])name='idle';else{const m=MV[f.atk];fi=Math.min(t<m.su?0:t<m.su+m.ac?1:2,SPRN[name]-1)}}
+if(!SPR[name])name='idle';
+const src=SPR[name],fw=src.width/SPRN[name],fh=src.height,k=SPRK;
+c.save();c.imageSmoothingEnabled=false;c.translate(x|0,y|0);c.scale(f.face*sc,sc);
+if(s=='ko'){c.translate(0,-4);c.rotate(-1.45)}else if(s=='hit')c.rotate(-.08);
+if(s=='atk'&&f.atk=='s'){c.fillStyle='rgba(255,210,63,.3)';c.fillRect(-34,-fh*k-6,68,fh*k+6)}
+c.drawImage(src,fi*fw,0,fw,fh,-fw*k/2,-fh*k,fw*k,fh*k);c.restore();return}
 c.save();c.translate(x|0,y|0);c.scale(f.face*sc,sc);
 if(s=='ko'){c.translate(0,-8);c.rotate(-1.5)}else if(s=='hit')c.rotate(-.12);
 if(f.cr&&s!='atk')c.scale(1,.75);
@@ -215,7 +221,10 @@ npc();
 if(!G){const f=[...demo];for(const d of f){d.t++;d.st='idle'}draw(f[0],f[0].x,FY);draw(f[1],f[1].x,FY);c.restore();return}
 const a=G.a,b=G.b;c.fillStyle='rgba(0,0,0,.25)';for(const f of[a,b])c.fillRect(f.x-14+(f.y/-3),FY-2,28+f.y/3,4);
 const order=a.y<b.y?[b,a]:[a,b];for(const f of order)draw(f,f.x,FY+f.y);
-for(const p of PJ){const x=p.x,y=FY-30,d=p.vx>0?1:-1;c.save();c.translate(x,y);c.scale(d,1);c.fillStyle='rgba(255,210,63,.4)';c.fillRect(-26,-6,24,12);R(-10,-8,20,12,'#9aa3ad');R(-10,-8,20,3,'#d42a2a');R(-8,4,4,4,'#222');R(4,4,4,4,'#222');c.restore()}
+for(const p of PJ){const x=p.x,y=FY-30,d=p.vx>0?1:-1;c.save();c.translate(x,y);c.scale(d,1);c.imageSmoothingEnabled=false;
+if(PAL.complete&&PAL.naturalWidth){c.rotate(p.t*.2);const k2=30/PAL.height;c.drawImage(PAL,-PAL.width*k2/2,-15,PAL.width*k2,30)}
+else{c.fillStyle='rgba(255,210,63,.4)';c.fillRect(-26,-6,24,12);R(-10,-8,20,12,'#9aa3ad');R(-10,-8,20,3,'#d42a2a');R(-8,4,4,4,'#222');R(4,4,4,4,'#222')}
+c.restore()}
 for(const p of PS){c.fillStyle=p.col;c.fillRect(p.x,FY+p.y,3,3)}
 hud();
 if(G.ph=='intro'){Tx(G.pt>40?'ROUND '+G.rd:'FIGHT!',W/2,70,G.pt>40?14:20,G.pt>40?'#fff':'#ffd23f')}
