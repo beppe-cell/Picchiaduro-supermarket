@@ -10,6 +10,7 @@ from PIL import Image
 from spritekey import key, figures
 
 SPRITE_H = 400
+LEFT_PAD = 2
 
 
 class Builder:
@@ -58,15 +59,26 @@ class Builder:
         ax = float(np.median(np.where(band)[1])) if band.any() else r.shape[1] / 2
         return dict(px=r, ax=ax)
 
-    def sheet(self, anim, frames, top=3, bot=2, fname=None):
+    def sheet(self, anim, frames, top=3, bot=2, fname=None, left=False):
+        """left=True (proiettili): ogni frame appoggiato al bordo sinistro della cella e centrato in
+        verticale, cosi' il punto di partenza (es. la punta del getto) coincide con x=LEFT_PAD.
+        Se un frame ha 'ay' (y del punto di partenza), quel punto finisce esattamente a meta' altezza."""
         H = max(f['px'].shape[0] for f in frames) + top + bot
-        half = int(max(max(f['ax'], f['px'].shape[1] - f['ax']) for f in frames)) + 3
-        cw = 2 * half
+        if left and all('ay' in f for f in frames):
+            H = 2 * int(max(max(f['ay'], f['px'].shape[0] - f['ay']) for f in frames)) + 4
+        if left:
+            cw = max(f['px'].shape[1] for f in frames) + LEFT_PAD + 2
+        else:
+            half = int(max(max(f['ax'], f['px'].shape[1] - f['ax']) for f in frames)) + 3
+            cw = 2 * half
         out = np.zeros((H, cw * len(frames), 4), np.float32)
         for i, f in enumerate(frames):
             h, w = f['px'].shape[:2]
-            x = i * cw + int(round(half - f['ax']))
-            out[H - bot - h:H - bot, x:x + w] = f['px']
+            if left:
+                x, y = i * cw + LEFT_PAD, int(round(H / 2 - f['ay'])) if 'ay' in f else (H - h) // 2
+            else:
+                x, y = i * cw + int(round(half - f['ax'])), H - bot - h
+            out[y:y + h, x:x + w] = f['px']
         path = os.path.join(self.dst, fname or '%s-%s.png' % (self.name, anim))
         Image.fromarray(np.clip(out, 0, 255).astype(np.uint8), 'RGBA').save(path, optimize=True)
         print(anim, len(frames), 'x', (cw, H))
