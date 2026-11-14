@@ -6,6 +6,8 @@ Tavole: 5422 riferimento (non usata) · 5424 guardia/camminata · 5426 calcio ·
 Mancano pose dedicate per salto e parata: si riusano pose simili (vedi sotto)."""
 import os, sys
 sys.path.insert(0, os.path.dirname(__file__))
+import numpy as np
+from PIL import Image
 from spritebuild import Builder, SPRITE_H
 
 K = SPRITE_H / 786       # altezza in piedi nelle tavole: 786px
@@ -26,16 +28,34 @@ sheet('punch', [idle0, punch1, punch1, punch1, idle0])
 sheet('heavy', [crouch0, crouch0, punch1, punch1, idle0])  # carica accovacciato e scatta col pugno
 sheet('kick', [k[0], k[1], k[1], k[1], k[2]])
 # speciale: estrae lo spruzzino, mira, spruzza. Nella tavola la 2a e la 3a figura si toccano con gli
-# stivali: la 2a si ritaglia a gradini (busto e spruzzino < x828, gamba < x760, stivale < x790).
-aim = fig(5429, 1, keep=lambda yy, xx: xx < ((yy < 560) * 828 + ((yy >= 560) & (yy < 690)) * 760 + (yy >= 690) * 790))
+# stivali: la 2a si ritaglia a gradini (busto e spruzzino < x828, gamba < x760, stivale < x736, punta < x754:
+# oltre c'e' lo stinco/tallone della figura accanto, che faceva da "terza gamba").
+aim = fig(5429, 1, keep=lambda yy, xx: xx < ((yy < 560) * 828 + ((yy >= 560) & (yy < 700)) * 760 + ((yy >= 700) & (yy < 772)) * 736 + (yy >= 772) * 754))
 sheet('special', [fig(5429, 0), aim, aim])
 sheet('jump', [k[0], k[0], idle0])                         # nessuna tavola salto: ginocchio alto, poi guardia
 sheet('block', [guard1])                                   # nessuna tavola parata: guardia frontale
 sheet('crouch', [crouch0])
-f = [fig(5433, i) for i in range(3)]
+# la 1a figura di 5433 ha tre gambe nel disegno originale: si usano solo la 2a (colpito) e la 3a (cade)
+f = [fig(5433, i) for i in (1, 2)]
 sheet('hit', [f[0]])
 sheet('fall', f)
 sheet('ko', [fig(5434, 0, K_KO)])
 sheet('win', [fig(5435, i) for i in range(2)])
 # proiettile: nuvola dello spruzzino (sbuffo iniziale, getto, nube che si allarga)
-sheet('spray', [fig(5430, i) for i in range(3)], top=1, bot=1)
+# allineata a sinistra: la punta del getto e' il bordo sinistro della cella, che il gioco mette sull'ugello
+spray = [fig(5430, i) for i in range(3)]
+for f in spray:  # punto di partenza = altezza media dei pixel nelle prime colonne a sinistra (punta del getto)
+    a = f['px'][..., 3] > 100
+    cols = np.where(a.any(0))[0][:6]
+    f['ay'] = float(np.where(a[:, cols].any(1))[0].mean())
+sheet('spray', spray, top=1, bot=1, left=True)
+
+# posizione dell'ugello (pixel blu piu' a destra nella posa di mira), in unita' del gioco rispetto ai piedi
+im = np.asarray(Image.open('assets/characters/vlad/vlad-special.png')).astype(int)
+cw = im.shape[1] // 3
+c = im[:, cw:2 * cw]
+blue = (c[..., 3] > 128) & (c[..., 2] > 150) & (c[..., 2] > c[..., 0] + 60)
+ys, xs = np.where(blue)
+nx = xs.max(); ny = ys[xs >= nx - 3].min()
+SPRK = 0.55 * 384 / 2 / SPRITE_H
+print('ugello (pjo per index.html): [%.1f, %.1f]' % ((nx - cw / 2) * SPRK, -(c.shape[0] - ny) * SPRK))
