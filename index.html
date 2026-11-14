@@ -103,7 +103,7 @@ Rr(432,200,44,38,'#14141c');Rr(434,202,40,34,'#c8482a');Rr(444,214,20,10,'#fff')
 /* ---------- fighter ---------- */
 function R(x,y,w,h,col){c.fillStyle='#07070c';c.fillRect(x-1,y-1,w+2,h+2);c.fillStyle=col;c.fillRect(x,y,w,h)}
 /* sprite BEPPE (da Google Drive): 1 riga per animazione in assets/characters/beppe/, corpo in piedi normalizzato a 400px, piedi sul bordo inferiore, rivolti a destra */
-const SPR={},SPRB=400,VER=13,SPRN={idle:4,walk:4,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:5,fall:3,ko:1};
+const SPR={},SPRB=400,VER=14,SPRN={idle:4,walk:4,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:5,fall:3,ko:1};
 for(const a of Object.keys(SPRN)){const im=new Image();im.onload=()=>{SPR[a]=im};im.src='assets/characters/beppe/beppe-'+a+'.png?v='+VER}
 const PAL=new Image();PAL.src='assets/characters/beppe/pallet.png?v='+VER;
 const BGI=new Image();BGI.src='assets/backgrounds/arena-supermercato.png?v='+VER;
@@ -111,6 +111,8 @@ const BGI=new Image();BGI.src='assets/backgrounds/arena-supermercato.png?v='+VER
 const BGS=document.createElement('canvas');BGS.width=W;BGS.height=H;let BGOK=0;
 function mkBGS(){if(!(BGI.complete&&BGI.naturalWidth))return;const g=BGS.getContext('2d'),Z=1.25;g.imageSmoothingEnabled=false;g.clearRect(0,0,W,H);g.drawImage(BGI,(W-W/Z)/2,0,W/Z,H,0,0,W,H);BGOK=1}
 BGI.onload=mkBGS;if(BGI.complete)mkBGS();
+/* sfondo verticale (portrait): corridoio a tutta altezza, linea del pavimento a ~87% dell'immagine */
+const VGI=new Image();VGI.src='assets/backgrounds/IMG_5406.jpeg?v='+VER;
 {const v=document.getElementById('ver');if(v)v.textContent='v'+VER}
 const SPR_H=0.55*384/2, SPRK=SPR_H/SPRB; /* altezza sprite ~55% del canvas, in coordinate mondo */
 function draw(f,x,y,pose,sc){const L=f.L,s=pose||f.st,t=f.t,e=f.ext||0;sc=(sc||1)*(L.big?1.12:1);if(!(L.n=='BEPPE'&&SPR.idle))sc*=1.5;
@@ -158,12 +160,12 @@ function sfx(n){const s=SF[n];if(s)tone(s[0],s[1],s[2],s[3]*O.sfx/100,s[4])}
 setInterval(()=>{if(!AC||!pl)return;const q=(mst/12|0)%2?5:0,n=[0,3,7,12,7,3][mst%6]+q;tone(110*2**(n/12),.15,'square',.05*O.mus/100);if(mst%2==0)tone(55*2**(q/12),.2,'triangle',.09*O.mus/100);mst++},170);
 /* ---------- gioco ---------- */
 const MV={p:{su:5,ac:9,re:5,d:5,r:34,st:11,kb:2},k:{su:5,ac:9,re:5,d:7,r:41,st:13,kb:3},h:{su:12,ac:9,re:18,d:13,r:39,st:22,kb:7},s:{su:11,ac:6,re:16}};
-let G=null,T=0,mode='arc',tour=0,pickI=0,keys={},TR={},PS=[],PJ=[],last=0,acc=0,demo=[{L:CH[0],x:88,face:1,st:'idle',t:0,ext:0,y:0},{L:CH[7],x:264,face:-1,st:'idle',t:0,ext:0,y:0}],arena=AR[0];
+let G=null,T=0,mode='arc',tour=0,pickI=0,keys={},TR={},PS=[],PJ=[],last=0,acc=0,ZP=1,XMIN=18,XMAX=334,demo=[{L:CH[0],x:88,face:1,st:'idle',t:0,ext:0,y:0},{L:CH[7],x:264,face:-1,st:'idle',t:0,ext:0,y:0}],arena=AR[0];
 function mk(L,x,face,ai,lv){return{L,x,y:0,vx:0,vy:0,face,hp:100,tr:100,sp:0,st:'idle',t:0,atk:null,did:0,stun:0,blk:0,cr:0,rep:{m:'',n:0,t:-999},ai,lv,ob:0,hd:{},wins:0,ext:0}}
 function sh(id){document.querySelectorAll('.scr').forEach(e=>e.classList.toggle('on',e.id==id));$('#tc').classList.toggle('on',id==''&&touchOn())}
 const touchOn=()=>O.touch==2?false:O.touch==1||matchMedia('(pointer:coarse)').matches;
 function spark(x,y,col){for(let i=0;i<9;i++)PS.push({x,y,vx:(Math.random()-.5)*4,vy:-Math.random()*3,l:14,col})}
-function newRound(){const a=G.a,b=G.b;a.x=88;b.x=264;for(const f of[a,b]){f.y=0;f.vx=f.vy=0;f.hp=100;f.tr=100;f.sp=0;f.st='idle';f.atk=null;f.stun=0;f.rep.n=0}a.face=1;b.face=-1;G.ph='intro';G.pt=100;G.tm=3600;PJ=[]}
+function newRound(){const a=G.a,b=G.b;a.x=176-88/ZP;b.x=176+88/ZP;for(const f of[a,b]){f.y=0;f.vx=f.vy=0;f.hp=100;f.tr=100;f.sp=0;f.st='idle';f.atk=null;f.stun=0;f.rep.n=0}a.face=1;b.face=-1;G.ph='intro';G.pt=100;G.tm=3600;PJ=[]}
 function startMatch(pi,oi,lv){arena=AR[Math.random()*4|0];mkBG(arena);G={a:mk(CH[pi],88,1),b:mk(CH[oi],264,-1,1,lv),rd:1,pi,oi,lv,hs:0,sh:0,pz:0};newRound();sh('');pl=true;sfx('ui')}
 function pin(){const i={};for(const k of'lrudbpkhs')i[k]=!!(keys[k]||tk[k]||TR[k]);for(const k in TR)TR[k]=0;return i}
 const tk={};
@@ -189,15 +191,15 @@ if(f.blk||f.cr)f.vx=0;else{const sp=f.L.sp;f.vx=i.l?-sp:i.r?sp:gr?0:f.vx;if(gr&&
 const k=i.s&&f.sp>=100?'s':i.h?'h':i.k?'k':i.p?'p':null;
 if(k&&!f.blk){f.st='atk';f.atk=k;f.t=0;f.did=0;f.cr=0;if(k=='s')f.sp=0;else sfx('whf')}
 else f.st=!gr?'jump':f.blk?'block':f.cr?'crouch':f.vx?'walk':'idle'}
-f.vy+=.45;f.y+=f.vy;if(f.y>=0){f.y=0;f.vy=0}f.x=Math.max(18,Math.min(W-18,f.x+f.vx))}
+f.vy+=.45;f.y+=f.vy;if(f.y>=0){f.y=0;f.vy=0}f.x=Math.max(XMIN,Math.min(XMAX,f.x+f.vx))}
 function AI(f,o){if(f.ob>0){f.ob--;return{...f.hd}}
-const lv=f.lv,dx=o.x-f.x,ad=Math.abs(dx),tw=dx>0?'r':'l',aw=dx>0?'l':'r',rn=Math.random(),hd={};
+const lv=f.lv,dx=o.x-f.x,ad=Math.abs(dx),tw=dx>0?'r':'l',aw=dx>0?'l':'r',rn=Math.random(),hd={},dz=ZP;
 f.ob=Math.max(4,20-lv*3)+(Math.random()*8|0);
-const thr=o.st=='atk'&&ad<66,rec=o.st=='atk'&&o.t>MV[o.atk].su+MV[o.atk].ac;
+const thr=o.st=='atk'&&ad<66/dz,rec=o.st=='atk'&&o.t>MV[o.atk].su+MV[o.atk].ac;
 if(thr&&!rec&&rn<.22+.13*lv+(o.rep.n>1?.15:0)){hd.b=1;f.ob=12+(Math.random()*10|0)}
-else if(rec&&ad<48&&rn<.35+.12*lv){hd[rn<.5?'p':'k']=1}
-else if(ad>120){hd[tw]=1;if(f.sp>=100&&rn<.5)hd.s=1}
-else if(ad>54){if(rn<.55)hd[tw]=1;else if(rn<.65&&f.sp>=100)hd.s=1;else if(rn<.72)hd.u=1}
+else if(rec&&ad<48/dz&&rn<.35+.12*lv){hd[rn<.5?'p':'k']=1}
+else if(ad>120/dz){hd[tw]=1;if(f.sp>=100&&rn<.5)hd.s=1}
+else if(ad>54/dz){if(rn<.55)hd[tw]=1;else if(rn<.65&&f.sp>=100)hd.s=1;else if(rn<.72)hd.u=1}
 else{if(rn<.38)hd.p=1;else if(rn<.6)hd.k=1;else if(rn<.7)hd.h=1;else if(rn<.84)hd[aw]=1;else hd.b=1}
 f.hd={l:hd.l,r:hd.r,d:hd.d,b:hd.b};return hd}
 function step(){T++;if(!G||G.pz||G.ph=='end')return;if(G.hs>0){G.hs--;return}
@@ -226,18 +228,27 @@ c.fillStyle='#000';c.fillRect(x0,22,w*.6+2,6);c.fillStyle=f.sp>=100?(T%10<5?'#ff
 Tx(f.L.n,d>0?x:x,34,6,'#fff',d>0?'left':'right');for(let i=0;i<2;i++){c.fillStyle='#000';c.fillRect(d>0?x+i*9:x-7-i*9,38,6,6);c.fillStyle=i<f.wins?'#ffd23f':'#333';c.fillRect(d>0?x+1+i*9:x-6-i*9,39,4,4)}}
 Tx(String(Math.max(0,Math.ceil(G.tm/60))),W/2,22,13,'#fff')}
 function render(){c.save();
-/* portrait: canvas più alto del mondo (352x192); estende soffitto e pavimento dell'arena
-   per coprire tutta l'altezza dello schermo, mondo ancorato in basso con spazio per i tasti */
-const WH=cv.height/2,bot=WH>192?Math.min(WH-192,WH*.16):0,top=WH-192-bot;
-c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,cv.width,cv.height);
-c.setTransform(2,0,0,2,0,2*top);c.imageSmoothingEnabled=false;
-if(G&&G.sh>0)c.translate((Math.random()-.5)*G.sh*.6,(Math.random()-.5)*G.sh*.6);
-/* arena da immagine (352x192) a tutto canvas; fallback procedurale finché non carica */
+const WH=cv.height/2;
+c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,cv.width,cv.height);c.imageSmoothingEnabled=false;
+let s2=2,tx=0,ty=0;const shx=G&&G.sh>0?(Math.random()-.5)*G.sh*.6:0,shy=G&&G.sh>0?(Math.random()-.5)*G.sh*.3:0;
+if(WH>352){
+/* portrait: camera zoomata (ZP) su sfondo verticale a tutto schermo, personaggi proporzionati al corridoio */
+s2=2*ZP;const gy=cv.height*.85;ty=gy-FY*s2;tx=352-176*s2;
+c.translate(shx*s2,shy*s2);
+if(VGI.complete&&VGI.naturalWidth){const iw=VGI.naturalWidth,ih=VGI.naturalHeight,sc=Math.max(cv.width/iw,cv.height/ih,(cv.height-gy)/(ih*.126));
+const y0=gy-.874*ih*sc,x0=(cv.width-iw*sc)/2;
+c.drawImage(VGI,x0,y0,iw*sc,ih*sc)}
+else c.drawImage(BGOK?BGS:BG,0,0,W,H,0,0,cv.width,cv.height)}
+else{
+/* landscape: arena 352x192 con soffitto/pavimento prolungati (invariato) */
+const bot=WH>192?Math.min(WH-192,WH*.16):0,top=WH-192-bot;ty=2*top;
 const img=BGOK?BGS:BG;
-if(top>0)c.drawImage(img,0,0,352,6,0,-top,352,top);
-c.drawImage(img,0,0,W,H);
-if(bot>0)c.drawImage(img,0,186,352,6,0,192,352,bot);
-if(!G){const f=[...demo];for(const d of f){d.t++;d.st='idle'}draw(f[0],f[0].x,FY);draw(f[1],f[1].x,FY);c.restore();return}
+if(top>0)c.drawImage(img,0,0,352,6,0,0,704,2*top);
+c.translate(shx*s2,shy*s2);
+c.drawImage(img,0,0,W,H,0,2*top,704,384);
+if(bot>0)c.drawImage(img,0,186,352,6,0,2*top+384,704,2*bot)}
+c.setTransform(s2,0,0,s2,tx,ty);c.imageSmoothingEnabled=false;c.translate(shx,shy);
+if(!G){const f=[...demo];for(const d of f){d.t++;d.st='idle'}draw(f[0],176-88/ZP,FY);draw(f[1],176+88/ZP,FY);c.restore();return}
 const a=G.a,b=G.b;c.fillStyle='rgba(0,0,0,.25)';for(const f of[a,b])c.fillRect(f.x-17+(f.y/-3),FY-2,34+f.y/3,4);
 const order=a.y<b.y?[b,a]:[a,b];for(const f of order)draw(f,f.x,FY+f.y);
 for(const p of PJ){const x=p.x,y=FY-30,d=p.vx>0?1:-1;c.save();c.translate(x,y);c.scale(d,1);c.imageSmoothingEnabled=false;
@@ -271,7 +282,8 @@ $('#o-vib').onclick=e=>{O.vib=!O.vib;e.target.textContent=O.vib?'SI':'NO'};
 $('#o-mus').value=O.mus;$('#o-sfx').value=O.sfx;
 mkBG(arena);document.fonts.ready.then(()=>mkBG(arena));
 /* il buffer del canvas segue le proporzioni dello schermo (crisp in portrait e landscape) */
-function fit(){if(!cv.getBoundingClientRect)return;const r=cv.getBoundingClientRect();if(r.width<2||r.height<2)return;const h=Math.max(384,Math.min(1760,Math.round(704*r.height/r.width)));if(cv.width!=704||cv.height!=h){cv.width=704;cv.height=h}}
+function fit(){if(!cv.getBoundingClientRect)return;const r=cv.getBoundingClientRect();if(r.width<2||r.height<2)return;const h=Math.max(384,Math.min(1760,Math.round(704*r.height/r.width)));if(cv.width!=704||cv.height!=h){cv.width=704;cv.height=h}
+ZP=h>704?Math.max(1,Math.min(2.2,h*.3/211)):1;XMIN=176-158/ZP;XMAX=176+158/ZP}
 addEventListener('resize',fit);fit();
 requestAnimationFrame(loop);
 </script></body></html>
