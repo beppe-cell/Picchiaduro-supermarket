@@ -1,4 +1,4 @@
-"""Genera i fogli sprite di MATTEO da assets/characters/matteo/IMG_54xx.JPG (sfondo magenta).
+"""Genera i fogli sprite di MATTEO da assets/characters/matteo/sorgenti/IMG_54xx.JPG (sfondo magenta).
 Stesso formato di Beppe: 1 PNG per animazione, celle a larghezza uguale, rivolto a destra,
 piedi sul bordo inferiore, corpo in piedi ~400px. Uso: python3 tools/build_matteo_sprites.py"""
 import os, sys
@@ -7,7 +7,7 @@ from PIL import Image
 sys.path.insert(0, os.path.dirname(__file__))
 from spritekey import key, figures, crop
 
-SRC = 'assets/characters/matteo/'
+SRC = 'assets/characters/matteo/sorgenti/'
 DST = 'assets/characters/matteo/'
 K = 400 / 797          # altezza in piedi nelle tavole (797px) -> 400px come Beppe
 K_KO = 470 / 1138      # tavola KO disegnata piu grande: lunghezza disteso ~470px

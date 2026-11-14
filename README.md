@@ -1,95 +1,77 @@
 # GROSSETTO — Picchiaduro del supermercato
 
-Picchiaduro arcade 2D in pixel art, ispirato ai classici anni '90, **giocabile direttamente nel browser** (desktop e smartphone) senza installazioni. Tutti gli asset grafici e sonori sono **originali e generati proceduralmente** a runtime: nessun file esterno, nessun framework.
+Picchiaduro 2D in pixel art ambientato tra le corsie di un supermercato, giocabile nel browser
+(desktop e smartphone, in orizzontale e in verticale). Tutto il gioco è in un solo file, `index.html`:
+nessun framework, nessuna build.
 
-## Avvio nel browser
+## Avvio
 
-Basta aprire `index.html` in un browser, oppure servire la cartella con un web server statico:
+Apri `index.html` nel browser, oppure servi la cartella con un server statico:
 
 ```bash
-# esempio con Python
-python3 -m http.server 8080
-
-# oppure con Node
-npx serve .
+python3 -m http.server 8080   # poi http://localhost:8080
 ```
 
-Poi visitare `http://localhost:8080`. Il progetto è completamente statico: pubblicabile su qualsiasi hosting web (GitHub Pages, Netlify, ecc.). Per GitHub Pages basta attivarlo da *Settings → Pages* sulla branch `main`.
+Ogni push su `main` pubblica il gioco su GitHub Pages (`.github/workflows/deploy-pages.yml`).
 
-## Caratteristiche
+## Modalità
 
-- **4 lottatori originali** con stile, statistiche e mossa speciale unici:
-  - **BLAZE** — il campione del supermercato (maglia rossa con logo, come la reference), *INFERNO WAVE*
-  - **SHADOW** — ninja del magazzino, affondo *PHANTOM RUSH*
-  - **TITAN** — il macellaio, lento e devastante, *SEISMIC SLAM*
-  - **VOLT** — cassiere fulmineo, tripla scarica *THUNDER FANG*
-- **Sistema di combattimento completo**: attacco leggero/pesante, calcio, parata (alta e bassa), salto, abbassamento, mosse speciali con barra energia, hitbox/hurtbox, knockback, hit-stop, invulnerabilità dopo il knockdown, combo concatenate con finestre di cancel e messaggio **COMBO HIT**.
-- **3 modalità**: Arcade (4 avversari AI con difficoltà crescente), Versus locale (2 giocatori tastiera), Training (manichino fermo o CPU, rigenerazione salute).
-- **AI a 3 difficoltà** (Easy / Normal / Hard): avvicinamento, pokes a distanza, parate reattive, anti-air, salti, combo, uso della speciale.
-- **4 arene con parallasse** ed elementi animati: NEON CITY (insegne al neon), DOJO (lanterne e petali di sakura), WASTELAND (fumo e polvere), SUPERMARKET (scaffali, insegna luminosa, carrelli — ispirata alla reference in `docs/reference/`).
-- **Audio interamente sintetizzato** con Web Audio API: musiche chiptune (menu + battaglia), SFX per pugni, calci, speciali, KO, vittoria/sconfitta. Volumi regolabili nelle Impostazioni.
-- **Feedback aptico** sui pulsanti touch (Vibration API, disattivabile nelle Impostazioni).
-- **Mobile-first**: controlli touch multitouch oversize (74px dpad, griglia azioni 172px) con feedback visivo e aptico, safe-area per i notch, canvas a risoluzione interna fissa (512×288) con **zoom camera 1.5×** (lottatori ~48% dell'altezza schermo, stile arcade classico) e scaling pixel-perfect, nessuno scroll accidentale, pausa, suggerimento di rotazione in portrait.
+- **Arcade**: un incontro contro un collega a caso, al meglio dei 3 round.
+- **Torneo**: tre incontri di fila (ANGEL, FALSA e il boss PAULUX).
+- **Impostazioni**: volume di musica ed effetti, controlli touch, vibrazione.
+
+## Personaggi
+
+| Nome | Grafica | Mossa speciale |
+|---|---|---|
+| BEPPE | sprite disegnati (`assets/characters/beppe/`) | Lancio del pallet |
+| MATTEO | sprite disegnati (`assets/characters/matteo/`) | Carrello volante |
+| VLAD, LUIS, ZANI, FALSA, ANGEL | disegno procedurale | Carrellino |
+| PAULUX (boss) | disegno procedurale | Carrellino |
 
 ## Comandi
 
-### Giocatore 1 (tastiera)
-| Azione | Tasti |
-|---|---|
-| Muovi | `A` / `D` |
-| Salto | `W` |
-| Abbassati | `S` |
-| Pugno | `J` |
-| Calcio | `K` |
-| Pugno pesante | `L` |
-| Mossa speciale | `I` |
-| Parata | `SPAZIO` / `SHIFT` |
-| Pausa | `P` / `ESC` |
+| Azione | Tastiera | Touch |
+|---|---|---|
+| Muovi | `A` / `D` | ◀ ▶ |
+| Salta / abbassati | `W` / `S` | ▲ ▼ |
+| Pugno / calcio / pesante | `J` / `K` / `L` | P / K / H |
+| Speciale (barra SUPER piena) | `I` | SP |
+| Parata (danno /10) | `SPAZIO` / `SHIFT` | BLK |
+| Pausa | `ESC` / `P` | II |
 
-Doppio tap su una direzione = corsa.
+Nei menu: frecce o WASD per spostarsi, `INVIO` / `SPAZIO` / `J` per confermare, `ESC` per tornare.
+Ripetere lo stesso colpo fa sempre meno danno: conviene alternare le mosse.
 
-### Giocatore 2 (Versus)
-| Azione | Tasti |
-|---|---|
-| Muovi | `←` / `→` |
-| Salto | `↑` |
-| Abbassati | `↓` |
-| Pugno | `,` |
-| Calcio | `.` |
-| Pugno pesante | `/` |
-| Mossa speciale | `SHIFT DX` |
-| Parata | `INVIO` |
-
-> **Nota hardware (ghosting):** le tastiere a membrana economiche possono limitare il numero di tasti registrati simultaneamente (rollover): in Versus, se alcuni input si perdono quando si premono molti tasti insieme, è una limitazione fisica della tastiera, non del gioco. Su laptop/desktop con tastiere NKRO il problema non si presenta; su mobile si usano i controlli touch multitouch.
-
-### Mobile
-D-pad a sinistra (muovi/salta/abbassati), pulsanti a destra: `P` pugno, `K` calcio, `H` pesante, `SP` speciale, `BLK` parata.
-
-## Struttura del progetto
+## Struttura
 
 ```
-/index.html          — shell e schermate UI
-/style.css           — stile pixel-art mobile-first
-/src
-  main.js            — bootstrap, resize, pausa automatica
-  game.js            — motore: loop 60Hz, round/KO, camera, HUD, modalità
-  fighter.js         — lottatore: stati, fisica, attacchi, speciali
-  enemy.js           — AI (Easy/Normal/Hard + manichino)
-  combat.js          — dati attacchi, hitbox, combo, danni
-  controls.js        — tastiera + touch multitouch, buffer input
-  animations.js      — pose scheletriche frame-by-frame
-  sprites.js         — generazione procedurale sprite/ritratti/proiettili
-  stages.js          — arene con parallasse
-  effects.js         — particelle, combo text, shake, flash
-  audio.js           — Web Audio: SFX + musiche sequenziate
-  ui.js              — menu, character select, impostazioni, risultati
-/assets              — riservata (asset generati a runtime)
+index.html                     gioco completo (HTML + CSS + JS)
+assets/
+  backgrounds/
+    arena-supermercato.png     arena in orizzontale
+    corridoio-verticale.jpeg   arena in verticale
+  characters/
+    beppe/                     beppe-<animazione>.png, pallet.png (proiettile)
+      sorgenti/                disegni originali
+    matteo/                    matteo-<animazione>.png, matteo-cart.png (proiettile)
+      sorgenti/                tavole originali IMG_5407–5418 (sfondo magenta)
+docs/reference/                immagini di riferimento per lo stile
+tools/
+  build_matteo_sprites.py      genera i PNG di Matteo dalle tavole sorgenti
+  spritekey.py                 scontorno del magenta e separazione dei frame
 ```
 
-## Tecnologie
+## Aggiungere un personaggio con sprite
 
-HTML5 · CSS3 · JavaScript (Canvas 2D) · Web Audio API. Nessun framework; il font arcade è caricato da CDN con fallback monospace (il gioco funziona anche offline).
+1. Prepara le tavole con sfondo magenta pieno (una posa per figura, rivolte a destra) e mettile in
+   `assets/characters/<nome>/sorgenti/`.
+2. Genera i fogli copiando `tools/build_matteo_sprites.py`
+   (richiede `pip install pillow numpy scipy`). Formato: un PNG per animazione,
+   `<nome>-<animazione>.png`, frame affiancati a larghezza uguale, piedi sul bordo inferiore,
+   personaggio in piedi alto circa 400 px.
+3. Registra il personaggio in `SPRSET` dentro `index.html` (cartella, numero di frame per
+   animazione, proiettile) e aumenta `VER` per svuotare la cache dei browser.
 
-## Combo di base
-
-`P → P → K → H → SP` (pugno, pugno, calcio, pesante, speciale) — concatena gli attacchi mentre il primo colpo va a segno. La barra gialla sotto la vita carica la mossa speciale.
+Animazioni riconosciute: `idle`, `walk`, `punch`, `kick`, `heavy`, `special`, `jump`, `block`,
+`crouch`, `fall`, `ko`; facoltative `hit` (colpito) e `win` (vittoria).

@@ -1,14 +1,7 @@
 # Reference di design
 
-Metti qui le immagini di riferimento per lo stile di PIXEL FURY
-(es. `stile-personaggi.png`, `schermata-combattimento.jpg`, `palette.png`).
+Immagini di riferimento per lo stile di GROSSETTO (personaggi, arene, HUD, menu).
 
-Formati supportati: PNG, JPG, GIF, WebP.
+- `stile-supermercato.jpeg`: riferimento iniziale per l'atmosfera del supermercato.
 
-Suggerimenti per l'uso:
-- Nomina il file in modo chiaro rispetto a ciò che rappresenta.
-- Se serve, indica in chat a quale parte del gioco si riferisce
-  (personaggi, arene, HUD, menu, effetti).
-
-Il team di sviluppo userà queste immagini per adeguare palette,
-sprite, arene, HUD e menu allo stile di riferimento.
+Nomina i file in base a cosa rappresentano. Il gioco non carica queste immagini.

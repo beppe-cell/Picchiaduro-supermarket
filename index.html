@@ -167,7 +167,7 @@ const BGS=document.createElement('canvas');BGS.width=W;BGS.height=H;let BGOK=0;
 function mkBGS(){if(!(BGI.complete&&BGI.naturalWidth))return;const g=BGS.getContext('2d'),Z=1.25;g.imageSmoothingEnabled=false;g.clearRect(0,0,W,H);g.drawImage(BGI,(W-W/Z)/2,0,W/Z,H,0,0,W,H);BGOK=1}
 BGI.onload=mkBGS;if(BGI.complete)mkBGS();
 /* sfondo verticale (portrait): corridoio a tutta altezza, linea del pavimento a ~87% dell'immagine */
-const VGI=new Image();VGI.src='assets/backgrounds/IMG_5406.jpeg?v='+VER;
+const VGI=new Image();VGI.src='assets/backgrounds/corridoio-verticale.jpeg?v='+VER;
 {const v=document.getElementById('ver');if(v)v.textContent='v'+VER}
 const SPR_H=0.55*384/2, SPRK=SPR_H/SPRB; /* altezza sprite ~55% del canvas, in coordinate mondo */
 function draw(f,x,y,pose,sc){const L=f.L,s=pose||f.st,t=f.t,e=f.ext||0;sc=(sc||1)*(L.big?1.12:1);const ss=SPRSET[L.n],SPR=ss&&ss.im,SPRN=ss&&ss.n;if(!(SPR&&SPR.idle))sc*=1.5;

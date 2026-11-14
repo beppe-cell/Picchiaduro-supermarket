@@ -1,4 +1,4 @@
-name: Deploy PIXEL FURY to GitHub Pages
+name: Deploy GROSSETTO to GitHub Pages
 
 on:
   push:
