@@ -30,8 +30,15 @@ input[type=range]{width:22cqw;accent-color:var(--r)}
 #tc [data-k=u]{left:9cqw;bottom:17cqw}#tc [data-k=l]{left:1.5cqw;bottom:9cqw}#tc [data-k=r]{left:16.5cqw;bottom:9cqw}#tc [data-k=d]{left:9cqw;bottom:1cqw}
 #tc [data-k=p]{right:17cqw;bottom:9cqw}#tc [data-k=k]{right:9cqw;bottom:17cqw}#tc [data-k=h]{right:1.5cqw;bottom:9cqw}#tc [data-k=s]{right:9cqw;bottom:1cqw}#tc [data-k=b]{right:19cqw;bottom:.8cqw;width:7cqw;height:7cqw;font-size:1.5cqw}
 #pz{right:1cqw!important;top:1cqw;width:5cqw!important;height:5cqw!important;font-size:1.6cqw!important}
-/* verticale: pulsanti touch più grandi, gioco giocabile anche in portrait */
+/* verticale: gioco a schermo intero, sfondo a tutta altezza, pulsanti touch più grandi */
 @media(orientation:portrait){
+#wrap{aspect-ratio:auto;width:100%;height:100%}
+.scr{font-size:3cqw;gap:2.6cqw}
+h1{font-size:7.5cqw}h2{font-size:4.2cqw}
+.b{min-width:34cqw;padding:1.8cqw 3cqw;font-size:2.8cqw}
+#grid{max-width:94cqw}#grid .b{width:27cqw;font-size:2.6cqw}
+.row{font-size:2.8cqw}input[type=range]{width:44cqw}
+.small{font-size:2.6cqw;max-width:92cqw}
 #tc button{width:13cqw;height:13cqw;font-size:3.2cqw}
 #tc [data-k=u]{left:11cqw;bottom:19.5cqw}#tc [data-k=l]{left:.5cqw;bottom:10cqw}#tc [data-k=r]{left:21.5cqw;bottom:10cqw}#tc [data-k=d]{left:11cqw;bottom:.5cqw}
 #tc [data-k=p]{right:21.5cqw;bottom:10cqw}#tc [data-k=k]{right:11cqw;bottom:19.5cqw}#tc [data-k=h]{right:.5cqw;bottom:10cqw}#tc [data-k=s]{right:11cqw;bottom:.5cqw}
@@ -96,7 +103,7 @@ Rr(432,200,44,38,'#14141c');Rr(434,202,40,34,'#c8482a');Rr(444,214,20,10,'#fff')
 /* ---------- fighter ---------- */
 function R(x,y,w,h,col){c.fillStyle='#07070c';c.fillRect(x-1,y-1,w+2,h+2);c.fillStyle=col;c.fillRect(x,y,w,h)}
 /* sprite BEPPE (da Google Drive): 1 riga per animazione in assets/characters/beppe/, corpo in piedi normalizzato a 400px, piedi sul bordo inferiore, rivolti a destra */
-const SPR={},SPRB=400,VER=11,SPRN={idle:4,walk:4,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:5,fall:3,ko:1};
+const SPR={},SPRB=400,VER=12,SPRN={idle:4,walk:4,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:5,fall:3,ko:1};
 for(const a of Object.keys(SPRN)){const im=new Image();im.onload=()=>{SPR[a]=im};im.src='assets/characters/beppe/beppe-'+a+'.png?v='+VER}
 const PAL=new Image();PAL.src='assets/characters/beppe/pallet.png?v='+VER;
 const BGI=new Image();BGI.src='assets/backgrounds/arena-supermercato.png?v='+VER;
@@ -215,10 +222,18 @@ const fw=f.tr/100*w,hw=f.hp/100*w;c.fillStyle='#ffd23f';c.fillRect(d>0?x0:x0+w-f
 c.fillStyle='#000';c.fillRect(x0,22,w*.6+2,6);c.fillStyle=f.sp>=100?(T%10<5?'#fff':'#ffd23f'):'#d68a00';c.fillRect(d>0?x0+1:x0+w-f.sp/100*w*.6-1,23,f.sp/100*w*.6,4);
 Tx(f.L.n,d>0?x:x,34,6,'#fff',d>0?'left':'right');for(let i=0;i<2;i++){c.fillStyle='#000';c.fillRect(d>0?x+i*9:x-7-i*9,38,6,6);c.fillStyle=i<f.wins?'#ffd23f':'#333';c.fillRect(d>0?x+1+i*9:x-6-i*9,39,4,4)}}
 Tx(String(Math.max(0,Math.ceil(G.tm/60))),W/2,22,13,'#fff')}
-function render(){c.save();c.setTransform(2,0,0,2,0,0);c.clearRect(0,0,W,H);
+function render(){c.save();
+/* portrait: canvas più alto del mondo (352x192); estende soffitto e pavimento dell'arena
+   per coprire tutta l'altezza dello schermo, mondo ancorato in basso con spazio per i tasti */
+const WH=cv.height/2,bot=WH>192?Math.min(WH-192,WH*.16):0,top=WH-192-bot;
+c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,cv.width,cv.height);
+c.setTransform(2,0,0,2,0,2*top);c.imageSmoothingEnabled=false;
 if(G&&G.sh>0)c.translate((Math.random()-.5)*G.sh*.6,(Math.random()-.5)*G.sh*.6);
 /* arena da immagine (352x192) a tutto canvas; fallback procedurale finché non carica */
-if(BGI.complete&&BGI.naturalWidth)c.drawImage(BGI,0,0,W,H);else c.drawImage(BG,0,0);
+const img=BGI.complete&&BGI.naturalWidth?BGI:BG;
+if(top>0)c.drawImage(img,0,0,352,6,0,-top,352,top);
+c.drawImage(img,0,0,W,H);
+if(bot>0)c.drawImage(img,0,186,352,6,0,192,352,bot);
 npc();
 if(!G){const f=[...demo];for(const d of f){d.t++;d.st='idle'}draw(f[0],f[0].x,FY);draw(f[1],f[1].x,FY);c.restore();return}
 const a=G.a,b=G.b;c.fillStyle='rgba(0,0,0,.25)';for(const f of[a,b])c.fillRect(f.x-14+(f.y/-3),FY-2,28+f.y/3,4);
@@ -228,9 +243,10 @@ if(PAL.complete&&PAL.naturalWidth){c.rotate(p.t*.2);const k2=30/PAL.height;c.dra
 else{c.fillStyle='rgba(255,210,63,.4)';c.fillRect(-26,-6,24,12);R(-10,-8,20,12,'#9aa3ad');R(-10,-8,20,3,'#d42a2a');R(-8,4,4,4,'#222');R(4,4,4,4,'#222')}
 c.restore()}
 for(const p of PS){c.fillStyle=p.col;c.fillRect(p.x,FY+p.y,3,3)}
+c.setTransform(2,0,0,2,0,0);
 hud();
-if(G.ph=='intro'){Tx(G.pt>40?'ROUND '+G.rd:'FIGHT!',W/2,70,G.pt>40?14:20,G.pt>40?'#fff':'#ffd23f')}
-if(G.ph=='ko')Tx(G.txt,W/2,70,20,'#ff4040');
+if(G.ph=='intro'){Tx(G.pt>40?'ROUND '+G.rd:'FIGHT!',W/2,WH*.36,G.pt>40?14:20,G.pt>40?'#fff':'#ffd23f')}
+if(G.ph=='ko')Tx(G.txt,W/2,WH*.36,20,'#ff4040');
 c.restore()}
 function loop(ts){requestAnimationFrame(loop);acc+=Math.min(50,ts-last);last=ts;while(acc>=16.67){acc-=16.67;step()}render()}
 /* ---------- UI ---------- */
@@ -251,5 +267,9 @@ $('#o-mus').oninput=e=>O.mus=+e.target.value;$('#o-sfx').oninput=e=>O.sfx=+e.tar
 $('#o-touch').onclick=e=>{O.touch=(O.touch+1)%3;e.target.textContent=['AUTO','SEMPRE','NASCOSTI'][O.touch]};
 $('#o-vib').onclick=e=>{O.vib=!O.vib;e.target.textContent=O.vib?'SI':'NO'};
 $('#o-mus').value=O.mus;$('#o-sfx').value=O.sfx;
-mkBG(arena);document.fonts.ready.then(()=>mkBG(arena));requestAnimationFrame(loop);
+mkBG(arena);document.fonts.ready.then(()=>mkBG(arena));
+/* il buffer del canvas segue le proporzioni dello schermo (crisp in portrait e landscape) */
+function fit(){if(!cv.getBoundingClientRect)return;const r=cv.getBoundingClientRect();if(r.width<2||r.height<2)return;const h=Math.max(384,Math.min(1760,Math.round(704*r.height/r.width)));if(cv.width!=704||cv.height!=h){cv.width=704;cv.height=h}}
+addEventListener('resize',fit);fit();
+requestAnimationFrame(loop);
 </script></body></html>
