@@ -116,7 +116,7 @@ const $=s=>document.querySelector(s),FT='"Press Start 2P",monospace';
 const S5=["01110","10000","01110","00001","11110"];
 const CH=[
 {n:'BEPPE',ms:'LANCIO DEL PALLET',sk:'#e2a977',h:'#15110f',hs:'spike',sh:'#d42a2a',pa:'#16161c',bt:'#4a2f1c',lg:1,sp:1.5,pw:1},
-{n:'VLAD',sk:'#f1cfae',h:'#5b3a22',hs:'short',sh:'#d42a2a',pa:'#16161c',bt:'#4a2f1c',lg:1,sp:1.65,pw:.95},
+{n:'VLAD',ms:'SPRUZZINO ACCECANTE',sk:'#e9b48c',h:'#e8c25a',hs:'short',sh:'#d42a2a',pa:'#16161c',bt:'#4a2f1c',lg:1,sp:1.65,pw:.95},
 {n:'LUIS',sk:'#b27a4c',h:'#0d0b0a',hs:'short',sh:'#d42a2a',pa:'#16161c',bt:'#4a2f1c',lg:1,sp:1.4,pw:1.1},
 {n:'ZANI',sk:'#e9bf98',h:'#8a6a3a',hs:'bald',sh:'#d42a2a',pa:'#16161c',bt:'#4a2f1c',lg:1,ac:'beard',sp:1.5,pw:1},
 {n:'MATTEO',ms:'CARRELLO VOLANTE',sk:'#c99068',h:'#4a2c1a',hs:'curl',sh:'#d42a2a',pa:'#16161c',bt:'#4a2f1c',lg:1,ac:'gl',sp:1.5,pw:1.05},
@@ -156,9 +156,11 @@ function R(x,y,w,h,col){c.fillStyle='#07070c';c.fillRect(x-1,y-1,w+2,h+2);c.fill
 /* sprite dei personaggi: 1 riga per animazione in assets/characters/<nome>/, corpo in piedi normalizzato a 400px, piedi sul bordo inferiore, rivolti a destra.
    n = frame per animazione; pj = proiettile dello speciale (pjn frame); spT = soglie (tick) dei frame dello speciale se diverse dallo standard.
    hit/win sono opzionali: se mancano si usa la posa idle (inclinata quando colpito). */
-const SPRB=400,VER=19,SPRSET={
+const SPRB=400,VER=20,SPRSET={
 BEPPE:{d:'beppe',n:{idle:4,walk:4,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:5,fall:3,ko:1},pj:'pallet',pjn:1},
-MATTEO:{d:'matteo',n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:3,ko:1,win:3},pj:'matteo-cart',pjn:3,spT:[5,11]}};
+MATTEO:{d:'matteo',n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:3,ko:1,win:3},pj:'matteo-cart',pjn:3,spT:[5,11]},
+VLAD:{d:'vlad',n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:3,ko:1,win:2},pj:'vlad-spray',pjn:3,pjh:46,pjy:-46,pji:1,spT:[5,11]}};
+/* proiettile a più frame: pjh altezza e pjy bordo superiore (rispetto alla linea del proiettile), pji = il 1o frame è solo l'avvio */
 for(const ss of Object.values(SPRSET)){ss.im={};for(const a of Object.keys(ss.n)){const im=new Image();im.onload=()=>{ss.im[a]=im};im.src='assets/characters/'+ss.d+'/'+ss.d+'-'+a+'.png?v='+VER}
 ss.pi=new Image();ss.pi.src='assets/characters/'+ss.d+'/'+ss.pj+'.png?v='+VER}
 const BGI=new Image();BGI.src='assets/backgrounds/arena-supermercato.png?v='+VER;
@@ -358,7 +360,7 @@ const a=G.a,b=G.b;c.fillStyle='rgba(0,0,0,.25)';for(const f of[a,b])c.fillRect(f
 const order=a.y<b.y?[b,a]:[a,b];for(const f of order)draw(f,f.x,FY+f.y);
 for(const p of PJ){const x=p.x,y=FY-30,d=p.vx>0?1:-1;c.save();c.translate(x,y);c.scale(d,1);c.imageSmoothingEnabled=false;
 const ps=SPRSET[p.o.L.n]||SPRSET.BEPPE,PI=ps.pi;
-if(PI.complete&&PI.naturalWidth){if(ps.pjn>1){const n=ps.pjn,fw=PI.width/n,fi=(p.t/6|0)%n,k2=48/PI.height;c.drawImage(PI,fi*fw,0,fw,PI.height,-fw*k2/2,-18,fw*k2,48)}
+if(PI.complete&&PI.naturalWidth){if(ps.pjn>1){const n=ps.pjn,fw=PI.width/n,ph=ps.pjh||48,fi=ps.pji?(p.t<5?0:1+((p.t/8|0)%(n-1))):(p.t/6|0)%n,k2=ph/PI.height;c.drawImage(PI,fi*fw,0,fw,PI.height,-fw*k2/2,ps.pjy||-18,fw*k2,ph)}
 else{c.rotate(p.t*.2);const k2=30/PI.height;c.drawImage(PI,-PI.width*k2/2,-15,PI.width*k2,30)}}
 else{c.fillStyle='rgba(255,210,63,.4)';c.fillRect(-26,-6,24,12);R(-10,-8,20,12,'#9aa3ad');R(-10,-8,20,3,'#d42a2a');R(-8,4,4,4,'#222');R(4,4,4,4,'#222')}
 c.restore()}

@@ -26,7 +26,8 @@ Ogni push su `main` pubblica il gioco su GitHub Pages (`.github/workflows/deploy
 |---|---|---|
 | BEPPE | sprite disegnati (`assets/characters/beppe/`) | Lancio del pallet |
 | MATTEO | sprite disegnati (`assets/characters/matteo/`) | Carrello volante |
-| VLAD, LUIS, ZANI, FALSA, ANGEL | disegno procedurale | Carrellino |
+| VLAD | sprite disegnati (`assets/characters/vlad/`) | Spruzzino accecante |
+| LUIS, ZANI, FALSA, ANGEL | disegno procedurale | Carrellino |
 | PAULUX (boss) | disegno procedurale | Carrellino |
 
 ## Comandi
@@ -56,9 +57,13 @@ assets/
       sorgenti/                disegni originali
     matteo/                    matteo-<animazione>.png, matteo-cart.png (proiettile)
       sorgenti/                tavole originali IMG_5407–5418 (sfondo magenta)
+    vlad/                      vlad-<animazione>.png, vlad-spray.png (proiettile)
+      sorgenti/                tavole originali IMG_5422–5437
 docs/reference/                immagini di riferimento per lo stile
 tools/
+  spritebuild.py               strumenti comuni: ritaglio, scala, allineamento, fogli PNG
   build_matteo_sprites.py      genera i PNG di Matteo dalle tavole sorgenti
+  build_vlad_sprites.py        genera i PNG di Vlad dalle tavole sorgenti
   spritekey.py                 scontorno del magenta e separazione dei frame
 ```
 
@@ -66,7 +71,7 @@ tools/
 
 1. Prepara le tavole con sfondo magenta pieno (una posa per figura, rivolte a destra) e mettile in
    `assets/characters/<nome>/sorgenti/`.
-2. Genera i fogli copiando `tools/build_matteo_sprites.py`
+2. Genera i fogli copiando `tools/build_vlad_sprites.py`
    (richiede `pip install pillow numpy scipy`). Formato: un PNG per animazione,
    `<nome>-<animazione>.png`, frame affiancati a larghezza uguale, piedi sul bordo inferiore,
    personaggio in piedi alto circa 400 px.
