@@ -64,6 +64,8 @@ tools/
   spritebuild.py               strumenti comuni: ritaglio, scala, allineamento, fogli PNG
   build_matteo_sprites.py      genera i PNG di Matteo dalle tavole sorgenti
   build_vlad_sprites.py        genera i PNG di Vlad dalle tavole sorgenti
+  build_beppe_special.py       speciale di Beppe: afferra, tiene e lancia il bancale
+  clean_white_residue.py       toglie il bianco di sfondo residuo dagli sprite
   spritekey.py                 scontorno del magenta e separazione dei frame
 ```
 
