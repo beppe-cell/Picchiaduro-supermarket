@@ -30,8 +30,13 @@ input[type=range]{width:22cqw;accent-color:var(--r)}
 #tc [data-k=u]{left:9cqw;bottom:17cqw}#tc [data-k=l]{left:1.5cqw;bottom:9cqw}#tc [data-k=r]{left:16.5cqw;bottom:9cqw}#tc [data-k=d]{left:9cqw;bottom:1cqw}
 #tc [data-k=p]{right:17cqw;bottom:9cqw}#tc [data-k=k]{right:9cqw;bottom:17cqw}#tc [data-k=h]{right:1.5cqw;bottom:9cqw}#tc [data-k=s]{right:9cqw;bottom:1cqw}#tc [data-k=b]{right:19cqw;bottom:.8cqw;width:7cqw;height:7cqw;font-size:1.5cqw}
 #pz{right:1cqw!important;top:1cqw;width:5cqw!important;height:5cqw!important;font-size:1.6cqw!important}
-#rot{position:fixed;inset:0;background:#05070f;display:none;flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:9;text-align:center;font-size:12px;line-height:1.8;padding:20px}
-@media(orientation:portrait) and (max-width:700px){#rot{display:flex}}
+/* verticale: pulsanti touch più grandi, gioco giocabile anche in portrait */
+@media(orientation:portrait){
+#tc button{width:13cqw;height:13cqw;font-size:3.2cqw}
+#tc [data-k=u]{left:11cqw;bottom:19.5cqw}#tc [data-k=l]{left:.5cqw;bottom:10cqw}#tc [data-k=r]{left:21.5cqw;bottom:10cqw}#tc [data-k=d]{left:11cqw;bottom:.5cqw}
+#tc [data-k=p]{right:21.5cqw;bottom:10cqw}#tc [data-k=k]{right:11cqw;bottom:19.5cqw}#tc [data-k=h]{right:.5cqw;bottom:10cqw}#tc [data-k=s]{right:11cqw;bottom:.5cqw}
+#tc [data-k=b]{right:25cqw;bottom:1cqw;width:11cqw;height:11cqw;font-size:2.4cqw}
+}
 </style></head><body>
 <div id="app"><div id="wrap"><canvas id="g" width="704" height="384"></canvas>
 <div id="tc"><button data-k="u">▲</button><button data-k="l">◀</button><button data-k="r">▶</button><button data-k="d">▼</button><button data-k="p">P</button><button data-k="k">K</button><button data-k="h">H</button><button data-k="s">SP</button><button data-k="b">BLK</button><button id="pz">II</button></div>
@@ -47,7 +52,6 @@ input[type=range]{width:22cqw;accent-color:var(--r)}
 <div class="scr" id="s-pause"><h2>PAUSA</h2><button class="b" id="b-res">RIPRENDI</button><button class="b alt" data-go="menu">MENU</button></div>
 <div class="scr" id="s-end"><h2 id="e-t"></h2><div id="e-s" class="small"></div><button class="b" id="b-nx"></button><button class="b alt" data-go="menu">MENU</button></div>
 </div></div>
-<div id="rot"><div style="font-size:30px">⟳</div>Ruota il telefono in orizzontale per combattere!<button class="b" style="font-size:11px;min-width:0" onclick="this.parentNode.style.display='none'">GIOCA COMUNQUE</button></div>
 <script>
 const W=352,H=192,FY=182,cv=document.getElementById('g');let c=cv.getContext('2d');c.scale(2,2);c.imageSmoothingEnabled=false;
 const $=s=>document.querySelector(s),FT='"Press Start 2P",monospace';
@@ -91,18 +95,20 @@ for(let i=0;i<3;i++){Rr(392,214+i*5,32,6,'#14141c');Rr(393,215+i*5,30,4,'#1f7a4a
 Rr(432,200,44,38,'#14141c');Rr(434,202,40,34,'#c8482a');Rr(444,214,20,10,'#fff');Rr(446,216,16,6,'#d42a2a');for(let i=0;i<6;i++)Rr(436+i*6,196,4,6,'#8a1a1a')}
 /* ---------- fighter ---------- */
 function R(x,y,w,h,col){c.fillStyle='#07070c';c.fillRect(x-1,y-1,w+2,h+2);c.fillStyle=col;c.fillRect(x,y,w,h)}
-/* sprite personalizzati: beppe-idle-walk.png = 1 riga, 4 frame uguali (0-1 idle, 2-3 camminata) */
-const SPR={};
-{const im=new Image();im.onload=()=>{SPR.sheet=im};im.src='assets/characters/custom/beppe-idle-walk.png?v=2'}
-const BGI=new Image();BGI.src='assets/backgrounds/arena-supermercato.png?v=2';
+/* sprite personalizzati: beppe-idle-walk.png = 1 riga, 4 frame uguali (0-1 idle, 2-3 camminata); attacco: BEPPE_punch/kick/heavy.png (4 frame) */
+const SPR={},SPRMAP={p:'punch',k:'kick',h:'heavy'};
+{const im=new Image();im.onload=()=>{SPR.sheet=im};im.src='assets/characters/custom/beppe-idle-walk.png?v=3'}
+['punch','kick','heavy'].forEach(a=>{const im=new Image();im.onload=()=>{SPR[a]=im};im.src='assets/characters/custom/BEPPE_'+a+'.png?v=3'});
+const BGI=new Image();BGI.src='assets/backgrounds/arena-supermercato.png?v=3';
 const SPR_H=0.45*384/2; /* altezza sprite ~45% del canvas, in coordinate mondo */
 function draw(f,x,y,pose,sc){const L=f.L,s=pose||f.st,t=f.t,e=f.ext||0;sc=(sc||1)*(L.big?1.12:1);
-if(L.n=='BEPPE'&&SPR.sheet){const sh2=SPR.sheet,SPW=sh2.width/4,SPH=sh2.height;let fi=0;
+if(L.n=='BEPPE'&&SPR.sheet){let src=SPR.sheet,fw=src.width/4,fh=src.height,fi=0;
 if(s=='walk')fi=2+((t/8|0)%2);
 else if(s=='idle')fi=((t/30|0)%2);
-/* pugno, calcio, parata, colpo, K.O.: frame idle finché non arrivano le altre righe */
-const k=SPR_H/SPH;
-c.save();c.imageSmoothingEnabled=false;c.translate(x|0,y|0);c.scale(f.face*sc,sc);c.drawImage(sh2,fi*SPW,0,SPW,SPH,-SPW*k/2,-SPH*k,SPW*k,SPH*k);c.restore();return}
+else if(s=='atk'&&SPR[SPRMAP[f.atk]]){src=SPR[SPRMAP[f.atk]];fw=src.width/4;fh=src.height;const m=MV[f.atk];fi=t<m.su?0:t<m.su+m.ac?1+Math.min(2,(t-m.su)/m.ac*3|0):3}
+/* parata, colpo, K.O.: frame idle finché non arrivano le altre righe */
+const k=SPR_H/fh;
+c.save();c.imageSmoothingEnabled=false;c.translate(x|0,y|0);c.scale(f.face*sc,sc);c.drawImage(src,fi*fw,0,fw,fh,-fw*k/2,-fh*k,fw*k,fh*k);c.restore();return}
 c.save();c.translate(x|0,y|0);c.scale(f.face*sc,sc);
 if(s=='ko'){c.translate(0,-8);c.rotate(-1.5)}else if(s=='hit')c.rotate(-.12);
 if(f.cr&&s!='atk')c.scale(1,.75);
