@@ -57,13 +57,27 @@ input[type=range]{width:22cqw;accent-color:var(--r)}
 .panel{background:linear-gradient(var(--n),var(--nd));border:.4cqw solid var(--y);outline:.3cqw solid #000;box-shadow:0 .6cqw 0 #000;padding:2cqw 3cqw;display:flex;flex-direction:column;gap:1.6cqw;align-items:center}
 .small{font-size:1.3cqw;color:#cfd6ff;max-width:84cqw}
 #e-t{font-size:4.4cqw}#e-t.win{color:var(--y)}#e-t.lose{color:#ff6a6a}
-#tc{position:absolute;inset:0;display:none;pointer-events:none}
+/* comandi touch: levetta mobile a sinistra, pulsanti a destra (le zone catturano il dito, i pulsanti sono solo grafica) */
+#tc{position:absolute;inset:0;display:none;pointer-events:none;-webkit-touch-callout:none}
 #tc.on{display:block}
-#tc button{pointer-events:auto;position:absolute;font:inherit;color:#fff;background:rgba(10,14,32,.5);border:.3cqw solid rgba(255,255,255,.75);width:8cqw;height:8cqw;font-size:2cqw;border-radius:50%;padding:0}
-#tc button.on{background:rgba(212,42,42,.8)}
-#tc [data-k=u]{left:9cqw;bottom:17cqw}#tc [data-k=l]{left:1.5cqw;bottom:9cqw}#tc [data-k=r]{left:16.5cqw;bottom:9cqw}#tc [data-k=d]{left:9cqw;bottom:1cqw}
-#tc [data-k=p]{right:17cqw;bottom:9cqw}#tc [data-k=k]{right:9cqw;bottom:17cqw}#tc [data-k=h]{right:1.5cqw;bottom:9cqw}#tc [data-k=s]{right:9cqw;bottom:1cqw}#tc [data-k=b]{right:19cqw;bottom:.8cqw;width:7cqw;height:7cqw;font-size:1.5cqw}
-#pz{left:50%;margin-left:-2.5cqw;top:10.6cqw;width:5cqw!important;height:5cqw!important;font-size:1.4cqw!important}
+#stick,#acts{position:absolute;bottom:0;height:62%;pointer-events:auto;touch-action:none}
+#stick{left:0;width:42%}#acts{right:0;width:42%}
+#stick .base,#stick .knob{position:absolute;border-radius:50%;left:10cqw;top:calc(100% - 10cqw);pointer-events:none}
+#stick .base{width:15cqw;height:15cqw;margin:-7.5cqw 0 0 -7.5cqw;border:.35cqw solid rgba(255,255,255,.35);background:radial-gradient(circle,rgba(255,255,255,.1),rgba(10,14,32,.35) 70%)}
+#stick .knob{width:7.5cqw;height:7.5cqw;margin:-3.75cqw 0 0 -3.75cqw;background:radial-gradient(circle at 35% 30%,#fff,#9aa3c8 60%,#5a6390);box-shadow:0 .4cqw 0 rgba(0,0,0,.45);opacity:.6}
+#stick.on .base{border-color:rgba(255,210,63,.8)}#stick.on .knob{opacity:1}
+.a{position:absolute;display:flex;align-items:center;justify-content:center;width:8cqw;height:8cqw;border-radius:50%;font-size:1.05cqw;color:#fff;text-shadow:.15cqw .15cqw 0 #000;border:.3cqw solid rgba(255,255,255,.85);box-shadow:0 .5cqw 0 rgba(0,0,0,.45);opacity:.55;pointer-events:none}
+.a.on{transform:translateY(.4cqw) scale(.93);box-shadow:0 .1cqw 0 rgba(0,0,0,.45);opacity:1;filter:brightness(1.35)}
+.a.pp{background:radial-gradient(circle at 35% 30%,#ff7a6a,#c4231d 65%,#7a1010)}
+.a.kk{background:radial-gradient(circle at 35% 30%,#7ab8ff,#2563c9 65%,#12306b)}
+.a.hh{background:radial-gradient(circle at 35% 30%,#ffb86a,#d9661c 65%,#7a3308)}
+.a.ss{background:radial-gradient(circle at 35% 30%,#8d8d9a,#4a4a58 65%,#24242c);color:#bbb}
+.a.ss.ready{background:radial-gradient(circle at 35% 30%,#fff6b0,#ffd23f 55%,#b8860b);color:#3a2400;text-shadow:none;opacity:1;animation:spr .5s steps(2) infinite}
+@keyframes spr{50%{box-shadow:0 .5cqw 0 rgba(0,0,0,.45),0 0 0 .8cqw rgba(255,210,63,.45)}}
+.a.bb{background:radial-gradient(circle at 35% 30%,#e8eef8,#9aa7bd 60%,#4c5870);color:#10182a;text-shadow:none}
+.a.pp{right:18.5cqw;bottom:1cqw}.a.kk{right:9.5cqw;bottom:4.5cqw}.a.bb{right:.6cqw;bottom:1cqw}
+.a.hh{right:18.5cqw;bottom:10cqw}.a.ss{right:9.5cqw;bottom:13.5cqw}
+#pz{position:absolute;pointer-events:auto;font:inherit;color:#fff;background:rgba(10,14,32,.55);border:.3cqw solid rgba(255,255,255,.75);border-radius:50%;padding:0;left:50%;margin-left:-2.5cqw;top:10.6cqw;width:5cqw!important;height:5cqw!important;font-size:1.4cqw!important}
 /* verticale: gioco a schermo intero, sfondo a tutta altezza, pulsanti touch più grandi */
 @media(orientation:portrait){
 #wrap{aspect-ratio:auto;width:100%;height:100%}
@@ -82,15 +96,20 @@ h2{font-size:4.4cqw}
 .row{font-size:2.8cqw}.row .b{min-width:34cqw}input[type=range]{width:44cqw}
 .small{font-size:2.6cqw;max-width:92cqw}
 #e-t{font-size:7cqw}
-#tc button{width:13cqw;height:13cqw;font-size:3.2cqw}
-#tc [data-k=u]{left:11cqw;bottom:19.5cqw}#tc [data-k=l]{left:.5cqw;bottom:10cqw}#tc [data-k=r]{left:21.5cqw;bottom:10cqw}#tc [data-k=d]{left:11cqw;bottom:.5cqw}
-#tc [data-k=p]{right:21.5cqw;bottom:10cqw}#tc [data-k=k]{right:11cqw;bottom:19.5cqw}#tc [data-k=h]{right:.5cqw;bottom:10cqw}#tc [data-k=s]{right:11cqw;bottom:.5cqw}
-#tc [data-k=b]{right:25cqw;bottom:1cqw;width:11cqw;height:11cqw;font-size:2.4cqw}
+/* verticale: pannello comandi dedicato in basso, il pavimento dell'arena sta sopra */
+#tc.on::before{content:'';position:absolute;left:0;right:0;bottom:0;height:50cqw;background:linear-gradient(rgba(5,7,15,0),rgba(5,7,15,.82) 22%,rgba(5,7,15,.92));border-top:.4cqw solid rgba(255,210,63,.25)}
+#stick,#acts{height:50cqw}#stick{width:46%}#acts{width:54%}
+#stick .base,#stick .knob{left:22cqw;top:calc(100% - 24cqw)}
+#stick .base{width:30cqw;height:30cqw;margin:-15cqw 0 0 -15cqw}
+#stick .knob{width:14cqw;height:14cqw;margin:-7cqw 0 0 -7cqw}
+.a{width:16.5cqw;height:16.5cqw;font-size:2.3cqw;border-width:.5cqw;opacity:.85}
+.a.pp{right:37cqw;bottom:5cqw}.a.kk{right:19cqw;bottom:9cqw}.a.bb{right:1.5cqw;bottom:5cqw}
+.a.hh{right:37cqw;bottom:25cqw}.a.ss{right:19cqw;bottom:29cqw}
 #pz{margin-left:-3.5cqw;top:11cqw;width:7cqw!important;height:7cqw!important;font-size:2.2cqw!important}
 }
 </style></head><body>
 <div id="app"><div id="wrap"><canvas id="g" width="704" height="384"></canvas>
-<div id="tc"><button data-k="u">▲</button><button data-k="l">◀</button><button data-k="r">▶</button><button data-k="d">▼</button><button data-k="p">P</button><button data-k="k">K</button><button data-k="h">H</button><button data-k="s">SP</button><button data-k="b">BLK</button><button id="pz">II</button></div>
+<div id="tc"><div id="stick"><div class="base"></div><div class="knob"></div></div><div id="acts"><div class="a pp" data-k="p">PUGNO</div><div class="a kk" data-k="k">CALCIO</div><div class="a hh" data-k="h">FORTE</div><div class="a ss" data-k="s">SPECIALE</div><div class="a bb" data-k="b">PARATA</div></div><button id="pz">II</button></div>
 <div class="scr on" id="s-title"><div class="logo"><div class="top"><div class="badge">G</div><div class="lt">GROSSETTO</div></div><div class="rib">PICCHIADURO DEL SUPERMERCATO</div></div>
 <div class="blink">TOCCA O PREMI UN TASTO</div><div class="small dim" id="ver"></div></div>
 <div class="scr" id="s-menu"><div class="logo sm"><div class="top"><div class="badge">G</div><div class="lt">GROSSETTO</div></div></div>
@@ -105,7 +124,7 @@ h2{font-size:4.4cqw}
 <label class="row">MUSICA <input type="range" id="o-mus" min="0" max="100"></label>
 <label class="row">EFFETTI <input type="range" id="o-sfx" min="0" max="100"></label>
 <div class="row">TOUCH <button class="b alt" id="o-touch" style="min-width:18cqw">AUTO</button> VIBRAZIONE <button class="b alt" id="o-vib" style="min-width:10cqw">SI</button></div>
-<div class="small">A/D muovi · W salta · S abbassati · J pugno · K calcio · L pesante · I speciale (barra SUPER piena) · SPAZIO/SHIFT para (danno /10) · ESC pausa. Pugni ripetuti fanno meno danno: alterna le mosse.</div></div>
+<div class="small">A/D muovi · W salta · S abbassati · J pugno · K calcio · L pesante · I speciale (barra SUPER piena) · SPAZIO/SHIFT para (danno /10) · ESC pausa. Pugni ripetuti fanno meno danno: alterna le mosse.<br>TELEFONO: levetta a sinistra (appoggia il pollice dove vuoi, su per saltare), pulsanti a destra: puoi far scorrere il dito da uno all'altro. SPECIALE si illumina quando è carico.</div></div>
 <button class="b" data-go="menu">INDIETRO</button></div>
 <div class="scr" id="s-pause"><h2>PAUSA</h2><div class="mlist"><button class="b" id="b-res">RIPRENDI</button><button class="b alt" data-go="menu">ESCI AL MENU</button></div></div>
 <div class="scr" id="s-end"><h2 id="e-t"></h2><div id="e-s" class="small"></div><div class="mlist"><button class="b" id="b-nx"></button><button class="b alt" data-go="menu">MENU</button></div></div>
@@ -156,7 +175,7 @@ function R(x,y,w,h,col){c.fillStyle='#07070c';c.fillRect(x-1,y-1,w+2,h+2);c.fill
 /* sprite dei personaggi: 1 riga per animazione in assets/characters/<nome>/, corpo in piedi normalizzato a 400px, piedi sul bordo inferiore, rivolti a destra.
    n = frame per animazione; pj = proiettile dello speciale (pjn frame); spT = soglie (tick) dei frame dello speciale se diverse dallo standard.
    hit/win sono opzionali: se mancano si usa la posa idle (inclinata quando colpito). */
-const SPRB=400,VER=24,SPRSET={
+const SPRB=400,VER=25,SPRSET={
 BEPPE:{d:'beppe',n:{idle:4,walk:4,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,fall:3,ko:1},pj:'pallet',pjn:1,pjw:46.9,pjh:44.3,pjo:[12.5,-23.8],spT:[6,11]},
 MATTEO:{d:'matteo',n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:3,ko:1,win:3},pj:'matteo-cart',pjn:3,spT:[5,11]},
 VLAD:{d:'vlad',sc:1.05,n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:2,ko:1,win:2},pj:'vlad-spray',pjn:3,pjs:.6,pjo:[33.8,-83.5],pji:1,spT:[5,11]}};
@@ -224,12 +243,14 @@ setInterval(()=>{if(!AC||!pl)return;const q=(mst/12|0)%2?5:0,n=[0,3,7,12,7,3][ms
 const MV={p:{su:5,ac:9,re:5,d:5,r:34,st:11,kb:2},k:{su:5,ac:9,re:5,d:7,r:41,st:13,kb:3},h:{su:12,ac:9,re:18,d:13,r:39,st:22,kb:7},s:{su:11,ac:6,re:16}};
 let G=null,T=0,mode='arc',tour=0,pickI=0,keys={},TR={},PS=[],PJ=[],last=0,acc=0,ZP=1,XMIN=18,XMAX=334,demo=[{L:CH[0],x:88,face:1,st:'idle',t:0,ext:0,y:0},{L:CH[7],x:264,face:-1,st:'idle',t:0,ext:0,y:0}],arena=AR[0];
 function mk(L,x,face,ai,lv){return{L,x,y:0,vx:0,vy:0,face,hp:100,tr:100,sp:0,st:'idle',t:0,atk:null,did:0,stun:0,blk:0,cr:0,rep:{m:'',n:0,t:-999},ai,lv,ob:0,hd:{},wins:0,ext:0}}
-function sh(id){document.querySelectorAll('.scr').forEach(e=>e.classList.toggle('on',e.id==id));$('#tc').classList.toggle('on',id==''&&touchOn());if(id&&id!='s-title')focusFirst()}
+function sh(id){document.querySelectorAll('.scr').forEach(e=>e.classList.toggle('on',e.id==id));$('#tc').classList.toggle('on',id==''&&touchOn());if(id)touchReset();if(id&&id!='s-title')focusFirst()}
 const touchOn=()=>O.touch==2?false:O.touch==1||matchMedia('(pointer:coarse)').matches;
 function spark(x,y,col){for(let i=0;i<9;i++)PS.push({x,y,vx:(Math.random()-.5)*4,vy:-Math.random()*3,l:14,col})}
 function newRound(){const a=G.a,b=G.b;a.cmb=b.cmb=0;a.x=176-88/ZP;b.x=176+88/ZP;for(const f of[a,b]){f.y=0;f.vx=f.vy=0;f.hp=100;f.tr=100;f.sp=0;f.st='idle';f.atk=null;f.stun=0;f.rep.n=0}a.face=1;b.face=-1;G.ph='intro';G.pt=100;G.tm=3600;PJ=[]}
 function startMatch(pi,oi,lv){arena=AR[Math.random()*4|0];mkBG(arena);G={a:mk(CH[pi],88,1),b:mk(CH[oi],264,-1,1,lv),rd:1,pi,oi,lv,hs:0,sh:0,pz:0};newRound();sh('');pl=true;sfx('ui')}
-function pin(){const i={};for(const k of'lrudbpkhs')i[k]=!!(keys[k]||tk[k]||TR[k]);for(const k in TR)TR[k]=0;return i}
+/* memoria comandi: un colpo premuto resta valido per 10 fotogrammi (~1/6 s), cosi' se lo premi mentre
+   finisce l'attacco precedente parte appena possibile invece di andare perso */
+function pin(){const i={};for(const k of'lrudbpkhs')i[k]=!!(keys[k]||tk[k]||(TR[k]&&T-TR[k]<=10));return i}
 const tk={};
 function hitchk(a,d,m){const dx=(d.x-a.x)*a.face,dy=Math.abs(a.y-d.y);if(dx<-6||dx>m.r+8||dy>28)return;if(a.atk=='p'&&d.cr&&d.y>=0)return;a.did=1;dmg(a,d,m.d*a.L.pw,m)}
 function dmg(a,d,base,m){if(G.ph!='play')return;const r=a.rep;if(r.m==a.atk&&T-r.t<110)r.n++;else r.n=0;r.m=a.atk;r.t=T;
@@ -251,7 +272,7 @@ if(t>=m.su+m.ac+m.re){f.st='idle';f.atk=null;f.ext=0}}
 else{f.ext=0;f.blk=gr&&i.b;f.cr=gr&&i.d&&!i.b;if(gr)f.face=o.x>f.x?1:-1;
 if(f.blk||f.cr)f.vx=0;else{const sp=f.L.sp;f.vx=i.l?-sp:i.r?sp:gr?0:f.vx;if(gr&&i.u){f.vy=-8.4;sfx('jp')}}
 const k=i.s&&f.sp>=100?'s':i.h?'h':i.k?'k':i.p?'p':null;
-if(k&&!f.blk){f.st='atk';f.atk=k;f.t=0;f.did=0;f.cr=0;if(k=='s')f.sp=0;else sfx('whf')}
+if(k&&!f.blk){if(!f.ai)delete TR[k];f.st='atk';f.atk=k;f.t=0;f.did=0;f.cr=0;if(k=='s')f.sp=0;else sfx('whf')}
 else f.st=!gr?'jump':f.blk?'block':f.cr?'crouch':f.vx?'walk':'idle'}
 f.vy+=.45;f.y+=f.vy;if(f.y>=0){f.y=0;f.vy=0}f.x=Math.max(XMIN,Math.min(XMAX,f.x+f.vx))}
 function AI(f,o){if(f.ob>0){f.ob--;return{...f.hd}}
@@ -342,11 +363,11 @@ c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,cv.width,cv.height);c.imageSmoothing
 let s2=2,tx=0,ty=0;const shx=G&&G.sh>0?(Math.random()-.5)*G.sh*.6:0,shy=G&&G.sh>0?(Math.random()-.5)*G.sh*.3:0;
 if(WH>352){
 /* portrait: camera zoomata (ZP) su sfondo verticale a tutto schermo, personaggi proporzionati al corridoio */
-s2=2*ZP;const gy=cv.height*.85;ty=gy-FY*s2;tx=352-176*s2;
+s2=2*ZP;const gyRef=cv.height*.85,gy=$('#tc').classList.contains('on')?Math.min(gyRef,cv.height-.52*cv.width):gyRef;ty=gy-FY*s2;tx=352-176*s2;
 c.translate(shx*s2,shy*s2);
-if(VGI.complete&&VGI.naturalWidth){const iw=VGI.naturalWidth,ih=VGI.naturalHeight,sc=Math.max(cv.width/iw,cv.height/ih,(cv.height-gy)/(ih*.126));
+if(VGI.complete&&VGI.naturalWidth){const iw=VGI.naturalWidth,ih=VGI.naturalHeight,sc=Math.max(cv.width/iw,cv.height/ih,(cv.height-gyRef)/(ih*.126));
 const y0=gy-.874*ih*sc,x0=(cv.width-iw*sc)/2;
-c.drawImage(VGI,x0,y0,iw*sc,ih*sc)}
+c.drawImage(VGI,x0,y0,iw*sc,ih*sc);const yb=y0+ih*sc;if(yb<cv.height){c.fillStyle='#14161c';c.fillRect(-20,yb-1,cv.width+40,cv.height-yb+21)}}
 else c.drawImage(BGOK?BGS:BG,0,0,W,H,0,0,cv.width,cv.height)}
 else{
 /* landscape: arena 352x192 con soffitto/pavimento prolungati (invariato) */
@@ -368,7 +389,7 @@ else{c.fillStyle='rgba(255,210,63,.4)';c.fillRect(-26,-6,24,12);R(-10,-8,20,12,'
 c.restore()}
 for(const p of PS){c.fillStyle=p.col;c.fillRect(p.x,FY+p.y,3,3)}
 c.setTransform(2,0,0,2,0,0);
-hud();
+hud();SPB.classList.toggle('ready',G.a.sp>=100);
 announce(WH);
 c.restore()}
 function loop(ts){requestAnimationFrame(loop);acc+=Math.min(50,ts-last);last=ts;while(acc>=16.67){acc-=16.67;step()}render();selAnim()}
@@ -412,9 +433,31 @@ $('#b-res').onclick=()=>pause(0);$('#pz').onpointerdown=()=>pause(1);
 const KM={KeyA:'l',ArrowLeft:'l',KeyD:'r',ArrowRight:'r',KeyW:'u',ArrowUp:'u',KeyS:'d',ArrowDown:'d',KeyJ:'p',KeyK:'k',KeyL:'h',KeyI:'s',Space:'b',ShiftLeft:'b',ShiftRight:'b'};
 addEventListener('keydown',e=>{if($('#s-title').classList.contains('on')){$('#s-title').click();return}
 const sc=vis();if(sc&&!(sc.id=='s-pause'&&(e.code=='Escape'||e.code=='KeyP'))){menuKey(e,sc);return}
-if(e.code=='Escape'||e.code=='KeyP'){pause(G&&!G.pz?1:0);return}const k=KM[e.code];if(!k)return;e.preventDefault();if(!keys[k]&&'pkhs'.includes(k))TR[k]=1;keys[k]=1});
+if(e.code=='Escape'||e.code=='KeyP'){pause(G&&!G.pz?1:0);return}const k=KM[e.code];if(!k)return;e.preventDefault();if(!keys[k]&&'pkhs'.includes(k))TR[k]=T;keys[k]=1});
 addEventListener('keyup',e=>{const k=KM[e.code];if(k)keys[k]=0});
-document.querySelectorAll('#tc [data-k]').forEach(b=>{const k=b.dataset.k,on=e=>{e.preventDefault();au();tk[k]=1;b.classList.add('on');if('pkhs'.includes(k))TR[k]=1},off=()=>{tk[k]=0;b.classList.remove('on')};b.addEventListener('pointerdown',on);['pointerup','pointercancel','pointerleave'].forEach(n=>b.addEventListener(n,off))});
+/* comandi touch. Levetta: compare dove si appoggia il pollice e lo segue se si allontana; sinistra/destra
+   muovono, su salta, giu' abbassa. Pulsanti: zona unica, vale il pulsante piu' vicino al dito e si puo'
+   scorrere da uno all'altro senza staccare. Piu' dita insieme (pointerId). */
+const TCH={},stick=$('#stick'),sBase=stick.querySelector('.base'),sKnob=stick.querySelector('.knob'),acts=$('#acts'),AB=[...acts.querySelectorAll('.a')],SPB=acts.querySelector('.ss');
+const vib=ms=>{if(O.vib&&navigator.vibrate)navigator.vibrate(ms)};
+const cap=(el,e)=>{try{el.setPointerCapture(e.pointerId)}catch(_){}};
+function stickPos(x,y,bx,by){sBase.style.left=bx+'px';sBase.style.top=by+'px';sKnob.style.left=x+'px';sKnob.style.top=y+'px'}
+stick.addEventListener('pointerdown',e=>{e.preventDefault();au();cap(stick,e);const r=stick.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;TCH[e.pointerId]={t:'s',ox:x,oy:y};stickPos(x,y,x,y);stick.classList.add('on')});
+stick.addEventListener('pointermove',e=>{const s=TCH[e.pointerId];if(!s)return;e.preventDefault();const r=stick.getBoundingClientRect(),R=sBase.offsetWidth/2;let dx=e.clientX-r.left-s.ox,dy=e.clientY-r.top-s.oy;const m=Math.hypot(dx,dy);
+if(m>R){s.ox+=dx*(1-R/m);s.oy+=dy*(1-R/m);dx*=R/m;dy*=R/m}
+stickPos(s.ox+dx,s.oy+dy,s.ox,s.oy);const u=dy<-R*.5;if(u&&!tk.u)vib(8);tk.l=dx<-R*.3;tk.r=dx>R*.3;tk.u=u;tk.d=dy>R*.5});
+function stickEnd(e){if(!TCH[e.pointerId])return;delete TCH[e.pointerId];tk.l=tk.r=tk.u=tk.d=0;stick.classList.remove('on');for(const el of[sBase,sKnob])el.style.left=el.style.top=''}
+function hitBtn(x,y){let best=null,bd=1e9;for(const b of AB){const r=b.getBoundingClientRect(),d=Math.hypot(x-r.left-r.width/2,y-r.top-r.height/2)/(r.width/2);if(d<bd){bd=d;best=b}}return bd<1.45?best:null}
+const held=k=>Object.values(TCH).some(s=>s.t=='a'&&s.k==k);
+function actSet(id,b){const s=TCH[id],old=s.k,k=b?b.dataset.k:null;if(old==k)return;s.k=k;
+if(old&&!held(old)){tk[old]=0;AB.find(x=>x.dataset.k==old).classList.remove('on')}
+if(k){tk[k]=1;b.classList.add('on');if('pkhs'.includes(k))TR[k]=T;vib(k=='b'?8:15)}}
+acts.addEventListener('pointerdown',e=>{e.preventDefault();au();cap(acts,e);TCH[e.pointerId]={t:'a',k:null};actSet(e.pointerId,hitBtn(e.clientX,e.clientY))});
+acts.addEventListener('pointermove',e=>{if(TCH[e.pointerId]){e.preventDefault();actSet(e.pointerId,hitBtn(e.clientX,e.clientY))}});
+function actEnd(e){if(!TCH[e.pointerId])return;actSet(e.pointerId,null);delete TCH[e.pointerId]}
+for(const n of['pointerup','pointercancel','lostpointercapture']){stick.addEventListener(n,stickEnd);acts.addEventListener(n,actEnd)}
+function touchReset(){for(const id in TCH)delete TCH[id];for(const k of'lrudbpkhs')tk[k]=0;AB.forEach(b=>b.classList.remove('on'));stick.classList.remove('on');for(const el of[sBase,sKnob])el.style.left=el.style.top=''}
+$('#tc').addEventListener('contextmenu',e=>e.preventDefault());
 $('#o-mus').oninput=e=>O.mus=+e.target.value;$('#o-sfx').oninput=e=>O.sfx=+e.target.value;
 $('#o-touch').onclick=e=>{O.touch=(O.touch+1)%3;e.target.textContent=['AUTO','SEMPRE','NASCOSTI'][O.touch]};
 $('#o-vib').onclick=e=>{O.vib=!O.vib;e.target.textContent=O.vib?'SI':'NO'};

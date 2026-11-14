@@ -34,12 +34,16 @@ Ogni push su `main` pubblica il gioco su GitHub Pages (`.github/workflows/deploy
 
 | Azione | Tastiera | Touch |
 |---|---|---|
-| Muovi | `A` / `D` | ◀ ▶ |
-| Salta / abbassati | `W` / `S` | ▲ ▼ |
-| Pugno / calcio / pesante | `J` / `K` / `L` | P / K / H |
-| Speciale (barra SUPER piena) | `I` | SP |
-| Parata (danno /10) | `SPAZIO` / `SHIFT` | BLK |
+| Muovi | `A` / `D` | levetta sinistra/destra |
+| Salta / abbassati | `W` / `S` | levetta su/giù |
+| Pugno / calcio / pesante | `J` / `K` / `L` | PUGNO / CALCIO / FORTE |
+| Speciale (barra SUPER piena) | `I` | SPECIALE (si illumina quando è carico) |
+| Parata (danno /10) | `SPAZIO` / `SHIFT` | PARATA |
 | Pausa | `ESC` / `P` | II |
+
+Sul telefono la levetta compare dove appoggi il pollice; sui pulsanti puoi far scorrere il dito da uno
+all'altro. In verticale i comandi hanno un pannello tutto loro sotto l'arena. Un colpo premuto mentre ne
+finisce un altro parte appena possibile (memoria comandi di circa 1/6 di secondo).
 
 Nei menu: frecce o WASD per spostarsi, `INVIO` / `SPAZIO` / `J` per confermare, `ESC` per tornare.
 Ripetere lo stesso colpo fa sempre meno danno: conviene alternare le mosse.
