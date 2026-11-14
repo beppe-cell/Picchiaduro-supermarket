@@ -68,7 +68,7 @@ const CH=[
 {n:'VLAD',sk:'#f1cfae',h:'#5b3a22',hs:'short',sh:'#d42a2a',pa:'#16161c',bt:'#4a2f1c',lg:1,sp:1.65,pw:.95},
 {n:'LUIS',sk:'#b27a4c',h:'#0d0b0a',hs:'short',sh:'#d42a2a',pa:'#16161c',bt:'#4a2f1c',lg:1,sp:1.4,pw:1.1},
 {n:'ZANI',sk:'#e9bf98',h:'#8a6a3a',hs:'bald',sh:'#d42a2a',pa:'#16161c',bt:'#4a2f1c',lg:1,ac:'beard',sp:1.5,pw:1},
-{n:'MATTEO',sk:'#efc9a4',h:'#f2f2f2',hs:'curl',sh:'#d42a2a',pa:'#16161c',bt:'#4a2f1c',lg:1,ac:'gl',sp:1.5,pw:1.05},
+{n:'MATTEO',sk:'#c99068',h:'#4a2c1a',hs:'curl',sh:'#d42a2a',pa:'#16161c',bt:'#4a2f1c',lg:1,ac:'gl',sp:1.5,pw:1.05},
 {n:'FALSA',sk:'#f3d2b4',h:'#f1d36a',hs:'long',sh:'#f4f4f4',pa:'#2a3a6a',bt:'#222',sp:1.8,pw:.9},
 {n:'ANGEL',sk:'#eac4a0',h:'#6b4a2b',hs:'short',sh:'#f4f4f4',pa:'#2b2b33',bt:'#222',ac:'wing',sp:1.6,pw:1},
 {n:'PAULUX',sk:'#dba37a',h:'#0d0b0a',hs:'slick',sh:'#16161c',pa:'#e8821e',bt:'#2a1a10',ac:'beard',sp:1.3,pw:1.3,big:1}];
@@ -102,10 +102,14 @@ for(let i=0;i<3;i++){Rr(392,214+i*5,32,6,'#14141c');Rr(393,215+i*5,30,4,'#1f7a4a
 Rr(432,200,44,38,'#14141c');Rr(434,202,40,34,'#c8482a');Rr(444,214,20,10,'#fff');Rr(446,216,16,6,'#d42a2a');for(let i=0;i<6;i++)Rr(436+i*6,196,4,6,'#8a1a1a')}
 /* ---------- fighter ---------- */
 function R(x,y,w,h,col){c.fillStyle='#07070c';c.fillRect(x-1,y-1,w+2,h+2);c.fillStyle=col;c.fillRect(x,y,w,h)}
-/* sprite BEPPE (da Google Drive): 1 riga per animazione in assets/characters/beppe/, corpo in piedi normalizzato a 400px, piedi sul bordo inferiore, rivolti a destra */
-const SPR={},SPRB=400,VER=16,SPRN={idle:4,walk:4,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:5,fall:3,ko:1};
-for(const a of Object.keys(SPRN)){const im=new Image();im.onload=()=>{SPR[a]=im};im.src='assets/characters/beppe/beppe-'+a+'.png?v='+VER}
-const PAL=new Image();PAL.src='assets/characters/beppe/pallet.png?v='+VER;
+/* sprite dei personaggi: 1 riga per animazione in assets/characters/<nome>/, corpo in piedi normalizzato a 400px, piedi sul bordo inferiore, rivolti a destra.
+   n = frame per animazione; pj = proiettile dello speciale (pjn frame); spT = soglie (tick) dei frame dello speciale se diverse dallo standard.
+   hit/win sono opzionali: se mancano si usa la posa idle (inclinata quando colpito). */
+const SPRB=400,VER=17,SPRSET={
+BEPPE:{d:'beppe',n:{idle:4,walk:4,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:5,fall:3,ko:1},pj:'pallet',pjn:1},
+MATTEO:{d:'matteo',n:{idle:4,walk:4,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:3,ko:1,win:3},pj:'matteo-cart',pjn:3,spT:[5,11]}};
+for(const ss of Object.values(SPRSET)){ss.im={};for(const a of Object.keys(ss.n)){const im=new Image();im.onload=()=>{ss.im[a]=im};im.src='assets/characters/'+ss.d+'/'+ss.d+'-'+a+'.png?v='+VER}
+ss.pi=new Image();ss.pi.src='assets/characters/'+ss.d+'/'+ss.pj+'.png?v='+VER}
 const BGI=new Image();BGI.src='assets/backgrounds/arena-supermercato.png?v='+VER;
 /* arena pre-ingrandita (zoom orizzontale: corsia più larga, soffitto/insegne e linea del pavimento invariati) */
 const BGS=document.createElement('canvas');BGS.width=W;BGS.height=H;let BGOK=0;
@@ -115,19 +119,21 @@ BGI.onload=mkBGS;if(BGI.complete)mkBGS();
 const VGI=new Image();VGI.src='assets/backgrounds/IMG_5406.jpeg?v='+VER;
 {const v=document.getElementById('ver');if(v)v.textContent='v'+VER}
 const SPR_H=0.55*384/2, SPRK=SPR_H/SPRB; /* altezza sprite ~55% del canvas, in coordinate mondo */
-function draw(f,x,y,pose,sc){const L=f.L,s=pose||f.st,t=f.t,e=f.ext||0;sc=(sc||1)*(L.big?1.12:1);if(!(L.n=='BEPPE'&&SPR.idle))sc*=1.5;
-if(L.n=='BEPPE'&&SPR.idle){let name='idle',fi=0;
+function draw(f,x,y,pose,sc){const L=f.L,s=pose||f.st,t=f.t,e=f.ext||0;sc=(sc||1)*(L.big?1.12:1);const ss=SPRSET[L.n],SPR=ss&&ss.im,SPRN=ss&&ss.n;if(!(SPR&&SPR.idle))sc*=1.5;
+if(SPR&&SPR.idle){let name='idle',fi=0;
 if(s=='walk'){name='walk';fi=(t/12|0)%SPRN.walk}
 else if(s=='idle')fi=(t/20|0)%SPRN.idle;
 else if(s=='jump'){name='jump';fi=f.vy<-3?0:f.vy<3?1:2}
 else if(s=='block')name='block';
 else if(s=='crouch')name='crouch';
-else if(s=='atk'){name=f.atk=='s'?'special':f.atk=='p'?'punch':f.atk=='k'?'kick':'heavy';if(!SPR[name])name='idle';else{const m=MV[f.atk];fi=Math.min(t<m.su-2?0:t<m.su?1:t<m.su+m.ac?2:t<m.su+m.ac+2?3:4,SPRN[name]-1)}}
+else if(s=='hit'&&SPR.hit)name='hit';
+else if(s=='atk'){name=f.atk=='s'?'special':f.atk=='p'?'punch':f.atk=='k'?'kick':'heavy';if(!SPR[name])name='idle';else if(name=='special'&&ss.spT)fi=ss.spT.filter(v=>t>=v).length;else{const m=MV[f.atk];fi=Math.min(t<m.su-2?0:t<m.su?1:t<m.su+m.ac?2:t<m.su+m.ac+2?3:4,SPRN[name]-1)}}
 else if(s=='ko'){if(t<35&&SPR.fall){name='fall';fi=Math.min(t/12|0,2)}else if(SPR.ko){name='ko';fi=0}}
+if(G&&G.ph=='ko'&&G.w===f&&SPR.win&&(s=='idle'||s=='walk')){name='win';fi=Math.min(SPRN.win-1,(150-G.pt)/14|0)}
 if(!SPR[name])name='idle';
 const src=SPR[name],fw=src.width/SPRN[name],fh=src.height,k=SPRK;
 c.save();c.imageSmoothingEnabled=false;c.translate(x|0,y|0);c.scale(f.face*sc,sc);
-if(s=='hit')c.rotate(-.08);
+if(s=='hit'&&name!='hit')c.rotate(-.08);
 if(s=='atk'&&f.atk=='s'){c.fillStyle='rgba(255,210,63,.3)';c.fillRect(-34,-fh*k-6,68,fh*k+6)}
 c.drawImage(src,fi*fw,0,fw,fh,-fw*k/2,-fh*k,fw*k,fh*k);c.restore();return}
 c.save();c.translate(x|0,y|0);c.scale(f.face*sc,sc);
@@ -252,7 +258,9 @@ if(!G){const f=[...demo];for(const d of f){d.t++;d.st='idle'}draw(f[0],176-88/ZP
 const a=G.a,b=G.b;c.fillStyle='rgba(0,0,0,.25)';for(const f of[a,b])c.fillRect(f.x-17+(f.y/-3),FY-2,34+f.y/3,4);
 const order=a.y<b.y?[b,a]:[a,b];for(const f of order)draw(f,f.x,FY+f.y);
 for(const p of PJ){const x=p.x,y=FY-30,d=p.vx>0?1:-1;c.save();c.translate(x,y);c.scale(d,1);c.imageSmoothingEnabled=false;
-if(PAL.complete&&PAL.naturalWidth){c.rotate(p.t*.2);const k2=30/PAL.height;c.drawImage(PAL,-PAL.width*k2/2,-15,PAL.width*k2,30)}
+const ps=SPRSET[p.o.L.n]||SPRSET.BEPPE,PI=ps.pi;
+if(PI.complete&&PI.naturalWidth){if(ps.pjn>1){const n=ps.pjn,fw=PI.width/n,fi=(p.t/6|0)%n,k2=48/PI.height;c.drawImage(PI,fi*fw,0,fw,PI.height,-fw*k2/2,-18,fw*k2,48)}
+else{c.rotate(p.t*.2);const k2=30/PI.height;c.drawImage(PI,-PI.width*k2/2,-15,PI.width*k2,30)}}
 else{c.fillStyle='rgba(255,210,63,.4)';c.fillRect(-26,-6,24,12);R(-10,-8,20,12,'#9aa3ad');R(-10,-8,20,3,'#d42a2a');R(-8,4,4,4,'#222');R(4,4,4,4,'#222')}
 c.restore()}
 for(const p of PS){c.fillStyle=p.col;c.fillRect(p.x,FY+p.y,3,3)}
