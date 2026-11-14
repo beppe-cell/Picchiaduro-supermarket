@@ -102,22 +102,19 @@ const PAL=new Image();PAL.src='assets/characters/beppe/pallet.png?v=5';
 const BGI=new Image();BGI.src='assets/backgrounds/arena-supermercato.png?v=5';
 const SPR_H=0.45*384/2, SPRK=SPR_H/SPRB; /* altezza sprite ~45% del canvas, in coordinate mondo */
 function draw(f,x,y,pose,sc){const L=f.L,s=pose||f.st,t=f.t,e=f.ext||0;sc=(sc||1)*(L.big?1.12:1);
-if(L.n=='BEPPE'&&SPR.idle){let name='idle',fi=0,fa=0,fn=-1;
-if(s=='walk'){name='walk';const P=16;fi=(t/P|0)%SPRN.walk;const pp=t%P;if(SPRN.walk>1&&pp>P-4){fa=(pp-(P-4))/4;fn=(fi+1)%SPRN.walk}}
-else if(s=='idle'){const P=60;fi=(t/P|0)%SPRN.idle;const pp=t%P;if(SPRN.idle>1&&pp>P-8){fa=(pp-(P-8))/8;fn=(fi+1)%SPRN.idle}}
+if(L.n=='BEPPE'&&SPR.idle){let name='idle',fi=0;
+if(s=='walk'){name='walk';fi=(t/16|0)%SPRN.walk}
+else if(s=='idle')fi=(t/60|0)%SPRN.idle;
 else if(s=='jump'){name='jump';fi=f.vy<-3?0:f.vy<3?1:2}
 else if(s=='block')name='block';
 else if(s=='crouch')name='crouch';
-else if(s=='atk'){name=f.atk=='s'?'special':f.atk=='p'?'punch':f.atk=='k'?'kick':'heavy';if(!SPR[name])name='idle';else{const m=MV[f.atk];const ph=t<m.su?0:t<m.su+m.ac?1:2;fi=Math.min(ph,SPRN[name]-1);if(fi>0&&t-m.su<4&&ph==1){fa=(t-m.su)/4;fn=fi-1}else if(fi>0&&ph==2&&t-m.su-m.ac<4){fa=(t-m.su-m.ac)/4;fn=fi-1}}}
+else if(s=='atk'){name=f.atk=='s'?'special':f.atk=='p'?'punch':f.atk=='k'?'kick':'heavy';if(!SPR[name])name='idle';else{const m=MV[f.atk];fi=Math.min(t<m.su?0:t<m.su+m.ac?1:2,SPRN[name]-1)}}
 if(!SPR[name])name='idle';
 const src=SPR[name],fw=src.width/SPRN[name],fh=src.height,k=SPRK;
 c.save();c.imageSmoothingEnabled=false;c.translate(x|0,y|0);c.scale(f.face*sc,sc);
 if(s=='ko'){c.translate(0,-4);c.rotate(-1.45)}else if(s=='hit')c.rotate(-.08);
-else if(s=='idle')c.translate(0,(t/15|0)%2);else if(s=='walk')c.translate(0,(t/8|0)%2);
 if(s=='atk'&&f.atk=='s'){c.fillStyle='rgba(255,210,63,.3)';c.fillRect(-34,-fh*k-6,68,fh*k+6)}
-c.globalAlpha=1;c.drawImage(src,fi*fw,0,fw,fh,-fw*k/2,-fh*k,fw*k,fh*k);
-if(fn>=0&&fn<SPRN[name]){c.globalAlpha=Math.min(1,fa);c.drawImage(src,fn*fw,0,fw,fh,-fw*k/2,-fh*k,fw*k,fh*k)}
-c.restore();return}
+c.drawImage(src,fi*fw,0,fw,fh,-fw*k/2,-fh*k,fw*k,fh*k);c.restore();return}
 c.save();c.translate(x|0,y|0);c.scale(f.face*sc,sc);
 if(s=='ko'){c.translate(0,-8);c.rotate(-1.5)}else if(s=='hit')c.rotate(-.12);
 if(f.cr&&s!='atk')c.scale(1,.75);
