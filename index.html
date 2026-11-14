@@ -96,7 +96,7 @@ Rr(432,200,44,38,'#14141c');Rr(434,202,40,34,'#c8482a');Rr(444,214,20,10,'#fff')
 /* ---------- fighter ---------- */
 function R(x,y,w,h,col){c.fillStyle='#07070c';c.fillRect(x-1,y-1,w+2,h+2);c.fillStyle=col;c.fillRect(x,y,w,h)}
 /* sprite BEPPE (da Google Drive): 1 riga per animazione in assets/characters/beppe/, corpo in piedi normalizzato a 400px, piedi sul bordo inferiore, rivolti a destra */
-const SPR={},SPRB=400,VER=9,SPRN={idle:4,walk:4,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:5,fall:5,ko:1};
+const SPR={},SPRB=400,VER=10,SPRN={idle:4,walk:4,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:5,fall:5,ko:1};
 for(const a of Object.keys(SPRN)){const im=new Image();im.onload=()=>{SPR[a]=im};im.src='assets/characters/beppe/beppe-'+a+'.png?v='+VER}
 const PAL=new Image();PAL.src='assets/characters/beppe/pallet.png?v='+VER;
 const BGI=new Image();BGI.src='assets/backgrounds/arena-supermercato.png?v='+VER;
