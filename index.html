@@ -144,7 +144,7 @@ const SF={hit:[180,.1,'square',.3,60],blk:[500,.06,'triangle',.25],whf:[260,.07,
 function sfx(n){const s=SF[n];if(s)tone(s[0],s[1],s[2],s[3]*O.sfx/100,s[4])}
 setInterval(()=>{if(!AC||!pl)return;const q=(mst/12|0)%2?5:0,n=[0,3,7,12,7,3][mst%6]+q;tone(110*2**(n/12),.15,'square',.05*O.mus/100);if(mst%2==0)tone(55*2**(q/12),.2,'triangle',.09*O.mus/100);mst++},170);
 /* ---------- gioco ---------- */
-const MV={p:{su:12,ac:16,re:32,d:5,r:30,st:11,kb:2},k:{su:14,ac:14,re:32,d:7,r:36,st:13,kb:3},h:{su:10,ac:5,re:18,d:13,r:34,st:22,kb:7},s:{su:9,ac:2,re:16}};
+const MV={p:{su:4,ac:4,re:4,d:5,r:30,st:11,kb:2},k:{su:4,ac:4,re:4,d:7,r:36,st:13,kb:3},h:{su:10,ac:5,re:18,d:13,r:34,st:22,kb:7},s:{su:9,ac:2,re:16}};
 let G=null,T=0,mode='arc',tour=0,pickI=0,keys={},TR={},PS=[],PJ=[],last=0,acc=0,demo=[{L:CH[0],x:88,face:1,st:'idle',t:0,ext:0,y:0},{L:CH[7],x:264,face:-1,st:'idle',t:0,ext:0,y:0}],arena=AR[0];
 function mk(L,x,face,ai,lv){return{L,x,y:0,vx:0,vy:0,face,hp:100,tr:100,sp:0,st:'idle',t:0,atk:null,did:0,stun:0,blk:0,cr:0,rep:{m:'',n:0,t:-999},ai,lv,ob:0,hd:{},wins:0,ext:0}}
 function sh(id){document.querySelectorAll('.scr').forEach(e=>e.classList.toggle('on',e.id==id));$('#tc').classList.toggle('on',id==''&&touchOn())}
