@@ -1,4 +1,4 @@
-# PIXEL FURY — 2D Pixel Art Fighting Game
+# GROSSETTO — Picchiaduro del supermercato
 
 Picchiaduro arcade 2D in pixel art, ispirato ai classici anni '90, **giocabile direttamente nel browser** (desktop e smartphone) senza installazioni. Tutti gli asset grafici e sonori sono **originali e generati proceduralmente** a runtime: nessun file esterno, nessun framework.
 
