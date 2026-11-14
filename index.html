@@ -97,9 +97,9 @@ Rr(432,200,44,38,'#14141c');Rr(434,202,40,34,'#c8482a');Rr(444,214,20,10,'#fff')
 function R(x,y,w,h,col){c.fillStyle='#07070c';c.fillRect(x-1,y-1,w+2,h+2);c.fillStyle=col;c.fillRect(x,y,w,h)}
 /* sprite BEPPE (da Google Drive): 1 riga per animazione in assets/characters/beppe/, corpo in piedi normalizzato a 400px, piedi sul bordo inferiore, rivolti a destra */
 const SPR={},SPRB=400,SPRN={idle:2,walk:2,punch:3,kick:3,heavy:3,jump:3,block:1,crouch:1,special:3};
-for(const a of Object.keys(SPRN)){const im=new Image();im.onload=()=>{SPR[a]=im};im.src='assets/characters/beppe/beppe-'+a+'.png?v=4'}
-const PAL=new Image();PAL.src='assets/characters/beppe/pallet.png?v=4';
-const BGI=new Image();BGI.src='assets/backgrounds/arena-supermercato.png?v=4';
+for(const a of Object.keys(SPRN)){const im=new Image();im.onload=()=>{SPR[a]=im};im.src='assets/characters/beppe/beppe-'+a+'.png?v=5'}
+const PAL=new Image();PAL.src='assets/characters/beppe/pallet.png?v=5';
+const BGI=new Image();BGI.src='assets/backgrounds/arena-supermercato.png?v=5';
 const SPR_H=0.45*384/2, SPRK=SPR_H/SPRB; /* altezza sprite ~45% del canvas, in coordinate mondo */
 function draw(f,x,y,pose,sc){const L=f.L,s=pose||f.st,t=f.t,e=f.ext||0;sc=(sc||1)*(L.big?1.12:1);
 if(L.n=='BEPPE'&&SPR.idle){let name='idle',fi=0;
@@ -144,7 +144,7 @@ const SF={hit:[180,.1,'square',.3,60],blk:[500,.06,'triangle',.25],whf:[260,.07,
 function sfx(n){const s=SF[n];if(s)tone(s[0],s[1],s[2],s[3]*O.sfx/100,s[4])}
 setInterval(()=>{if(!AC||!pl)return;const q=(mst/12|0)%2?5:0,n=[0,3,7,12,7,3][mst%6]+q;tone(110*2**(n/12),.15,'square',.05*O.mus/100);if(mst%2==0)tone(55*2**(q/12),.2,'triangle',.09*O.mus/100);mst++},170);
 /* ---------- gioco ---------- */
-const MV={p:{su:3,ac:6,re:3,d:5,r:30,st:11,kb:2},k:{su:3,ac:6,re:3,d:7,r:36,st:13,kb:3},h:{su:10,ac:5,re:18,d:13,r:34,st:22,kb:7},s:{su:9,ac:2,re:16}};
+const MV={p:{su:3,ac:9,re:3,d:5,r:30,st:11,kb:2},k:{su:3,ac:9,re:3,d:7,r:36,st:13,kb:3},h:{su:10,ac:9,re:18,d:13,r:34,st:22,kb:7},s:{su:9,ac:6,re:16}};
 let G=null,T=0,mode='arc',tour=0,pickI=0,keys={},TR={},PS=[],PJ=[],last=0,acc=0,demo=[{L:CH[0],x:88,face:1,st:'idle',t:0,ext:0,y:0},{L:CH[7],x:264,face:-1,st:'idle',t:0,ext:0,y:0}],arena=AR[0];
 function mk(L,x,face,ai,lv){return{L,x,y:0,vx:0,vy:0,face,hp:100,tr:100,sp:0,st:'idle',t:0,atk:null,did:0,stun:0,blk:0,cr:0,rep:{m:'',n:0,t:-999},ai,lv,ob:0,hd:{},wins:0,ext:0}}
 function sh(id){document.querySelectorAll('.scr').forEach(e=>e.classList.toggle('on',e.id==id));$('#tc').classList.toggle('on',id==''&&touchOn())}
