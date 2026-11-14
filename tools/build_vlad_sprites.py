@@ -2,8 +2,8 @@
 Uso: python3 tools/build_vlad_sprites.py
 
 Tavole: 5422 riferimento (non usata) · 5424 guardia/camminata · 5426 calcio · 5429 spruzzino (speciale)
-5430 nuvola dello spruzzino (proiettile) · 5433 colpito/caduta · 5434 KO · 5435 vittoria · 5437 accovacciato + pugno
-Mancano pose dedicate per salto e parata: si riusano pose simili (vedi sotto)."""
+5430 nuvola dello spruzzino (proiettile) · 5432 parata/accovacciato · 5433 colpito/caduta · 5434 KO · 5435 vittoria · 5437 accovacciato + pugno
+Manca una posa dedicata per il salto: si riusa il ginocchio alto del calcio."""
 import os, sys
 sys.path.insert(0, os.path.dirname(__file__))
 import numpy as np
@@ -34,37 +34,10 @@ aim = fig(5429, 1, keep=lambda yy, xx: xx < ((yy < 560) * 828 + ((yy >= 560) & (
 sheet('special', [fig(5429, 0), aim, aim])
 sheet('jump', [k[0], k[0], idle0])                         # nessuna tavola salto: ginocchio alto, poi guardia
 
-
-def waist(f):
-    """riga di vita (ultima riga con molta maglia rossa) e centro x della maglia su quella riga"""
-    p = f['px']
-    red = (p[..., 3] > 128) & (p[..., 0] > 90) & (p[..., 0] > p[..., 1] * 2.2) & (p[..., 0] > p[..., 2] * 2.2)
-    rows = np.where(red.sum(1) > 25)[0]
-    y = int(rows.max())
-    xs = np.where(red[y - 6:y + 1].any(0))[0]
-    return y, float(xs.mean())
-
-
-def splice(top, bottom):
-    """busto e braccia di 'top' sopra bacino e gambe di 'bottom', uniti alla vita"""
-    yt, xt = waist(top)
-    yb, xb = waist(bottom)
-    T, Bp = top['px'][:yt + 1], bottom['px'][yb + 1:]
-    L = int(max(xt, xb)) + 4
-    Rw = int(max(T.shape[1] - xt, Bp.shape[1] - xb)) + 4
-    out = np.zeros((T.shape[0] + Bp.shape[0], L + Rw, 4), np.float32)
-    xo = int(round(L - xb))
-    out[T.shape[0]:, xo:xo + Bp.shape[1]] = Bp
-    xo = int(round(L - xt))
-    region = out[:T.shape[0], xo:xo + T.shape[1]]
-    m = T[..., 3:4] > 0
-    region[:] = np.where(m, T, region)
-    return dict(px=out, ax=L + (bottom['ax'] - xb))
-
-
-# nessuna tavola parata: busto della posa accovacciata (braccio che copre il viso) sulle gambe in piedi
-sheet('block', [splice(crouch0, idle0)])
-sheet('crouch', [crouch0])
+# parata: tavola 5432 (in piedi a braccia incrociate, in piedi che si copre il viso, mezza guardia,
+# accovacciato in parata). La 2a e la 3a posa si toccano: si separano a x=634.
+sheet('block', [fig(5432, 1, keep=lambda yy, xx: xx < 634)])  # si copre il viso con le braccia
+sheet('crouch', [fig(5432, 2)])                            # accovacciato in parata
 # la 1a figura di 5433 ha tre gambe nel disegno originale: si usano solo la 2a (colpito) e la 3a (cade)
 f = [fig(5433, i) for i in (1, 2)]
 sheet('hit', [f[0]])
