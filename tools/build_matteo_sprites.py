@@ -68,17 +68,18 @@ def sheet(name, frames, top=3, bot=2):
     Image.fromarray(np.clip(out, 0, 255).astype(np.uint8), 'RGBA').save(DST + 'matteo-%s.png' % name, optimize=True)
     print(name, len(frames), 'x', (cw, H))
 
-B = blend
-idle0, idle1, walk2 = fig(5408, 0), fig(5408, 1), fig(5408, 2)
-sheet('idle', [idle0, B(idle0, idle1), idle1, B(idle1, idle0)])
-sheet('walk', [idle0, B(idle0, walk2), walk2, B(walk2, idle0)])
+# niente frame interpolati (sovrapposizioni in trasparenza = effetto "mosso"):
+# solo pose nitide; negli attacchi la posa di colpo compare gia' dal 2o frame per una risposta immediata
+idle0, walk2 = fig(5408, 0), fig(5408, 2)
+sheet('idle', [idle0])                                        # respiro fatto in gioco (leggero bob)
+sheet('walk', [idle0, walk2])
 p = [fig(5409, i) for i in range(3)]
-sheet('punch', [p[0], B(p[0], p[1]), p[1], B(p[1], p[2]), p[2]])
+sheet('punch', [p[0], p[1], p[1], p[1], p[2]])
 k = [fig(5410, i) for i in range(3)]
-sheet('kick', [k[0], B(k[0], k[1]), k[1], B(k[1], k[2]), k[2]])
+sheet('kick', [k[0], k[1], k[1], k[1], k[2]])
 h = [fig(5411, i) for i in range(3)]
-sheet('heavy', [h[0], h[1], h[2], h[2], B(h[2], idle0)])
-sheet('special', [fig(5412, i, K_SPECIAL) for i in range(3)])          # spinge carrello, lo solleva, lancia
+sheet('heavy', [h[0], h[1], h[2], h[2], idle0])
+sheet('special', [fig(5412, i, K_SPECIAL) for i in range(3)])  # spinge carrello, lo solleva, lancia
 j = [fig(5414, i, K_JUMP) for i in range(4)]
 # la posa di stacco (j[1]) ha il braccio tagliato nella tavola: stacco/atterraggio in guardia, raccolto all'apice
 sheet('jump', [j[3], j[2], j[3]])
