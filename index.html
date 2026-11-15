@@ -184,7 +184,7 @@ function R(x,y,w,h,col){c.fillStyle='#07070c';c.fillRect(x-1,y-1,w+2,h+2);c.fill
 /* sprite dei personaggi: 1 riga per animazione in assets/characters/<nome>/, corpo in piedi normalizzato a 400px, piedi sul bordo inferiore, rivolti a destra.
    n = frame per animazione; pj = proiettile dello speciale (pjn frame); spT = soglie (tick) dei frame dello speciale se diverse dallo standard.
    hit/win sono opzionali: se mancano si usa la posa idle (inclinata quando colpito). */
-const SPRB=400,VER=37,SPRSET={
+const SPRB=400,VER=38,SPRSET={
 BEPPE:{d:'beppe',n:{idle:4,walk:4,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:3,ko:1,win:2},pj:'pallet',pjn:1,pjw:46.9,pjh:44.3,pjo:[12.5,-23.8],spT:[6,11]},
 MATTEO:{d:'matteo',n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:3,ko:1,win:3},pj:'matteo-cart',pjn:3,spT:[5,11]},
 VLAD:{d:'vlad',sc:1.05,n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:2,ko:1,win:2},pj:'vlad-spray',pjn:3,pjs:.6,pjo:[33.8,-83.5],pji:1,spT:[5,11]},
@@ -199,8 +199,9 @@ FALSA:{d:'falsa',n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1
 ANGEL:{d:'angel',n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:4,hit:1,fall:2,ko:1,win:2},ml:50,dash:4.2,hop:4.2,spT:[4,9,13]},
 /* PAULUX (boss): pose da tools/build_character.py, speciale da tools/build_special.py --linee:
    sale sul transpallet e carica, corpo a corpo con scatto (dash).
-   Alto come VLAD: L.big lo ingrandirebbe di 1.12, quindi sc = 1.05/1.12 per arrivare a 1.05 */
-PAULUX:{d:'paulux',sc:.9375,n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:4,hit:1,fall:2,ko:1,win:2},ml:62,dash:5,spT:[4,9,14]}};
+   Alto come VLAD ma con testa e busto grandi come gli altri: tools/build_paulux.py gli allunga le
+   gambe (x1.16) e qui la scala totale e' 0.89 (L.big 1.12 x sc .795). fk = altezza in selezione */
+PAULUX:{d:'paulux',sc:.795,fk:.9375,n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:4,hit:1,fall:2,ko:1,win:2},ml:62,dash:5,spT:[4,9,14]}};
 /* proiettile a più frame: pjh altezza e pjy bordo superiore (rispetto alla linea del proiettile), pji = il 1o frame è solo l'avvio;
    pjg = l'effetto cresce frame dopo frame e resta sull'ultimo (onda di LUIS);
    sc = scala del personaggio (es. Vlad un po' più alto); pjo = [avanti, altezza] del punto di uscita rispetto ai piedi (es. ugello dello spruzzino), pjs = scala rispetto agli sprite:
@@ -442,7 +443,7 @@ st.addEventListener('pointerup',e=>{if(sx==null)return;const d=e.clientX-sx;sx=n
 function selAnim(){if(!$('#s-sel').classList.contains('on'))return;const sv=c,L=CH[selI],ss=SPRSET[L.n],fr=ss&&ss.front;
 try{c=$('#pvc').getContext('2d');c.imageSmoothingEnabled=false;c.clearRect(0,0,300,420);
 const kk=(ss&&ss.sc||1)*(L.big?1.12:1)/1.12;/* il piu' grande (boss) occupa tutta l'altezza */
-if(fr&&fr.complete&&fr.naturalWidth){const h=404*kk*(1+Math.sin(T/22)*.008),w=fr.naturalWidth*h/fr.naturalHeight;c.drawImage(fr,150-w/2,416-h,w,h)}
+if(fr&&fr.complete&&fr.naturalWidth){const h=404*(ss.fk||kk)*(1+Math.sin(T/22)*.008),w=fr.naturalWidth*h/fr.naturalHeight;c.drawImage(fr,150-w/2,416-h,w,h)}
 else draw({L,face:1,st:'idle',t:T,ext:0,cr:0},150,416,'idle',404/(0.55*384/2)/(L.big?1.12:1)*kk*(ss&&ss.im.idle?1:.75))}finally{c=sv}}
 $('#b-go').onclick=()=>go(selI);
 const GO={menu:()=>{G=null;pl=false;sh('s-menu')},arc:()=>{mode='arc';fillSel();sh('s-sel')},tor:()=>{mode='tor';fillSel();sh('s-sel')},set:()=>sh('s-set')};
