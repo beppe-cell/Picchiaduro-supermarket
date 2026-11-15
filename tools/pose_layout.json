@@ -1,0 +1,30 @@
+{
+  "_doc": "Disposizione dei 3 fogli pose da far ridisegnare a Gemini (la mossa speciale non c'e': e' unica per ogni personaggio e si fa a parte). Unica fonte per tools/make_pose_templates.py (fogli guida ed esempio) e tools/build_character.py (importazione). Coordinate in caselle: col, row, span (caselle occupate in orizzontale). Le linee guida sono frazioni dell'altezza di una casella.",
+  "sheet": {"w": 1264, "h": 848, "cols": 3, "rows": 2},
+  "guides": {"feet": 0.95, "head": 0.07},
+  "sheets": {
+    "A": {"title": "MOVIMENTO", "cells": [
+      {"id": "idle",      "label": "1 GUARDIA",          "col": 0, "row": 0},
+      {"id": "walk",      "label": "2 PASSO",            "col": 1, "row": 0},
+      {"id": "jump_up",   "label": "3 SALTO - STACCO",   "col": 2, "row": 0},
+      {"id": "jump_tuck", "label": "4 SALTO - RACCOLTO", "col": 0, "row": 1},
+      {"id": "crouch",    "label": "5 ACCOVACCIATO",     "col": 1, "row": 1},
+      {"id": "block",     "label": "6 PARATA",           "col": 2, "row": 1}
+    ]},
+    "B": {"title": "ATTACCHI", "cells": [
+      {"id": "punch_0",   "label": "1 PUGNO - CARICA",   "col": 0, "row": 0},
+      {"id": "punch_1",   "label": "2 PUGNO - COLPO",    "col": 1, "row": 0},
+      {"id": "kick_0",    "label": "3 CALCIO - CARICA",  "col": 2, "row": 0},
+      {"id": "kick_1",    "label": "4 CALCIO - COLPO",   "col": 0, "row": 1},
+      {"id": "heavy_0",   "label": "5 FORTE - CARICA",   "col": 1, "row": 1},
+      {"id": "heavy_1",   "label": "6 FORTE - COLPO",    "col": 2, "row": 1}
+    ]},
+    "C": {"title": "REAZIONI", "cells": [
+      {"id": "hit",       "label": "1 COLPITO",          "col": 0, "row": 0},
+      {"id": "fall",      "label": "2 CADE",             "col": 1, "row": 0},
+      {"id": "win_0",     "label": "3 VITTORIA",         "col": 2, "row": 0},
+      {"id": "ko",        "label": "4 KO - DISTESO",     "col": 0, "row": 1, "span": 2, "lying": true},
+      {"id": "win_1",     "label": "5 VITTORIA 2",       "col": 2, "row": 1}
+    ]}
+  }
+}
