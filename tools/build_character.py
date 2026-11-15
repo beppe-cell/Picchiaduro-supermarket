@@ -52,9 +52,18 @@ def load_sheet(path, sheet):
     delle etichette sotto la linea dei piedi."""
     o = key(path)
     H, W = o.shape[:2]
+    # magenta scuro o spento (Gemini a volte sbaglia il colore dello sfondo): rosso e blu entrambi
+    # ben sopra il verde. La pelle (B < G), la maglia rossa (B basso), i capelli grigi e il nero
+    # non rientrano.
+    raw = np.asarray(Image.open(path).convert('RGB')).astype(np.float32)
+    r, gg, b = raw[..., 0], raw[..., 1], raw[..., 2]
+    mag = np.minimum(r, b) - gg
+    dull = (mag > 22) & (r > 1.5 * gg + 8) & (b > 1.5 * gg + 8)
+    soft = np.clip(1 - (mag - 22) / 28, 0, 1) * 255
+    o[..., 3] = np.where(dull, np.minimum(o[..., 3], soft), o[..., 3])
     R, G, B = o[..., 0], o[..., 1], o[..., 2]
     cyan = (G > 140) & (B > 140) & (R < 120) & (np.abs(G - B) < 80)
-    blue = (B > np.maximum(R, G) + 35) & (B > 110) & (o[..., 3] > 0)
+    blue = (B > np.maximum(R, G) + 30) & (B > 70) & (o[..., 3] > 0)   # anche blu scuro (guide su fondo scuro)
     zone = np.zeros((H, W), bool)
     rows = np.where(blue.sum(1) > 0.25 * W)[0]
     cols = np.where(blue.sum(0) > 0.25 * H)[0]
