@@ -28,7 +28,8 @@ Ogni push su `main` pubblica il gioco su GitHub Pages (`.github/workflows/deploy
 | MATTEO | sprite disegnati (`assets/characters/matteo/`) | Carrello volante |
 | VLAD | sprite disegnati (`assets/characters/vlad/`) | Spruzzino accecante |
 | LUIS | sprite disegnati (`assets/characters/luis/`) | Assolo distruttivo (onda sonora) |
-| ZANI, FALSA, ANGEL | disegno procedurale | Carrellino |
+| ZANI | sprite disegnati (`assets/characters/zani/`) | Taglierino furioso (corpo a corpo) |
+| FALSA, ANGEL | disegno procedurale | Carrellino |
 | PAULUX (boss) | disegno procedurale | Carrellino |
 
 ## Comandi
@@ -37,7 +38,7 @@ Ogni push su `main` pubblica il gioco su GitHub Pages (`.github/workflows/deploy
 |---|---|---|
 | Muovi | `A` / `D` | levetta sinistra/destra |
 | Salta / abbassati | `W` / `S` | levetta su/giù |
-| Pugno / calcio / pesante | `J` / `K` / `L` | PUGNO / CALCIO / FORTE |
+| Pugno forte / calcio / pugno | `J` / `K` / `L` | FORTE (in basso) / CALCIO / PUGNO (in alto) |
 | Speciale (barra SUPER piena) | `I` | SPECIALE (si illumina quando è carico) |
 | Parata (danno /10) | `SPAZIO` / `SHIFT` | PARATA |
 | Pausa | `ESC` / `P` | II |
@@ -66,12 +67,15 @@ assets/
       sorgenti/                tavole originali IMG_5422–5437
     luis/                      luis-<animazione>.png, luis-wave.png (proiettile)
       sorgenti/                tavola, fogli pose IMG_5449–5452, speciale IMG_5454
+    zani/                      zani-<animazione>.png (speciale corpo a corpo, senza proiettile)
+      sorgenti/                tavola IMG_5456, fogli pose IMG_5458–5460, speciale IMG_5463
 docs/reference/                immagini di riferimento per lo stile
 docs/sprite-guide/             fogli pose e prompt per creare un personaggio con Gemini
 tools/
   pose_layout.json             disposizione delle caselle dei fogli pose
   make_pose_templates.py       genera i fogli guida ed esempio in docs/sprite-guide/
   build_character.py           importa un personaggio dai 3 fogli pose (tutte le animazioni tranne la speciale)
+  build_special.py             pose della speciale da una tavola a parte (con --taglio per pose che si toccano)
   build_luis_special.py        speciale di LUIS: chitarra e onda sonora
   spritebuild.py               strumenti comuni: ritaglio, scala, allineamento, fogli PNG
   build_matteo_sprites.py      genera i PNG di Matteo dalle tavole sorgenti

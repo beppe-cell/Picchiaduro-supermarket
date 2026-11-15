@@ -75,8 +75,8 @@ input[type=range]{width:22cqw;accent-color:var(--r)}
 .a.ss.ready{background:radial-gradient(circle at 35% 30%,#fff6b0,#ffd23f 55%,#b8860b);color:#3a2400;text-shadow:none;opacity:1;animation:spr .5s steps(2) infinite}
 @keyframes spr{50%{box-shadow:0 .5cqw 0 rgba(0,0,0,.45),0 0 0 .8cqw rgba(255,210,63,.45)}}
 .a.bb{background:radial-gradient(circle at 35% 30%,#e8eef8,#9aa7bd 60%,#4c5870);color:#10182a;text-shadow:none}
-.a.pp{right:18.5cqw;bottom:1cqw}.a.kk{right:9.5cqw;bottom:4.5cqw}.a.bb{right:.6cqw;bottom:1cqw}
-.a.hh{right:18.5cqw;bottom:10cqw}.a.ss{right:9.5cqw;bottom:13.5cqw}
+.a.hh{right:18.5cqw;bottom:1cqw}.a.kk{right:9.5cqw;bottom:4.5cqw}.a.bb{right:.6cqw;bottom:1cqw}
+.a.pp{right:18.5cqw;bottom:10cqw}.a.ss{right:9.5cqw;bottom:13.5cqw}
 #pz{position:absolute;pointer-events:auto;font:inherit;color:#fff;background:rgba(10,14,32,.55);border:.3cqw solid rgba(255,255,255,.75);border-radius:50%;padding:0;left:50%;margin-left:-2.5cqw;top:10.6cqw;width:5cqw!important;height:5cqw!important;font-size:1.4cqw!important}
 /* verticale: gioco a schermo intero, sfondo a tutta altezza, pulsanti touch più grandi */
 @media(orientation:portrait){
@@ -103,8 +103,8 @@ h2{font-size:4.4cqw}
 #stick .base{width:30cqw;height:30cqw;margin:-15cqw 0 0 -15cqw}
 #stick .knob{width:14cqw;height:14cqw;margin:-7cqw 0 0 -7cqw}
 .a{width:16.5cqw;height:16.5cqw;font-size:2.3cqw;border-width:.5cqw;opacity:.85}
-.a.pp{right:37cqw;bottom:5cqw}.a.kk{right:19cqw;bottom:9cqw}.a.bb{right:1.5cqw;bottom:5cqw}
-.a.hh{right:37cqw;bottom:25cqw}.a.ss{right:19cqw;bottom:29cqw}
+.a.hh{right:37cqw;bottom:5cqw}.a.kk{right:19cqw;bottom:9cqw}.a.bb{right:1.5cqw;bottom:5cqw}
+.a.pp{right:37cqw;bottom:25cqw}.a.ss{right:19cqw;bottom:29cqw}
 #pz{margin-left:-3.5cqw;top:11cqw;width:7cqw!important;height:7cqw!important;font-size:2.2cqw!important}
 }
 </style></head><body>
@@ -124,7 +124,7 @@ h2{font-size:4.4cqw}
 <label class="row">MUSICA <input type="range" id="o-mus" min="0" max="100"></label>
 <label class="row">EFFETTI <input type="range" id="o-sfx" min="0" max="100"></label>
 <div class="row">TOUCH <button class="b alt" id="o-touch" style="min-width:18cqw">AUTO</button> VIBRAZIONE <button class="b alt" id="o-vib" style="min-width:10cqw">SI</button></div>
-<div class="small">A/D muovi · W salta · S abbassati · J pugno · K calcio · L pesante · I speciale (barra SUPER piena) · SPAZIO/SHIFT para (danno /10) · ESC pausa. Pugni ripetuti fanno meno danno: alterna le mosse.<br>TELEFONO: levetta a sinistra (appoggia il pollice dove vuoi, su per saltare), pulsanti a destra: puoi far scorrere il dito da uno all'altro. SPECIALE si illumina quando è carico.</div></div>
+<div class="small">A/D muovi · W salta · S abbassati · J pugno forte · K calcio · L pugno · I speciale (barra SUPER piena) · SPAZIO/SHIFT para (danno /10) · ESC pausa. Pugni ripetuti fanno meno danno: alterna le mosse.<br>TELEFONO: levetta a sinistra (appoggia il pollice dove vuoi, su per saltare), pulsanti a destra: puoi far scorrere il dito da uno all'altro. SPECIALE si illumina quando è carico.</div></div>
 <button class="b" data-go="menu">INDIETRO</button></div>
 <div class="scr" id="s-pause"><h2>PAUSA</h2><div class="mlist"><button class="b" id="b-res">RIPRENDI</button><button class="b alt" data-go="menu">ESCI AL MENU</button></div></div>
 <div class="scr" id="s-end"><h2 id="e-t"></h2><div id="e-s" class="small"></div><div class="mlist"><button class="b" id="b-nx"></button><button class="b alt" data-go="menu">MENU</button></div></div>
@@ -137,7 +137,7 @@ const CH=[
 {n:'BEPPE',ms:'LANCIO DEL PALLET',sk:'#e2a977',h:'#15110f',hs:'spike',sh:'#d42a2a',pa:'#16161c',bt:'#4a2f1c',lg:1,sp:1.5,pw:1},
 {n:'VLAD',ms:'SPRUZZINO ACCECANTE',sk:'#e9b48c',h:'#e8c25a',hs:'short',sh:'#d42a2a',pa:'#16161c',bt:'#4a2f1c',lg:1,sp:1.65,pw:.95},
 {n:'LUIS',ms:'ASSOLO DISTRUTTIVO',sk:'#b27a4c',h:'#0d0b0a',hs:'short',sh:'#d42a2a',pa:'#16161c',bt:'#4a2f1c',lg:1,sp:1.4,pw:1.1},
-{n:'ZANI',sk:'#e9bf98',h:'#8a6a3a',hs:'bald',sh:'#d42a2a',pa:'#16161c',bt:'#4a2f1c',lg:1,ac:'beard',sp:1.5,pw:1},
+{n:'ZANI',ms:'TAGLIERINO FURIOSO',sk:'#e9bf98',h:'#8a6a3a',hs:'bald',sh:'#d42a2a',pa:'#16161c',bt:'#4a2f1c',lg:1,ac:'beard',sp:1.5,pw:1},
 {n:'MATTEO',ms:'CARRELLO VOLANTE',sk:'#c99068',h:'#4a2c1a',hs:'curl',sh:'#d42a2a',pa:'#16161c',bt:'#4a2f1c',lg:1,ac:'gl',sp:1.5,pw:1.05},
 {n:'FALSA',sk:'#f3d2b4',h:'#f1d36a',hs:'long',sh:'#f4f4f4',pa:'#2a3a6a',bt:'#222',sp:1.8,pw:.9},
 {n:'ANGEL',sk:'#eac4a0',h:'#6b4a2b',hs:'short',sh:'#f4f4f4',pa:'#2b2b33',bt:'#222',ac:'wing',sp:1.6,pw:1},
@@ -175,12 +175,14 @@ function R(x,y,w,h,col){c.fillStyle='#07070c';c.fillRect(x-1,y-1,w+2,h+2);c.fill
 /* sprite dei personaggi: 1 riga per animazione in assets/characters/<nome>/, corpo in piedi normalizzato a 400px, piedi sul bordo inferiore, rivolti a destra.
    n = frame per animazione; pj = proiettile dello speciale (pjn frame); spT = soglie (tick) dei frame dello speciale se diverse dallo standard.
    hit/win sono opzionali: se mancano si usa la posa idle (inclinata quando colpito). */
-const SPRB=400,VER=28,SPRSET={
+const SPRB=400,VER=30,SPRSET={
 BEPPE:{d:'beppe',n:{idle:4,walk:4,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,fall:3,ko:1},pj:'pallet',pjn:1,pjw:46.9,pjh:44.3,pjo:[12.5,-23.8],spT:[6,11]},
 MATTEO:{d:'matteo',n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:3,ko:1,win:3},pj:'matteo-cart',pjn:3,spT:[5,11]},
 VLAD:{d:'vlad',sc:1.05,n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:2,ko:1,win:2},pj:'vlad-spray',pjn:3,pjs:.6,pjo:[33.8,-83.5],pji:1,spT:[5,11]},
 /* LUIS: pose da tools/build_character.py (fogli pose), speciale e onda da tools/build_luis_special.py */
-LUIS:{d:'luis',n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:2,ko:1,win:2},pj:'luis-wave',pjn:3,pjs:.6,pjo:[26.4,-63.4],pjg:1,spT:[5,11]}};
+LUIS:{d:'luis',n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:2,ko:1,win:2},pj:'luis-wave',pjn:3,pjs:.6,pjo:[26.4,-63.4],pjg:1,spT:[5,11]},
+/* ZANI: pose da tools/build_character.py, speciale da tools/build_special.py; ml = speciale corpo a corpo con portata ml */
+ZANI:{d:'zani',n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:2,ko:1,win:2},ml:46,spT:[5,11]}};
 /* proiettile a più frame: pjh altezza e pjy bordo superiore (rispetto alla linea del proiettile), pji = il 1o frame è solo l'avvio;
    pjg = l'effetto cresce frame dopo frame e resta sull'ultimo (onda di LUIS);
    sc = scala del personaggio (es. Vlad un po' più alto); pjo = [avanti, altezza] del punto di uscita rispetto ai piedi (es. ugello dello spruzzino), pjs = scala rispetto agli sprite:
@@ -269,7 +271,9 @@ if(f.st=='ko'){f.vx*=.92;f.x+=f.vx;f.vy+=.5;f.y=Math.min(0,f.y+f.vy);if(f.y>=0)f
 const gr=f.y>=0&&f.vy>=0;
 if(f.stun>0){f.stun--;f.vx*=.85;f.st=f.stun>0?'hit':'idle'}
 else if(f.st=='atk'){const m=MV[f.atk],t=f.t;f.ext=t<m.su?t/m.su:t<m.su+m.ac?1:Math.max(0,1-(t-m.su-m.ac)/m.re);f.vx*=.8;
-if(f.atk=='s'){if(t==m.su){const ps0=SPRSET[f.L.n]||{},po=ps0.pjo,bs=(f.L.big?1.12:1)*(ps0.sc||1);PJ.push({x:f.x+f.face*(po?po[0]*bs:22)-f.face*3.6,y:(po?po[1]*bs:-30)+f.y,fy:f.y,vx:f.face*3.6,o:f,a:f.atk,t:-1});/* nasce fermo sul punto di uscita: si muove e ruota dal fotogramma dopo */sfx('sp')}}
+if(f.atk=='s'&&(SPRSET[f.L.n]||{}).ml){/* speciale corpo a corpo (es. taglierino di ZANI): nessun proiettile, colpo nella fase attiva */
+ if(t==m.su)sfx('sp');if(t>=m.su&&t<m.su+m.ac&&!f.did)hitchk(f,o,{r:SPRSET[f.L.n].ml,d:18,st:24,kb:6})}
+else if(f.atk=='s'){if(t==m.su){const ps0=SPRSET[f.L.n]||{},po=ps0.pjo,bs=(f.L.big?1.12:1)*(ps0.sc||1);PJ.push({x:f.x+f.face*(po?po[0]*bs:22)-f.face*3.6,y:(po?po[1]*bs:-30)+f.y,fy:f.y,vx:f.face*3.6,o:f,a:f.atk,t:-1});/* nasce fermo sul punto di uscita: si muove e ruota dal fotogramma dopo */sfx('sp')}}
 else if(t>=m.su&&t<m.su+m.ac&&!f.did)hitchk(f,o,m);
 if(t>=m.su+m.ac+m.re){f.st='idle';f.atk=null;f.ext=0}}
 else{f.ext=0;f.blk=gr&&i.b;f.cr=gr&&i.d&&!i.b;if(gr)f.face=o.x>f.x?1:-1;
@@ -278,15 +282,15 @@ const k=i.s&&f.sp>=100?'s':i.h?'h':i.k?'k':i.p?'p':null;
 if(k&&!f.blk){if(!f.ai)delete TR[k];f.st='atk';f.atk=k;f.t=0;f.did=0;f.cr=0;if(k=='s')f.sp=0;else sfx('whf')}
 else f.st=!gr?'jump':f.blk?'block':f.cr?'crouch':f.vx?'walk':'idle'}
 f.vy+=.45;f.y+=f.vy;if(f.y>=0){f.y=0;f.vy=0}f.x=Math.max(XMIN,Math.min(XMAX,f.x+f.vx))}
-function AI(f,o){if(f.ob>0){f.ob--;return{...f.hd}}
+function AI(f,o){if(f.ob>0){f.ob--;return{...f.hd}}const mlS=!!(SPRSET[f.L.n]||{}).ml;
 const lv=f.lv,dx=o.x-f.x,ad=Math.abs(dx),tw=dx>0?'r':'l',aw=dx>0?'l':'r',rn=Math.random(),hd={},dz=ZP;
 f.ob=Math.max(4,20-lv*3)+(Math.random()*8|0);
 const thr=o.st=='atk'&&ad<66/dz,rec=o.st=='atk'&&o.t>MV[o.atk].su+MV[o.atk].ac;
 if(thr&&!rec&&rn<.22+.13*lv+(o.rep.n>1?.15:0)){hd.b=1;f.ob=12+(Math.random()*10|0)}
 else if(rec&&ad<48/dz&&rn<.35+.12*lv){hd[rn<.5?'p':'k']=1}
-else if(ad>120/dz){hd[tw]=1;if(f.sp>=100&&rn<.5)hd.s=1}
-else if(ad>54/dz){if(rn<.55)hd[tw]=1;else if(rn<.65&&f.sp>=100)hd.s=1;else if(rn<.72)hd.u=1}
-else{if(rn<.38)hd.p=1;else if(rn<.6)hd.k=1;else if(rn<.7)hd.h=1;else if(rn<.84)hd[aw]=1;else hd.b=1}
+else if(ad>120/dz){hd[tw]=1;if(f.sp>=100&&rn<.5&&!mlS)hd.s=1}
+else if(ad>54/dz){if(rn<.55)hd[tw]=1;else if(rn<.65&&f.sp>=100&&!mlS)hd.s=1;else if(rn<.72)hd.u=1}
+else{if(mlS&&f.sp>=100&&rn<.3)hd.s=1;/* speciale corpo a corpo: solo da vicino */else if(rn<.38)hd.p=1;else if(rn<.6)hd.k=1;else if(rn<.7)hd.h=1;else if(rn<.84)hd[aw]=1;else hd.b=1}
 f.hd={l:hd.l,r:hd.r,d:hd.d,b:hd.b};return hd}
 function step(){T++;if(!G||G.pz||G.ph=='end')return;if(G.hs>0){G.hs--;return}
 const a=G.a,b=G.b;let ia={},ib={};
@@ -433,7 +437,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-go]');if(t
 $('#s-title').onclick=()=>{au();pl=true;sh('s-menu')};
 function pause(v){if(!G||G.ph=='end')return;G.pz=v;pl=!v;sh(v?'s-pause':'')}
 $('#b-res').onclick=()=>pause(0);$('#pz').onpointerdown=()=>pause(1);
-const KM={KeyA:'l',ArrowLeft:'l',KeyD:'r',ArrowRight:'r',KeyW:'u',ArrowUp:'u',KeyS:'d',ArrowDown:'d',KeyJ:'p',KeyK:'k',KeyL:'h',KeyI:'s',Space:'b',ShiftLeft:'b',ShiftRight:'b'};
+const KM={KeyA:'l',ArrowLeft:'l',KeyD:'r',ArrowRight:'r',KeyW:'u',ArrowUp:'u',KeyS:'d',ArrowDown:'d',KeyJ:'h',KeyK:'k',KeyL:'p',KeyI:'s',Space:'b',ShiftLeft:'b',ShiftRight:'b'};
 addEventListener('keydown',e=>{if($('#s-title').classList.contains('on')){$('#s-title').click();return}
 const sc=vis();if(sc&&!(sc.id=='s-pause'&&(e.code=='Escape'||e.code=='KeyP'))){menuKey(e,sc);return}
 if(e.code=='Escape'||e.code=='KeyP'){pause(G&&!G.pz?1:0);return}const k=KM[e.code];if(!k)return;e.preventDefault();if(!keys[k]&&'pkhs'.includes(k))TR[k]=T;keys[k]=1});
