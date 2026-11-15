@@ -20,6 +20,7 @@ BOARDS = {   # personaggio -> tavola di riferimento
     'angel': 'angel/sorgenti/IMG_5469.jpeg',
     'falsa': 'falsa/sorgenti/tavola.png',
     'beppe': 'beppe/sorgenti/tavola.JPG',      # sfondo BIANCO (vedi white_key)
+    'paulux': 'paulux/sorgenti/IMG_5476.jpeg',
 }
 WHITE_BG = {'beppe'}
 
@@ -49,5 +50,10 @@ for name, board in BOARDS.items():
     ys = np.where(idle[..., 3].max(1) > 128)[0]
     target = ys.max() - ys.min() + 1                  # altezza della guardia nello sprite
     k = target / float(front['y1'] - front['y0'] + 1)
-    write_sheet(CH + '%s/%s-front.png' % (name, name), [frame_from_mask(o, front['mask'], k)])
-    print('%s-front.png: scala %.3f, alta %d px' % (name, k, target))
+    out = CH + '%s/%s-front.png' % (name, name)
+    write_sheet(out, [frame_from_mask(o, front['mask'], k)])
+    extra = ''
+    if name in WHITE_BG:            # sfondo bianco: toglie l'alone chiaro sul contorno
+        from defringe import defringe, harden
+        extra = ', alone tolto: %d px + bordo grigio %d px' % (defringe(out), harden(out))
+    print('%s-front.png: scala %.3f, alta %d px%s' % (name, k, target, extra))

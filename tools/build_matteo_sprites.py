@@ -38,7 +38,9 @@ j = [fig(5414, i, K_JUMP) for i in range(4)]
 # la posa di stacco (j[1]) ha il braccio tagliato nella tavola: stacco/atterraggio in guardia, raccolto all'apice
 sheet('jump', [j[3], j[2], j[3]])
 sheet('block', [fig(5415, 0)])
-sheet('crouch', [fig(5415, 3)])
+# nella colonna destra di 5415 ci sono due accovacciati uno sopra l'altro: quello in alto (indice 3)
+# ha le gambe tagliate, quello in basso (indice 2) e' intero
+sheet('crouch', [fig(5415, 2)])
 f = [fig(5416, i) for i in range(3)]
 sheet('hit', [f[0]])
 sheet('fall', f)
