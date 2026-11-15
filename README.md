@@ -31,7 +31,7 @@ Ogni push su `main` pubblica il gioco su GitHub Pages (`.github/workflows/deploy
 | ZANI | sprite disegnati (`assets/characters/zani/`) | Taglierino furioso (corpo a corpo) |
 | FALSA | sprite disegnati (`assets/characters/falsa/`) | Risata al telefono (onda sonora) |
 | ANGEL | sprite disegnati (`assets/characters/angel/`) | Picchiata angelica (volo corpo a corpo) |
-| PAULUX (boss) | disegno procedurale | Carrellino |
+| PAULUX (boss) | sprite disegnati (`assets/characters/paulux/`) | Carica del transpallet (corpo a corpo) |
 
 ## Comandi
 
@@ -74,6 +74,8 @@ assets/
       sorgenti/                tavola.png, foglio-A/B/C.png, speciale IMG_5474
     angel/                     angel-<animazione>.png (speciale corpo a corpo, senza proiettile)
       sorgenti/                tavola IMG_5469, fogli pose IMG_5470–5472, speciale IMG_5473
+    paulux/                    paulux-<animazione>.png (speciale corpo a corpo col transpallet)
+      sorgenti/                tavola IMG_5476, fogli pose IMG_5477–5479, speciale IMG_5480
 docs/reference/                immagini di riferimento per lo stile
 docs/sprite-guide/             fogli pose e prompt per creare un personaggio con Gemini
 tools/

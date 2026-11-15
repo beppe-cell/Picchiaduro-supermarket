@@ -33,6 +33,9 @@ def main():
     ap.add_argument('--griglia', action='store_true',
                     help='la tavola ha la griglia azzurra dei fogli pose: toglie linee ed etichette e '
                          'ordina le pose per righe (prima la riga in alto, da sinistra)')
+    ap.add_argument('--linee', action='store_true',
+                    help='la tavola e\' divisa da linee scure a tutta lunghezza: le toglie e ordina '
+                         'le pose per righe (prima la riga in alto, da sinistra)')
     ap.add_argument('--usa', metavar='I,J,...',
                     help='quali figure usare e in che ordine (indici dopo l\'ordinamento, da 0)')
     ap.add_argument('--scala', type=float,
@@ -45,8 +48,16 @@ def main():
         o = load_sheet(a.sheet, 'A')
     else:
         o = key(a.sheet)
-    full_alpha = o[..., 3].copy()
     H, W = o.shape[:2]
+    if a.linee:
+        dark = (o[..., 3] > 40) & (o[..., :3].max(-1) < 90)
+        for axis, n in ((0, H), (1, W)):
+            full = np.convolve(dark.sum(axis) > 0.8 * n, np.ones(7), 'same') > 0
+            if axis == 0:
+                o[:, full, 3] = 0
+            else:
+                o[full, :, 3] = 0
+    full_alpha = o[..., 3].copy()
     yy, xx = np.mgrid[:H, :W]
     lines = []
     for t in a.taglio:
@@ -61,7 +72,7 @@ def main():
             gap |= (np.abs(yy - v[i]) <= 4) & (xx >= lo) & (xx <= hi)
         o[..., 3][gap] = 0
         lines.append(line)
-    if a.griglia:
+    if a.griglia or a.linee:
         allf = figures(o)
         big = max(f['mask'].sum() for f in allf)
         figs = sorted([f for f in allf if f['mask'].sum() > 0.25 * big],
