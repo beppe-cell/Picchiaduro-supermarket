@@ -57,8 +57,9 @@ Ripetere lo stesso colpo fa sempre meno danno: conviene alternare le mosse.
 index.html                     gioco completo (HTML + CSS + JS)
 assets/
   backgrounds/
-    arena-supermercato.png     arena in orizzontale
-    corridoio-verticale.jpeg   arena in verticale
+    arena-orizzontale.jpeg     arena usata in entrambi gli orientamenti (in verticale la telecamera scorre)
+    arena-supermercato.png     vecchia arena (riserva se l'immagine non carica)
+    corridoio-verticale.jpeg   vecchia arena verticale (non piu' usata)
   characters/
     beppe/                     beppe-<animazione>.png, pallet.png (proiettile)
       sorgenti/                disegni originali, foglio reazioni IMG_5475 (colpito e vittoria)
