@@ -27,7 +27,8 @@ Ogni push su `main` pubblica il gioco su GitHub Pages (`.github/workflows/deploy
 | BEPPE | sprite disegnati (`assets/characters/beppe/`) | Lancio del pallet |
 | MATTEO | sprite disegnati (`assets/characters/matteo/`) | Carrello volante |
 | VLAD | sprite disegnati (`assets/characters/vlad/`) | Spruzzino accecante |
-| LUIS, ZANI, FALSA, ANGEL | disegno procedurale | Carrellino |
+| LUIS | sprite disegnati (`assets/characters/luis/`) | Assolo distruttivo (onda sonora) |
+| ZANI, FALSA, ANGEL | disegno procedurale | Carrellino |
 | PAULUX (boss) | disegno procedurale | Carrellino |
 
 ## Comandi
@@ -63,8 +64,15 @@ assets/
       sorgenti/                tavole originali IMG_5407–5418 (sfondo magenta)
     vlad/                      vlad-<animazione>.png, vlad-spray.png (proiettile)
       sorgenti/                tavole originali IMG_5422–5437
+    luis/                      luis-<animazione>.png, luis-wave.png (proiettile)
+      sorgenti/                tavola, fogli pose IMG_5449–5452, speciale IMG_5454
 docs/reference/                immagini di riferimento per lo stile
+docs/sprite-guide/             fogli pose e prompt per creare un personaggio con Gemini
 tools/
+  pose_layout.json             disposizione delle caselle dei fogli pose
+  make_pose_templates.py       genera i fogli guida ed esempio in docs/sprite-guide/
+  build_character.py           importa un personaggio dai 3 fogli pose (tutte le animazioni tranne la speciale)
+  build_luis_special.py        speciale di LUIS: chitarra e onda sonora
   spritebuild.py               strumenti comuni: ritaglio, scala, allineamento, fogli PNG
   build_matteo_sprites.py      genera i PNG di Matteo dalle tavole sorgenti
   build_vlad_sprites.py        genera i PNG di Vlad dalle tavole sorgenti
@@ -75,10 +83,10 @@ tools/
 
 ## Aggiungere un personaggio con sprite
 
-1. Prepara le tavole con sfondo magenta pieno (una posa per figura, rivolte a destra) e mettile in
+1. Genera con Gemini i 3 fogli pose seguendo `docs/sprite-guide/PROMPT.md` e mettili in
    `assets/characters/<nome>/sorgenti/`.
-2. Genera i fogli copiando `tools/build_vlad_sprites.py`
-   (richiede `pip install pillow numpy scipy`). Formato: un PNG per animazione,
+2. `python3 -B tools/build_character.py <nome> <A> <B> <C>` (richiede `pip install pillow numpy
+   scipy`) crea tutte le animazioni tranne la speciale, che si fa a parte. Formato: un PNG per animazione,
    `<nome>-<animazione>.png`, frame affiancati a larghezza uguale, piedi sul bordo inferiore,
    personaggio in piedi alto circa 400 px.
 3. Registra il personaggio in `SPRSET` dentro `index.html` (cartella, numero di frame per
