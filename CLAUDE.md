@@ -5,11 +5,15 @@ Each agent owns a specific domain, enforcing separation of concerns and quality.
 
 ## Technology Stack
 
-- **Engine**: [CHOOSE: Web / Godot 4 / Unity / Unreal Engine 5]
-- **Language**: [CHOOSE: TypeScript / GDScript / C# / C++ / Blueprint]
+- **Engine**: Web (no bundler: the files as they are — HTML5 Canvas 2D and Web Audio, no library)
+- **Language**: JavaScript (plain, in `index.html`)
 - **Version Control**: Git with trunk-based development
-- **Build System**: [SPECIFY after choosing engine]
-- **Asset Pipeline**: [SPECIFY after choosing engine]
+- **Build System**: none — `index.html` and `assets/` are served as static files (GitHub Pages, `.github/workflows/deploy-pages.yml`); no npm, no `package.json`
+- **Asset Pipeline**: sprite sheets `assets/characters/<name>/<name>-<anim>.png` generated from the source boards in `sorgenti/` (magenta background) by `tools/build_*_sprites.py` (Python: Pillow, NumPy, SciPy); backgrounds in `assets/backgrounds/`
+
+> **Note**: the Web engine reference (`docs/engine-reference/web/`) pins the Vite + TypeScript
+> template; this game uses neither. Only its Canvas 2D and Web Audio notes apply — API answers are
+> checked against the browser APIs the game actually calls.
 
 > **Note**: Engine-specialist agents exist for Godot, Unity, and Unreal with
 > dedicated sub-specialists. Use the set matching your engine.
@@ -25,6 +29,7 @@ Each agent owns a specific domain, enforcing separation of concerns and quality.
      step and /project-settings (engine.name) write
      @docs/engine-reference/<engine>/VERSION.md here for the chosen engine. Skills
      that need the pinned version read that file on demand either way. -->
+@docs/engine-reference/web/VERSION.md
 
 
 ## Technical Preferences

@@ -25,3 +25,31 @@ framework:
 # here. `/project-settings --local <key>=<value>` writes there; `/project-settings <key>=<value>`
 # edits this file. See `.claude/docs/config-resolution.md` for the full
 # precedence order.
+
+# Written by /setup-engine web: an existing browser game recorded as it is (no bundler, no package.json).
+engine:
+  name: "Web"
+  language: "JavaScript"
+  rendering: "Canvas 2D"
+  physics: "none"
+  code_root: "."
+
+specialists:
+  code: "lead-programmer"
+  shader: "lead-programmer"
+  ui: "lead-programmer"
+  additional: []
+
+naming:
+  classes: PascalCase
+  variables: camelCase
+  constants: SCREAMING_SNAKE
+  signals: on_event_name
+  files: kebab-case
+  scenes: snake_case
+
+# No build step (static files) and no automated tests yet: build, test and smoke are
+# deliberately left unset, so checks that need them report NOT ASSESSED. The engine
+# table's npm defaults do not apply here (there is no package.json).
+commands:
+  run: "python3 -m http.server 8080"

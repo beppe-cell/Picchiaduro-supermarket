@@ -10,43 +10,43 @@
 
 ## Engine & Language
 
-- **Engine**: [TO BE CONFIGURED — run /setup-engine]
-- **Language**: [TO BE CONFIGURED]
-- **Rendering**: [TO BE CONFIGURED]
-- **Physics**: [TO BE CONFIGURED]
+- **Engine**: Web (no bundler: the files as they are)
+- **Language**: JavaScript (plain, in `index.html`)
+- **Rendering**: Canvas 2D (pixel art, `imageSmoothingEnabled=false`, logical 352x192 scaled 2x)
+- **Physics**: none (hand-written movement and hit boxes in the game loop)
 
 ## Input & Platform
 
 <!-- Written by /setup-engine. Read by /ux-design, /ux-review, /test-setup, /team-ui, and /dev-story -->
 <!-- to scope interaction specs, test helpers, and implementation to the correct input methods. -->
 
-- **Target Platforms**: [TO BE CONFIGURED — e.g., PC, Console, Mobile, Web]
-- **Input Methods**: [TO BE CONFIGURED — e.g., Keyboard/Mouse, Gamepad, Touch, Mixed]
-- **Primary Input**: [TO BE CONFIGURED — the dominant input for this game]
-- **Gamepad Support**: [TO BE CONFIGURED — Full / Partial / None]
-- **Touch Support**: [TO BE CONFIGURED — Full / Partial / None]
-- **Platform Notes**: [TO BE CONFIGURED — any platform-specific UX constraints]
+- **Target Platforms**: Web — desktop browsers and phones (portrait and landscape)
+- **Input Methods**: Keyboard and Touch
+- **Primary Input**: Touch on phones (floating stick + named buttons), keyboard on desktop
+- **Gamepad Support**: None
+- **Touch Support**: Full
+- **Platform Notes**: in portrait the touch controls have their own panel under the arena; cache-busting via `VER` in `index.html` (bump it when assets change)
 
 ## Naming Conventions
 
-- **Classes**: [TO BE CONFIGURED]
-- **Variables**: [TO BE CONFIGURED]
-- **Signals/Events**: [TO BE CONFIGURED]
-- **Files**: [TO BE CONFIGURED]
-- **Scenes/Prefabs**: [TO BE CONFIGURED]
-- **Constants**: [TO BE CONFIGURED]
+- **Classes**: PascalCase (the game has almost none: plain objects and functions)
+- **Variables**: camelCase (short names are the existing style: `f`, `G`, `PJ`)
+- **Signals/Events**: on_event_name (DOM handlers in the existing code: `onclick`, `pointerdown`)
+- **Files**: kebab-case for assets (`beppe-idle.png`); snake_case for the Python tools
+- **Scenes/Prefabs**: snake_case (screens are `#s-<name>` elements in `index.html`)
+- **Constants**: SCREAMING_SNAKE / UPPER (`VER`, `SPRSET`, `MV`)
 
 ## Performance Budgets
 
-- **Target Framerate**: [TO BE CONFIGURED]
-- **Frame Budget**: [TO BE CONFIGURED]
-- **Draw Calls**: [TO BE CONFIGURED]
-- **Memory Ceiling**: [TO BE CONFIGURED]
+- **Target Framerate**: 60 fps (fixed step 16.67 ms, `requestAnimationFrame`)
+- **Frame Budget**: 16.67 ms
+- **Draw Calls**: not measured
+- **Memory Ceiling**: not measured
 
 ## Testing
 
-- **Framework**: [TO BE CONFIGURED]
-- **Minimum Coverage**: [TO BE CONFIGURED]
+- **Framework**: none yet (no automated tests in the repo; `/test-setup` can add them)
+- **Minimum Coverage**: not set
 - **Required Tests**: Balance formulas, gameplay systems, networking (if applicable)
 
 ## Forbidden Patterns
@@ -57,7 +57,8 @@
 ## Allowed Libraries / Addons
 
 <!-- Add approved third-party dependencies here -->
-- [None configured yet — add as dependencies are approved]
+- None in the game (plain browser APIs); font Press Start 2P from Google Fonts
+- Asset tools only (not shipped): Python Pillow, NumPy, SciPy
 
 ## Architecture Decisions Log
 
@@ -70,12 +71,12 @@
 <!-- Read by /code-review, /architecture-decision, /architecture-review, and team skills -->
 <!-- to know which specialist to spawn for engine-specific validation. -->
 
-- **Primary**: [TO BE CONFIGURED — run /setup-engine]
-- **Language/Code Specialist**: [TO BE CONFIGURED]
-- **Shader Specialist**: [TO BE CONFIGURED]
-- **UI Specialist**: [TO BE CONFIGURED]
-- **Additional Specialists**: [TO BE CONFIGURED]
-- **Routing Notes**: [TO BE CONFIGURED]
+- **Primary**: lead-programmer (Web has no engine specialist agent)
+- **Language/Code Specialist**: lead-programmer
+- **Shader Specialist**: lead-programmer
+- **UI Specialist**: lead-programmer
+- **Additional Specialists**: none
+- **Routing Notes**: engine work and API checks go to lead-programmer against `docs/engine-reference/web/` (Canvas 2D / Web Audio notes only)
 
 ### File Extension Routing
 
