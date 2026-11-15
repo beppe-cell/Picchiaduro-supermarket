@@ -29,7 +29,8 @@ Ogni push su `main` pubblica il gioco su GitHub Pages (`.github/workflows/deploy
 | VLAD | sprite disegnati (`assets/characters/vlad/`) | Spruzzino accecante |
 | LUIS | sprite disegnati (`assets/characters/luis/`) | Assolo distruttivo (onda sonora) |
 | ZANI | sprite disegnati (`assets/characters/zani/`) | Taglierino furioso (corpo a corpo) |
-| FALSA, ANGEL | disegno procedurale | Carrellino |
+| FALSA | sprite disegnati (`assets/characters/falsa/`) | Carrellino (speciale propria da fare) |
+| ANGEL | disegno procedurale | Carrellino |
 | PAULUX (boss) | disegno procedurale | Carrellino |
 
 ## Comandi
@@ -69,6 +70,8 @@ assets/
       sorgenti/                tavola, fogli pose IMG_5449–5452, speciale IMG_5454
     zani/                      zani-<animazione>.png (speciale corpo a corpo, senza proiettile)
       sorgenti/                tavola IMG_5456, fogli pose IMG_5458–5460, speciale IMG_5463
+    falsa/                     falsa-<animazione>.png (speciale ancora da fare)
+      sorgenti/                tavola.png, foglio-A/B/C.png
 docs/reference/                immagini di riferimento per lo stile
 docs/sprite-guide/             fogli pose e prompt per creare un personaggio con Gemini
 tools/
