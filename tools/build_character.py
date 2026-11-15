@@ -110,6 +110,10 @@ def figures_by_cell(o, sheet, notes):
         cy, cx = nd.center_of_mass(comp)
         for c, (x0, y0, x1, y1) in boxes:
             if x0 <= cx < x1 and y0 <= cy < y1:
+                if c.get('lying') and bh > 0.5 * (y1 - y0) and bh > 1.2 * bw:
+                    notes.append('foglio %s, %s: ignorata una figura in piedi nella casella del KO'
+                                 % (sheet, c['label']))
+                    break
                 if sl[0].start > y0 + feet * (y1 - y0) - 3 and area < 0.05 * (x1 - x0) * (y1 - y0):
                     break   # scritta sotto la linea dei piedi (etichetta ridisegnata)
                 out[c['id']] = out.get(c['id'], np.zeros_like(msk)) | comp

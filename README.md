@@ -29,8 +29,8 @@ Ogni push su `main` pubblica il gioco su GitHub Pages (`.github/workflows/deploy
 | VLAD | sprite disegnati (`assets/characters/vlad/`) | Spruzzino accecante |
 | LUIS | sprite disegnati (`assets/characters/luis/`) | Assolo distruttivo (onda sonora) |
 | ZANI | sprite disegnati (`assets/characters/zani/`) | Taglierino furioso (corpo a corpo) |
-| FALSA | sprite disegnati (`assets/characters/falsa/`) | Carrellino (speciale propria da fare) |
-| ANGEL | disegno procedurale | Carrellino |
+| FALSA | sprite disegnati (`assets/characters/falsa/`) | Risata al telefono (onda sonora) |
+| ANGEL | sprite disegnati (`assets/characters/angel/`) | Picchiata angelica (volo corpo a corpo) |
 | PAULUX (boss) | disegno procedurale | Carrellino |
 
 ## Comandi
@@ -61,7 +61,7 @@ assets/
     corridoio-verticale.jpeg   arena in verticale
   characters/
     beppe/                     beppe-<animazione>.png, pallet.png (proiettile)
-      sorgenti/                disegni originali
+      sorgenti/                disegni originali, foglio reazioni IMG_5475 (colpito e vittoria)
     matteo/                    matteo-<animazione>.png, matteo-cart.png (proiettile)
       sorgenti/                tavole originali IMG_5407–5418 (sfondo magenta)
     vlad/                      vlad-<animazione>.png, vlad-spray.png (proiettile)
@@ -70,8 +70,10 @@ assets/
       sorgenti/                tavola, fogli pose IMG_5449–5452, speciale IMG_5454
     zani/                      zani-<animazione>.png (speciale corpo a corpo, senza proiettile)
       sorgenti/                tavola IMG_5456, fogli pose IMG_5458–5460, speciale IMG_5463
-    falsa/                     falsa-<animazione>.png (speciale ancora da fare)
-      sorgenti/                tavola.png, foglio-A/B/C.png
+    falsa/                     falsa-<animazione>.png, falsa-laugh.png (proiettile)
+      sorgenti/                tavola.png, foglio-A/B/C.png, speciale IMG_5474
+    angel/                     angel-<animazione>.png (speciale corpo a corpo, senza proiettile)
+      sorgenti/                tavola IMG_5469, fogli pose IMG_5470–5472, speciale IMG_5473
 docs/reference/                immagini di riferimento per lo stile
 docs/sprite-guide/             fogli pose e prompt per creare un personaggio con Gemini
 tools/
@@ -80,6 +82,8 @@ tools/
   build_character.py           importa un personaggio dai 3 fogli pose (tutte le animazioni tranne la speciale)
   build_special.py             pose della speciale da una tavola a parte (con --taglio per pose che si toccano)
   build_luis_special.py        speciale di LUIS: chitarra e onda sonora
+  build_falsa_special.py       speciale di FALSA: busto col telefono sulle gambe della guardia, onda della risata
+  build_extra_poses.py         aggiunge singole animazioni da un foglio pose (es. vittoria di Beppe)
   spritebuild.py               strumenti comuni: ritaglio, scala, allineamento, fogli PNG
   build_matteo_sprites.py      genera i PNG di Matteo dalle tavole sorgenti
   build_vlad_sprites.py        genera i PNG di Vlad dalle tavole sorgenti
