@@ -84,6 +84,7 @@ tools/
   build_luis_special.py        speciale di LUIS: chitarra e onda sonora
   build_falsa_special.py       speciale di FALSA: busto col telefono sulle gambe della guardia, onda della risata
   build_extra_poses.py         aggiunge singole animazioni da un foglio pose (es. vittoria di Beppe)
+  build_fronts.py              vista frontale di ogni personaggio (<nome>-front.png) per la selezione
   spritebuild.py               strumenti comuni: ritaglio, scala, allineamento, fogli PNG
   build_matteo_sprites.py      genera i PNG di Matteo dalle tavole sorgenti
   build_vlad_sprites.py        genera i PNG di Vlad dalle tavole sorgenti
