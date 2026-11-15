@@ -133,6 +133,7 @@ h2{font-size:4.4cqw}
 <label class="row">MUSICA <input type="range" id="o-mus" min="0" max="100"></label>
 <label class="row">EFFETTI <input type="range" id="o-sfx" min="0" max="100"></label>
 <div class="row">TOUCH <button class="b alt" id="o-touch" style="min-width:18cqw">AUTO</button> VIBRAZIONE <button class="b alt" id="o-vib" style="min-width:10cqw">SI</button></div>
+<div class="row">LUCI E ATMOSFERA <button class="b alt" id="o-fx" style="min-width:10cqw">SI</button></div>
 <div class="small">A/D muovi · W salta · S abbassati · J pugno forte · K calcio · L pugno · I speciale (barra SUPER piena) · SPAZIO/SHIFT para (danno /10) · ESC pausa. Pugni ripetuti fanno meno danno: alterna le mosse.<br>TELEFONO: levetta a sinistra (appoggia il pollice dove vuoi, su per saltare), pulsanti a destra: puoi far scorrere il dito da uno all'altro. SPECIALE si illumina quando è carico.</div></div>
 <button class="b" data-go="menu">INDIETRO</button></div>
 <div class="scr" id="s-pause"><h2>PAUSA</h2><div class="mlist"><button class="b" id="b-res">RIPRENDI</button><button class="b alt" data-go="menu">ESCI AL MENU</button></div></div>
@@ -184,7 +185,7 @@ function R(x,y,w,h,col){c.fillStyle='#07070c';c.fillRect(x-1,y-1,w+2,h+2);c.fill
 /* sprite dei personaggi: 1 riga per animazione in assets/characters/<nome>/, corpo in piedi normalizzato a 400px, piedi sul bordo inferiore, rivolti a destra.
    n = frame per animazione; pj = proiettile dello speciale (pjn frame); spT = soglie (tick) dei frame dello speciale se diverse dallo standard.
    hit/win sono opzionali: se mancano si usa la posa idle (inclinata quando colpito). */
-const SPRB=400,VER=38,SPRSET={
+const SPRB=400,VER=41,SPRSET={
 BEPPE:{d:'beppe',n:{idle:4,walk:4,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:3,ko:1,win:2},pj:'pallet',pjn:1,pjw:46.9,pjh:44.3,pjo:[12.5,-23.8],spT:[6,11]},
 MATTEO:{d:'matteo',n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:3,ko:1,win:3},pj:'matteo-cart',pjn:3,spT:[5,11]},
 VLAD:{d:'vlad',sc:1.05,n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:2,ko:1,win:2},pj:'vlad-spray',pjn:3,pjs:.6,pjo:[33.8,-83.5],pji:1,spT:[5,11]},
@@ -215,7 +216,17 @@ const BGS=document.createElement('canvas');BGS.width=W;BGS.height=H;let BGOK=0;
 function mkBGS(){if(!(BGI.complete&&BGI.naturalWidth))return;const g=BGS.getContext('2d'),Z=1.25;g.imageSmoothingEnabled=false;g.clearRect(0,0,W,H);g.drawImage(BGI,(W-W/Z)/2,0,W/Z,H,0,0,W,H);BGOK=1}
 BGI.onload=mkBGS;if(BGI.complete)mkBGS();
 /* sfondo verticale (portrait): corridoio a tutta altezza, linea del pavimento a ~87% dell'immagine */
-const VGI=new Image();VGI.src='assets/backgrounds/corridoio-verticale.jpeg?v='+VER;
+/* arena: fondale orizzontale unico (11:6) per entrambi gli orientamenti, in coordinate di gioco.
+   ARH = altezza nel mondo, la macchia di luce sul pavimento (87% dell'immagine) cade sui piedi (FY).
+   In verticale la telecamera scorre (CAMX) e mostra i bordi quando i lottatori ci si avvicinano. */
+const ARI=new Image(),ARC={top:'#1a2624',bot:'#3a3a30'};let CAMX=176,CAMHW=176,ARH,ARY,ARL,ARR;
+/* dimensiona il fondale: alto almeno h (mondo); in verticale abbastanza da arrivare in cima allo schermo.
+   Il campo di gioco (XMIN..XMAX) e' sempre tutto il fondale meno un margine */
+function arenaFit(h){ARH=Math.max(208,h);ARY=FY-.87*ARH;const hw2=ARH*1408/768/2;ARL=176-hw2;ARR=176+hw2;XMIN=ARL+22;XMAX=ARR-22}
+ARI.onload=()=>{const t=document.createElement('canvas');t.width=ARI.naturalWidth;t.height=ARI.naturalHeight;const g=t.getContext('2d');g.drawImage(ARI,0,0);
+const avg=(y,h)=>{const d=g.getImageData(0,y,t.width,h).data;let r=0,gg=0,b=0,n=d.length/4;for(let i=0;i<d.length;i+=4){r+=d[i];gg+=d[i+1];b+=d[i+2]}return'rgb('+(r/n|0)+','+(gg/n|0)+','+(b/n|0)+')'};
+ARC.top=avg(0,6);ARC.bot=avg(t.height-6,6)};
+ARI.src='assets/backgrounds/arena-orizzontale.jpeg?v='+VER;
 {const v=document.getElementById('ver');if(v)v.textContent='v'+VER}
 const SPR_H=0.55*384/2, SPRK=SPR_H/SPRB; /* altezza sprite ~55% del canvas, in coordinate mondo */
 function draw(f,x,y,pose,sc){const L=f.L,s=pose||f.st,t=f.t,e=f.ext||0;const ss=SPRSET[L.n],SPR=ss&&ss.im,SPRN=ss&&ss.n;sc=(sc||1)*(L.big?1.12:1)*(ss&&ss.sc||1);if(!(SPR&&SPR.idle))sc*=1.5;
@@ -267,11 +278,12 @@ setInterval(()=>{if(!AC||!pl)return;const q=(mst/12|0)%2?5:0,n=[0,3,7,12,7,3][ms
 /* ---------- gioco ---------- */
 const MV={p:{su:5,ac:9,re:5,d:5,r:34,st:11,kb:2},k:{su:5,ac:9,re:5,d:7,r:41,st:13,kb:3},h:{su:12,ac:9,re:18,d:13,r:39,st:22,kb:7},s:{su:11,ac:6,re:16}};
 let G=null,T=0,mode='arc',tour=0,pickI=0,keys={},TR={},PS=[],PJ=[],last=0,acc=0,ZP=1,XMIN=18,XMAX=334,demo=[{L:CH[0],x:88,face:1,st:'idle',t:0,ext:0,y:0},{L:CH[7],x:264,face:-1,st:'idle',t:0,ext:0,y:0}],arena=AR[0];
+arenaFit(208);
 function mk(L,x,face,ai,lv){return{L,x,y:0,vx:0,vy:0,face,hp:100,tr:100,sp:0,st:'idle',t:0,atk:null,did:0,stun:0,blk:0,cr:0,rep:{m:'',n:0,t:-999},ai,lv,ob:0,hd:{},wins:0,ext:0}}
 function sh(id){document.querySelectorAll('.scr').forEach(e=>e.classList.toggle('on',e.id==id));$('#tc').classList.toggle('on',id==''&&touchOn());if(id)touchReset();if(id&&id!='s-title')focusFirst()}
 const touchOn=()=>O.touch==2?false:O.touch==1||matchMedia('(pointer:coarse)').matches;
 function spark(x,y,col){for(let i=0;i<9;i++)PS.push({x,y,vx:(Math.random()-.5)*4,vy:-Math.random()*3,l:14,col})}
-function newRound(){const a=G.a,b=G.b;a.cmb=b.cmb=0;a.x=176-88/ZP;b.x=176+88/ZP;for(const f of[a,b]){f.y=0;f.vx=f.vy=0;f.hp=100;f.tr=100;f.sp=0;f.st='idle';f.atk=null;f.stun=0;f.rep.n=0}a.face=1;b.face=-1;G.ph='intro';G.pt=100;G.tm=3600;PJ=[]}
+function newRound(){const a=G.a,b=G.b;CAMX=176;a.cmb=b.cmb=0;a.x=176-88/ZP;b.x=176+88/ZP;for(const f of[a,b]){f.y=0;f.vx=f.vy=0;f.hp=100;f.tr=100;f.sp=0;f.st='idle';f.atk=null;f.stun=0;f.rep.n=0}a.face=1;b.face=-1;G.ph='intro';G.pt=100;G.tm=3600;PJ=[]}
 function startMatch(pi,oi,lv){arena=AR[Math.random()*4|0];mkBG(arena);G={a:mk(CH[pi],88,1),b:mk(CH[oi],264,-1,1,lv),rd:1,pi,oi,lv,hs:0,sh:0,pz:0};newRound();sh('');pl=true;sfx('ui')}
 /* memoria comandi: un colpo premuto resta valido per 10 fotogrammi (~1/6 s), cosi' se lo premi mentre
    finisce l'attacco precedente parte appena possibile invece di andare perso */
@@ -318,9 +330,18 @@ const a=G.a,b=G.b;let ia={},ib={};
 if(G.ph=='intro'&&--G.pt<=0)G.ph='play';
 if(G.ph=='play'){ia=pin();ib=AI(b,a);if(--G.tm<=0)endRound(a.hp>=b.hp?a:b,'TEMPO!')}
 upd(a,b,ia);upd(b,a,ib);
-if(Math.abs(a.x-b.x)<18&&a.y>-20&&b.y>-20){const p=a.x<b.x?-1:1;a.x+=p;b.x-=p}
+/* collisione dei corpi: a terra i lottatori non si sovrappongono mai (distanza minima BODY tra i
+   centri). Si separano del tutto nello stesso tick, meta' a testa, senza uscire dal campo; chi salta
+   abbastanza in alto puo' passare sopra l'altro */
+{const BODY=34,d=b.x-a.x;if(Math.abs(d)<BODY&&a.y>-28&&b.y>-28){const s=d!==0?Math.sign(d):(a.face>0?1:-1),need=(BODY-Math.abs(d))/2;
+a.x-=s*need;b.x+=s*need;
+if(a.x<XMIN){b.x+=XMIN-a.x;a.x=XMIN}if(a.x>XMAX){b.x-=a.x-XMAX;a.x=XMAX}if(b.x<XMIN){a.x+=XMIN-b.x;b.x=XMIN}if(b.x>XMAX){a.x-=b.x-XMAX;b.x=XMAX}}}
+/* telecamera: segue il punto medio dei lottatori, un passo per tick (indipendente dal disegno) */
+{const t=Math.max(ARL+CAMHW,Math.min(ARR-CAMHW,(a.x+b.x)/2));CAMX+=(t-CAMX)*.12}
+/* i due lottatori restano sempre insieme nell'inquadratura: distanza massima = larghezza visibile meno un margine */
+{const ms=352/ZP-50,d=a.x-b.x;if(Math.abs(d)>ms){const e=(Math.abs(d)-ms)/2*Math.sign(d);a.x-=e;b.x+=e}}
 for(let i=PJ.length-1;i>=0;i--){const p=PJ[i],o=p.o==a?b:a;p.x+=p.vx;p.t++;
-if(Math.abs(p.x-o.x)<12&&Math.abs(o.y-(p.fy||0))<45&&G.ph=='play'){/* da terra: come prima (avversario non troppo in alto); in salto: colpisce chi e' alla stessa altezza */dmg(p.o,o,18*p.o.L.pw,{st:24,kb:6});PJ.splice(i,1)}else if(p.x<-20||p.x>W+20)PJ.splice(i,1)}
+if(Math.abs(p.x-o.x)<12&&Math.abs(o.y-(p.fy||0))<45&&G.ph=='play'){/* da terra: come prima (avversario non troppo in alto); in salto: colpisce chi e' alla stessa altezza */dmg(p.o,o,18*p.o.L.pw,{st:24,kb:6});PJ.splice(i,1)}else if(p.x<ARL-20||p.x>ARR+20)PJ.splice(i,1)}
 for(let i=PS.length-1;i>=0;i--){const p=PS[i];p.x+=p.vx;p.y+=p.vy;p.vy+=.2;if(--p.l<=0)PS.splice(i,1)}
 for(const f of[a,b])f.tr+=(f.hp-f.tr)*.06;
 if(G.ph=='ko'&&--G.pt<=0){const w=G.w;if(w.wins>=2)endMatch(w==a);else{G.rd++;newRound()}}
@@ -385,31 +406,78 @@ const txt=r?(G.a.wins==1&&G.b.wins==1?'ROUND FINALE':'ROUND '+G.rd):'COMBATTI!',
 c.save();c.globalAlpha=Math.min(1,.3+a/5);TxO(txt,W/2,cy,sz,r?'#fff':gr(sz),'#d42a2a');c.restore()}
 if(G.ph=='ko'){const a=150-G.pt,sz=26*(1+Math.max(0,1-a/8)*.8);TxO(G.txt,W/2,cy,sz,G.txt=='K.O.'?'#ff4040':gr(sz),'#000');
 if(a>30){const w=G.w;TxO((w.hp>=100?'PERFETTO! ':'')+'VINCE '+w.L.n,W/2,cy+20,8,'#ffd23f','#000')}}}
+/* ---------- luci e atmosfera (solo estetica) ----------
+   I lottatori vengono disegnati su un livello a parte e "illuminati" come l'arena: luce fredda dei
+   neon dall'alto, dominante verde-azzurra, riflesso caldo della macchia di luce sul pavimento e
+   bagliore azzurro dei frigoriferi sul lato sinistro. Poi pulviscolo nei fasci di luce e un velo di
+   fumo basso sul pavimento. Tutto leggero; FXON=0 lo spegne. */
+let FXON=1;const LYR=document.createElement('canvas'),lc=LYR.getContext('2d'),MSK=document.createElement('canvas');
+const DUST=Array.from({length:38},(_,i)=>{const r=k=>{const s=Math.sin(i*127.1+k*311.7)*43758.5453;return s-Math.floor(s)};
+return{u:r(1),v:r(2),vx:(r(3)-.5)*.05,vy:-.012-r(4)*.02,ph:r(5)*6.28,a:.18+r(6)*.3,front:r(7)<.3}});
+const FOG=Array.from({length:6},(_,i)=>({u:i/6+.05,y:-2+(i%3)*5,r:46+(i*17)%30,vx:(i%2?1:-1)*(.012+i*.003),a:.05+(i%3)*.012}));
+const BLOB=document.createElement('canvas');BLOB.width=BLOB.height=128;
+{const g=BLOB.getContext('2d'),gr=g.createRadialGradient(64,64,0,64,64,64);gr.addColorStop(0,'rgba(190,215,205,1)');gr.addColorStop(.55,'rgba(170,200,190,.45)');gr.addColorStop(1,'rgba(160,190,180,0)');g.fillStyle=gr;g.fillRect(0,0,128,128)}
+/* tremolio dei neon: ogni tanto la luce dall'alto cala per qualche frame */
+const neon=()=>{const k=(T/7|0)%173;return k<2||k==5?.55:1};
+function dustPass(front){if(!FXON)return;const w=ARR-ARL,h=FY-(ARY+ARH*.18),y0=ARY+ARH*.18;
+for(const d of DUST){if(d.front!=front)continue;let x=ARL+((d.u*w+d.vx*T)%w+w)%w,y=y0+((d.v*h+d.vy*T)%h+h)%h;
+const tw=.6+.4*Math.sin(T*.05+d.ph),near=1-(y-y0)/h*.6;c.fillStyle='rgba(220,255,240,'+(d.a*tw*near).toFixed(3)+')';c.fillRect(x,y,front?1.2:.9,front?1.2:.9)}}
+function fogPass(){if(!FXON)return;c.save();c.imageSmoothingEnabled=true;const w=ARR-ARL;
+for(const f of FOG){const x=ARL+((f.u*w+f.vx*T)%w+w)%w,y=FY+f.y,br=1+.08*Math.sin(T*.01+f.u*9);
+c.globalAlpha=f.a*br;c.drawImage(BLOB,x-f.r*1.6,y-f.r*.45,f.r*3.2,f.r*.9)}c.restore()}
+/* disegna fn() sul livello e la illumina come l'arena, poi la riporta sullo schermo */
+function litLayer(fn,tr,xs){if(!FXON){fn();return}
+if(LYR.width!=cv.width||LYR.height!=cv.height){LYR.width=cv.width;LYR.height=cv.height}
+/* lavora solo nel riquadro dei lottatori (xs = loro x nel mondo): molto piu' leggero sul telefono */
+const bx0=Math.max(0,Math.floor(tr[4]+(Math.min(...xs)-90)*tr[0])),bx1=Math.min(LYR.width,Math.ceil(tr[4]+(Math.max(...xs)+90)*tr[0])),by0=Math.max(0,Math.floor(tr[5]+(FY-200)*tr[3])),by1=Math.min(LYR.height,Math.ceil(tr[5]+(FY+14)*tr[3])),bw=bx1-bx0,bh=by1-by0;if(bw<=0||bh<=0){fn();return}
+lc.setTransform(1,0,0,1,0,0);lc.clearRect(bx0,by0,bw,bh);lc.setTransform(...tr);lc.imageSmoothingEnabled=false;
+const mc=c;c=lc;try{fn()}finally{c=mc}
+/* maschera dei lottatori, poi: multiply per la dominante fredda (i neri restano neri), screen per le
+   luci; alla fine la maschera ritaglia tutto sulla sagoma */
+if(MSK.width!=LYR.width||MSK.height!=LYR.height){MSK.width=LYR.width;MSK.height=LYR.height}
+const mk=MSK.getContext('2d');mk.setTransform(1,0,0,1,0,0);mk.clearRect(bx0,by0,bw,bh);mk.drawImage(LYR,bx0,by0,bw,bh,bx0,by0,bw,bh);
+lc.save();lc.globalCompositeOperation='multiply';lc.fillStyle='rgb(232,245,240)';lc.fillRect(ARL,ARY-200,ARR-ARL,ARH+400);
+lc.globalCompositeOperation='screen';
+const nl=neon(),top=lc.createLinearGradient(0,FY-118,0,FY-50);top.addColorStop(0,'rgba(110,160,148,'+(.22*nl).toFixed(3)+')');top.addColorStop(1,'rgba(120,175,160,0)');
+lc.fillStyle=top;lc.fillRect(ARL,FY-160,ARR-ARL,110);/* luce fredda dei neon su teste e spalle */
+const fl=lc.createLinearGradient(0,FY,0,FY-38);fl.addColorStop(0,'rgba(110,85,35,.26)');fl.addColorStop(1,'rgba(110,85,35,0)');
+lc.fillStyle=fl;lc.fillRect(ARL,FY-38,ARR-ARL,42);/* riflesso caldo della macchia di luce */
+const fr=lc.createLinearGradient(ARL+ARH*.05,0,ARL+ARH*.75,0);fr.addColorStop(0,'rgba(40,120,140,.24)');fr.addColorStop(1,'rgba(40,120,140,0)');
+lc.fillStyle=fr;lc.fillRect(ARL,FY-170,ARH*.75,180);/* bagliore dei frigoriferi a sinistra */
+lc.globalCompositeOperation='destination-in';lc.setTransform(1,0,0,1,0,0);lc.drawImage(MSK,bx0,by0,bw,bh,bx0,by0,bw,bh);
+lc.restore();
+c.save();c.setTransform(1,0,0,1,0,0);c.drawImage(LYR,bx0,by0,bw,bh,bx0,by0,bw,bh);c.restore()}
+/* ombra morbida sotto i piedi */
+function shadow(f){const k=Math.max(.35,1+f.y/90);c.save();c.imageSmoothingEnabled=true;c.globalAlpha=.32*k;c.fillStyle='#000';
+c.beginPath();c.ellipse(f.x,FY+1,19*k,3.6*k,0,0,6.283);c.fill();c.restore()}
 function render(){c.save();
 const WH=cv.height/2;
 c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,cv.width,cv.height);c.imageSmoothingEnabled=false;
 let s2=2,tx=0,ty=0;const shx=G&&G.sh>0?(Math.random()-.5)*G.sh*.6:0,shy=G&&G.sh>0?(Math.random()-.5)*G.sh*.3:0;
 if(WH>352){
-/* portrait: camera zoomata (ZP) su sfondo verticale a tutto schermo, personaggi proporzionati al corridoio */
-s2=2*ZP;const gyRef=cv.height*.85,gy=$('#tc').classList.contains('on')?Math.min(gyRef,cv.height-.52*cv.width):gyRef;ty=gy-FY*s2;tx=352-176*s2;
-c.translate(shx*s2,shy*s2);
-if(VGI.complete&&VGI.naturalWidth){const iw=VGI.naturalWidth,ih=VGI.naturalHeight,sc=Math.max(cv.width/iw,cv.height/ih,(cv.height-gyRef)/(ih*.126));
-const y0=gy-.874*ih*sc,x0=(cv.width-iw*sc)/2;
-c.drawImage(VGI,x0,y0,iw*sc,ih*sc);const yb=y0+ih*sc;if(yb<cv.height){c.fillStyle='#14161c';c.fillRect(-20,yb-1,cv.width+40,cv.height-yb+21)}}
-else c.drawImage(BGOK?BGS:BG,0,0,W,H,0,0,cv.width,cv.height)}
+/* verticale: camera zoomata (ZP), piedi sopra il pannello dei comandi */
+s2=2*ZP;const gyRef=cv.height*.85,gy=$('#tc').classList.contains('on')?Math.min(gyRef,cv.height-.52*cv.width):gyRef;ty=gy-FY*s2;
+if(!G||G.ph=='intro'||Math.abs(ARH-(FY+ty/s2+2)/.87)>40)arenaFit((FY+ty/s2+2)/.87)}/* si ridimensiona solo fuori dal combattimento o se cambia molto (rotazione) */
 else{
-/* landscape: arena 352x192 con soffitto/pavimento prolungati (invariato) */
-const bot=WH>192?Math.min(WH-192,WH*.16):0,top=WH-192-bot;ty=2*top;
-const img=BGOK?BGS:BG;
-if(top>0)c.drawImage(img,0,0,352,6,0,0,704,2*top);
-c.translate(shx*s2,shy*s2);
-c.drawImage(img,0,0,W,H,0,2*top,704,384);
-if(bot>0)c.drawImage(img,0,186,352,6,0,2*top+384,704,2*bot)}
+/* orizzontale: arena alta 192 con margini sopra/sotto se lo schermo e' piu' alto */
+const bot=WH>192?Math.min(WH-192,WH*.16):0,top=WH-192-bot;ty=2*top;if(ARH!=208)arenaFit(208)}
+/* telecamera orizzontale: segue il punto medio dei lottatori senza uscire dal fondale */
+const hw=352/s2;CAMHW=hw;if(!G)CAMX=176;else CAMX=Math.max(ARL+hw,Math.min(ARR-hw,CAMX));if(ARR-ARL<2*hw)CAMX=176;
+tx=352-CAMX*s2;
 c.setTransform(s2,0,0,s2,tx,ty);c.imageSmoothingEnabled=false;c.translate(shx,shy);
-if(!G){if($('#s-sel').classList.contains('on')){c.restore();return}/* in selezione: solo lo sfondo, il protagonista e' il dipendente scelto */
-const f=[...demo];for(const d of f){d.t++;d.st='idle'}draw(f[0],176-88/ZP,FY);draw(f[1],176+88/ZP,FY);c.restore();return}
-const a=G.a,b=G.b;c.fillStyle='rgba(0,0,0,.25)';for(const f of[a,b])c.fillRect(f.x-17+(f.y/-3),FY-2,34+f.y/3,4);
-const order=a.y<b.y?[b,a]:[a,b];for(const f of order)draw(f,f.x,FY+f.y);
+/* fondale nel mondo: macchia di luce sul pavimento (87% dell'immagine) sotto i piedi; sopra e sotto
+   l'immagine il colore medio del soffitto e del pavimento */
+if(ARI.complete&&ARI.naturalWidth){const vt=-ty/s2-4,vb=(cv.height-ty)/s2+4,vl=CAMX-hw-4;
+c.fillStyle=ARC.top;c.fillRect(vl,vt,2*hw+8,ARY-vt+1);c.fillStyle=ARC.bot;c.fillRect(vl,ARY+ARH-1,2*hw+8,vb-ARY-ARH+1);
+c.drawImage(ARI,ARL,ARY,ARR-ARL,ARH)}
+else c.drawImage(BG,0,0,W,H,0,0,W,H);
+dustPass(false);
+const TR2=[s2,0,0,s2,tx+shx*s2,ty+shy*s2];
+if(!G){if($('#s-sel').classList.contains('on')){fogPass();c.restore();return}/* in selezione: solo lo sfondo, il protagonista e' il dipendente scelto */
+const f=[...demo];f[0].x=176-88/ZP;f[1].x=176+88/ZP;for(const d of f){d.t++;d.st='idle';d.y=0;shadow(d)}litLayer(()=>{draw(f[0],176-88/ZP,FY);draw(f[1],176+88/ZP,FY)},TR2,[f[0].x,f[1].x]);fogPass();dustPass(true);c.restore();return}
+const a=G.a,b=G.b;for(const f of[a,b])shadow(f);
+const order=a.y<b.y?[b,a]:[a,b];litLayer(()=>{for(const f of order)draw(f,f.x,FY+f.y)},TR2,[a.x,b.x]);
+fogPass();dustPass(true);
 for(const p of PJ){const x=p.x,y=FY+(p.y==null?-30:p.y),d=p.vx>0?1:-1;c.save();c.translate(x,y);c.scale(d,1);c.imageSmoothingEnabled=false;
 const ps=SPRSET[p.o.L.n]||{},PI=ps.pi;/* senza proiettile proprio: il carrellino generico disegnato qui sotto */
 if(PI&&PI.complete&&PI.naturalWidth){if(ps.pjn>1){const n=ps.pjn,fw=PI.width/n,ph=ps.pjh||48,fi=ps.pjg?Math.min(n-1,Math.max(0,p.t)/6|0):ps.pji?(p.t<5?0:1+((p.t/8|0)%(n-1))):(p.t/6|0)%n,k2=ph/PI.height;if(ps.pjs){const k3=SPRK*ps.pjs*(ps.sc||1);c.drawImage(PI,fi*fw,0,fw,PI.height,-2*k3,-PI.height*k3/2,fw*k3,PI.height*k3)}else c.drawImage(PI,fi*fw,0,fw,PI.height,-fw*k2/2,ps.pjy||-18,fw*k2,ph)}
@@ -496,12 +564,13 @@ function touchReset(){for(const id in TCH)delete TCH[id];for(const k of'lrudbpkh
 $('#tc').addEventListener('contextmenu',e=>e.preventDefault());
 $('#o-mus').oninput=e=>O.mus=+e.target.value;$('#o-sfx').oninput=e=>O.sfx=+e.target.value;
 $('#o-touch').onclick=e=>{O.touch=(O.touch+1)%3;e.target.textContent=['AUTO','SEMPRE','NASCOSTI'][O.touch]};
+$('#o-fx').onclick=e=>{FXON=FXON?0:1;e.target.textContent=FXON?'SI':'NO'};
 $('#o-vib').onclick=e=>{O.vib=!O.vib;e.target.textContent=O.vib?'SI':'NO'};
 $('#o-mus').value=O.mus;$('#o-sfx').value=O.sfx;
 mkBG(arena);document.fonts.ready.then(()=>mkBG(arena));
 /* il buffer del canvas segue le proporzioni dello schermo (crisp in portrait e landscape) */
 function fit(){if(!cv.getBoundingClientRect)return;const r=cv.getBoundingClientRect();if(r.width<2||r.height<2)return;const h=Math.max(384,Math.min(1760,Math.round(704*r.height/r.width)));if(cv.width!=704||cv.height!=h){cv.width=704;cv.height=h}
-ZP=h>704?Math.max(1,Math.min(2.2,h*.3/211)):1;XMIN=176-158/ZP;XMAX=176+158/ZP}
+ZP=h>704?Math.max(1,Math.min(2.2,h*.3/211)):1}/* il campo (XMIN..XMAX) lo imposta arenaFit; in verticale la telecamera scorre */
 addEventListener('resize',fit);fit();
 requestAnimationFrame(loop);
 </script></body></html>
