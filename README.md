@@ -57,7 +57,9 @@ Ripetere lo stesso colpo fa sempre meno danno: conviene alternare le mosse.
 index.html                     gioco completo (HTML + CSS + JS)
 assets/
   backgrounds/
-    arena-orizzontale.jpeg     arena usata in entrambi gli orientamenti (in verticale la telecamera scorre)
+    arena-orizzontale.jpeg     corsia centrale; con arena-magazzino, -casse, -ortofrutta, -surgelati,
+                               -parcheggio sono le 6 arene (una a caso per incontro, entrambi gli
+                               orientamenti; in verticale la telecamera scorre)
     arena-supermercato.png     vecchia arena (riserva se l'immagine non carica)
     corridoio-verticale.jpeg   vecchia arena verticale (non piu' usata)
   characters/
