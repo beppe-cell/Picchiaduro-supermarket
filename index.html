@@ -31,7 +31,7 @@ text-shadow:0 .25cqw 0 var(--y),0 .5cqw 0 var(--yd),-.45cqw 0 var(--r),.45cqw 0 
 .b:focus{outline:none}
 .b.f,.b:focus-visible{border-color:var(--y);box-shadow:0 .6cqw 0 #000,0 0 0 .7cqw var(--y)}
 .mlist{display:flex;flex-direction:column;gap:1.5cqw;align-items:stretch}
-.mlist .b{min-width:30cqw;font-size:2cqw;padding:1.3cqw 2.4cqw}
+.mlist .b{min-width:30cqw;font-size:2cqw;padding:1.1cqw 2.4cqw}
 .mlist .b.f::before,.mlist .b:hover::before{content:'▶';position:absolute;left:-3.4cqw;color:var(--y);text-shadow:.2cqw .2cqw 0 #000;animation:nd .5s steps(2) infinite alternate}
 @keyframes nd{to{transform:translateX(.6cqw)}}
 #mdesc{min-height:2.6em;color:#cfd6ff;font-size:1.3cqw;max-width:60cqw}
@@ -57,6 +57,21 @@ text-shadow:0 .25cqw 0 var(--y),0 .5cqw 0 var(--yd),-.45cqw 0 var(--r),.45cqw 0 
 .st i{width:9cqw;height:1.1cqw;background:#000;border:.2cqw solid #fff;display:block}
 .st b{display:block;height:100%;background:linear-gradient(90deg,var(--r),var(--y));transition:width .2s}
 #dots{display:flex;gap:.8cqw;justify-content:center}
+/* cedolini e negozio */
+.wallet{position:absolute;top:2cqw;right:2.5cqw;font-size:1.5cqw;color:var(--y);background:rgba(5,8,20,.75);border:.3cqw solid var(--y);outline:.25cqw solid #000;padding:.8cqw 1.4cqw;text-shadow:.2cqw .2cqw 0 #000}
+.wallet::before{content:'';display:inline-block;width:1.2cqw;height:1.5cqw;margin-right:.9cqw;vertical-align:-.2cqw;background:linear-gradient(#fff 0 18%,#9aa3c8 18% 26%,#fff 26% 44%,#9aa3c8 44% 52%,#fff 52% 70%,#d42a2a 70%);outline:.2cqw solid #000}
+#e-c{font-size:2.2cqw;color:var(--y);text-shadow:.25cqw .25cqw 0 #000}#e-c .small{margin-top:.8cqw;color:#cfd6ff;text-shadow:none}
+#pchip{position:absolute;top:2cqw;left:2.5cqw;min-width:0;font-size:1.4cqw;padding:.8cqw 1.4cqw}#pchip::before{content:'';display:inline-block;width:1.1cqw;height:1.1cqw;margin-right:.9cqw;border-radius:50% 50% 20% 20%;background:var(--y);outline:.2cqw solid #000;vertical-align:-.1cqw}
+#pfl{gap:.9cqw;min-width:56cqw;max-height:22cqw;overflow-y:auto}.pf{display:flex;align-items:center;gap:1.4cqw;width:100%;font-size:1.5cqw}.pf span{flex:1;text-align:left}.pf i{font-style:normal;color:var(--y);font-size:1.2cqw}
+.pf .b{min-width:0;font-size:1.2cqw;padding:.7cqw 1.2cqw}.pf.on span{color:var(--y)}#s-prof .row .b,#s-pform .row .b{min-width:16cqw;font-size:1.5cqw}
+#pff-i,#pff-c{font:inherit;font-size:2cqw;text-transform:uppercase;text-align:center;background:#0b1130;color:#fff;border:.3cqw solid var(--y);padding:1cqw;width:36cqw}
+#pff-c{font-size:1.1cqw;text-transform:none;text-align:left;width:56cqw;height:10cqw;resize:none;word-break:break-all}#pff-e{color:#ff6a6a;min-height:1.2em}
+/* negozio: catalogo di schede (anteprima, skin, personaggio, prezzo); stesse schede per le skin in selezione */
+#s-shop,#s-skin{gap:1.4cqw;padding:5cqw 0 3cqw}.cat{display:flex;flex-wrap:wrap;justify-content:center;gap:1.4cqw;max-width:92cqw;max-height:30cqw;overflow-y:auto;padding:1cqw}
+.card{display:flex;flex-direction:column;align-items:center;gap:.5cqw;width:15cqw;padding:1cqw .8cqw;background:linear-gradient(var(--n),var(--nd));border:.3cqw solid var(--y);outline:.25cqw solid #000;box-shadow:0 .5cqw 0 #000}
+.card img{height:11cqw;max-width:100%;object-fit:contain;image-rendering:pixelated}.card b{font-size:1.2cqw;color:var(--y);line-height:1.3}.card span{font-size:1cqw;color:#cfd6ff}
+.card .b{min-width:0;width:100%;font-size:1cqw;padding:.7cqw .4cqw}.card .b[disabled]{opacity:.55;cursor:default}.card.on{border-color:#fff}
+.empty{max-width:60cqw;line-height:1.6}
 #dots i{width:1.1cqw;height:1.1cqw;background:#2a3358;border:.2cqw solid #000;display:block;transform:rotate(45deg)}
 #dots i.on{background:var(--y)}
 .row{display:flex;gap:2cqw;align-items:center;justify-content:center;font-size:1.8cqw}
@@ -101,6 +116,11 @@ h2{font-size:4.4cqw}
 .arr{font-size:7cqw;width:14cqw;height:14cqw}.arr.l{left:2cqw}.arr.r{right:2cqw}
 #pvn{font-size:10cqw}.selinfo{font-size:2.6cqw;gap:2cqw 4cqw}.st i{width:18cqw;height:2.2cqw}
 #dots{gap:1.8cqw}#dots i{width:2.4cqw;height:2.4cqw}
+.wallet{font-size:2.8cqw;top:4cqw;right:4cqw;padding:1.4cqw 2.2cqw}.wallet::before{width:2.2cqw;height:2.8cqw}#e-c{font-size:4cqw}
+#pchip{font-size:2.6cqw;top:4cqw;left:4cqw;padding:1.4cqw 2.2cqw}#pchip::before{width:2.2cqw;height:2.2cqw}
+#pfl{min-width:86cqw;max-height:60cqw;gap:2cqw}.pf{font-size:3cqw}.pf i{font-size:2.4cqw}.pf .b{font-size:2.4cqw;padding:1.4cqw 2cqw}#s-prof .row,#s-pform .row{flex-wrap:wrap}#s-prof .row .b,#s-pform .row .b{min-width:36cqw;font-size:2.8cqw}
+#pff-i{font-size:4cqw;width:70cqw}#pff-c{font-size:2.6cqw;width:84cqw;height:30cqw}
+#s-shop,#s-skin{gap:3cqw;padding:16cqw 0 6cqw}.cat{gap:3cqw;max-height:110cqw}.card{width:40cqw;padding:2cqw 1.6cqw;gap:1cqw}.card img{height:32cqw}.card b{font-size:2.8cqw}.card span{font-size:2.3cqw}.card .b{font-size:2.3cqw;padding:1.6cqw .6cqw}.empty{max-width:84cqw}
 .row{font-size:2.8cqw}.row .b{min-width:34cqw}input[type=range]{width:44cqw}
 .small{font-size:2.6cqw;max-width:92cqw}
 #e-t{font-size:7cqw}
@@ -122,14 +142,22 @@ h2{font-size:4.4cqw}
 <div class="blink">TOCCA O PREMI UN TASTO</div><div class="small dim" id="ver"></div></div>
 <div class="scr" id="s-load"><h2>CARICAMENTO</h2><div class="small" id="ld-p"></div></div>
 <div class="scr" id="s-menu"><div class="logo sm"><div class="top"><div class="badge">G</div><div class="lt">GROSSETTO</div></div></div>
-<nav class="mlist"><button class="b" data-go="arc" data-d="Sfida un collega a caso. Al meglio dei 3 round.">ARCADE</button><button class="b" data-go="tor" data-d="Tre incontri di fila: l'ultimo è contro il boss PAULUX.">TORNEO</button><button class="b alt" data-go="set" data-d="Musica, effetti, controlli touch e vibrazione.">IMPOSTAZIONI</button></nav>
-<div id="mdesc"></div></div>
+<nav class="mlist"><button class="b" data-go="arc" data-d="Sfida un collega a caso. Al meglio dei 3 round.">ARCADE</button><button class="b" data-go="tor" data-d="Tre incontri di fila: l'ultimo è contro il boss PAULUX.">TORNEO</button><button class="b alt" data-go="shop" data-d="Spendi i cedolini guadagnati combattendo: skin alternative per i dipendenti.">NEGOZIO</button><button class="b alt" data-go="set" data-d="Musica, effetti, controlli touch e vibrazione.">IMPOSTAZIONI</button></nav>
+<div id="mdesc"></div><div class="wallet"></div><button class="b alt" id="pchip" data-go="prof" data-d="Profili e codice di salvataggio per spostare i progressi su un altro dispositivo."></button></div>
+<div class="scr" id="s-prof"><h2>PROFILI</h2><div class="panel" id="pfl"></div>
+<div class="row"><button class="b alt" id="pf-new">NUOVO</button><button class="b alt" id="pf-code">IL MIO CODICE</button><button class="b alt" id="pf-imp">INSERISCI CODICE</button></div>
+<button class="b alt" data-go="menu">INDIETRO</button></div>
+<div class="scr" id="s-pform"><h2 id="pff-t"></h2><div class="panel"><div class="small" id="pff-l"></div><input id="pff-i" maxlength="12" autocomplete="off" spellcheck="false"><textarea id="pff-c" spellcheck="false"></textarea><div class="small" id="pff-e"></div></div>
+<div class="row"><button class="b alt" id="pff-x">INDIETRO</button><button class="b alt" id="pff-2"></button><button class="b" id="pff-ok"></button></div></div>
+<div class="scr" id="s-shop"><h2>NEGOZIO</h2><div class="wallet"></div><div class="cat" id="shl"></div>
+<button class="b alt" data-go="menu">INDIETRO</button></div>
+<div class="scr" id="s-skin"><h2 id="skt"></h2><div class="cat" id="skl"></div><button class="b alt" id="sk-x">INDIETRO</button></div>
 <div class="scr" id="s-sel"><h2 id="sel-t">SCEGLI IL DIPENDENTE</h2>
 <div class="stage" id="stage"><canvas id="pvc" width="300" height="420"></canvas><button class="arr l" id="sel-l" aria-label="precedente">◀</button><button class="arr r" id="sel-r" aria-label="successivo">▶</button></div>
 <div id="pvn"></div>
 <div class="selinfo"><div class="st"><span>VELOCITÀ</span><i><b id="pvs"></b></i></div><div class="st"><span>POTENZA</span><i><b id="pvp"></b></i></div><div id="pvx"></div></div>
 <div id="dots"></div>
-<div class="row"><button class="b alt" data-go="menu">INDIETRO</button><button class="b" id="b-go">COMBATTI!</button></div></div>
+<div class="row"><button class="b alt" data-go="menu">INDIETRO</button><button class="b alt" id="b-skin">SKIN</button><button class="b" id="b-go">COMBATTI!</button></div></div>
 <div class="scr" id="s-set"><h2>IMPOSTAZIONI</h2><div class="panel">
 <label class="row">MUSICA <input type="range" id="o-mus" min="0" max="100"></label>
 <label class="row">EFFETTI <input type="range" id="o-sfx" min="0" max="100"></label>
@@ -138,7 +166,7 @@ h2{font-size:4.4cqw}
 <div class="small">A/D muovi · W salta · S abbassati · J pugno forte · K calcio · L pugno · I speciale (barra SUPER piena) · SPAZIO/SHIFT para (danno /10) · ESC pausa. Pugni ripetuti fanno meno danno: alterna le mosse.<br>TELEFONO: levetta a sinistra (appoggia il pollice dove vuoi, su per saltare), pulsanti a destra: puoi far scorrere il dito da uno all'altro. SPECIALE si illumina quando è carico.</div></div>
 <button class="b" data-go="menu">INDIETRO</button></div>
 <div class="scr" id="s-pause"><h2>PAUSA</h2><div class="mlist"><button class="b" id="b-res">RIPRENDI</button><button class="b alt" data-go="menu">ESCI AL MENU</button></div></div>
-<div class="scr" id="s-end"><h2 id="e-t"></h2><div id="e-s" class="small"></div><div class="mlist"><button class="b" id="b-nx"></button><button class="b alt" data-go="menu">MENU</button></div></div>
+<div class="scr" id="s-end"><h2 id="e-t"></h2><div id="e-s" class="small"></div><div id="e-c"></div><div class="mlist"><button class="b" id="b-nx"></button><button class="b alt" data-go="menu">MENU</button></div></div>
 </div></div>
 <script>
 const W=352,H=192,FY=182,cv=document.getElementById('g');let c=cv.getContext('2d');c.scale(2,2);c.imageSmoothingEnabled=false;
@@ -157,7 +185,7 @@ const TOR=[6,5,7],TLV=[2,3,5];
 /* sprite dei personaggi: 1 riga per animazione in assets/characters/<nome>/, corpo in piedi normalizzato a 400px, piedi sul bordo inferiore, rivolti a destra.
    n = frame per animazione; pj = proiettile dello speciale (pjn frame); spT = soglie (tick) dei frame dello speciale se diverse dallo standard.
    hit/win sono opzionali: se mancano si usa la posa idle (inclinata quando colpito). */
-const SPRB=400,VER=44,SPRSET={
+const SPRB=400,VER=45,SPRSET={
 BEPPE:{d:'beppe',n:{idle:4,walk:4,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:3,ko:1,win:2},pj:'pallet',pjn:1,pjw:50,pjh:39.3,pjo:[62,-84],spT:[6,11]},
 MATTEO:{d:'matteo',n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:3,ko:1,win:3},pj:'matteo-cart',pjn:3,pjf:0,pjt:1,pjh:71.3,pjy:-40.8,spT:[5,11]},
 VLAD:{d:'vlad',sc:1.05,n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:2,ko:1,win:2},pj:'vlad-spray',pjn:3,pjs:.6,pjo:[33.8,-83.5],pji:1,spT:[5,11]},
@@ -190,7 +218,58 @@ const fine=ok=>{LD.n++;cb&&cb(ok);if(fase==1&&!--LD.p1){for(const f of LD.q2)f()
 im.onload=()=>fine(1);im.onerror=()=>fine(0);(fase==1?LD.q1:LD.q2).push(()=>{im.src=src+'?v='+VER});return im}
 function ldShow(){const b=$('#s-title .blink');if(b)b.textContent=LD.p1>0?'CARICAMENTO '+(100*(LD.t1-LD.p1)/LD.t1|0)+'%':'TOCCA O PREMI UN TASTO';
 const lp=$('#ld-p');if(lp)lp.textContent=(100*LD.n/LD.t|0)+'%'}
-const ready=n=>!SPRSET[n]||!SPRSET[n].left;
+const ready=ss=>!ss||!ss.left;
+/* ---------- cedolini (moneta di gioco) e skin ---------- */
+/* REW: cedolini guadagnati a fine incontro dal giocatore. win/lose = vittoria o sconfitta, round = per
+   ogni round vinto, perfect = round vinto senza subire danni, tour = torneo completato. Il totale e'
+   moltiplicato per la difficolta' della CPU: x(1 + (lv-2)*lvk), lv da 1 a 5 */
+const REW={win:50,lose:15,round:10,perfect:20,tour:150,lvk:.15};
+/* skin alternative in vendita nel negozio: SKINS.<NOME> = [{id,n,p}]
+   id = cartella assets/characters/<d>/skin-<id>/ con gli stessi nomi di file dell'originale
+   (<d>-<animazione>.webp, proiettile, <d>-front.webp): un file che manca resta quello originale.
+   n = nome nel negozio, p = prezzo in cedolini. ORIGINALE ('base') e' sempre posseduta.
+   Esempio: BEPPE:[{id:'natale',n:'BABBO BEPPE',p:400}] con i file in assets/characters/beppe/skin-natale/ */
+const SKINS={BEPPE:[],VLAD:[],LUIS:[],ZANI:[],MATTEO:[],FALSA:[],ANGEL:[],PAULUX:[]};
+/* ---------- profili ---------- */
+/* i progressi stanno nel browser (localStorage), un profilo per giocatore: n = nome, ced = cedolini,
+   own/eq = skin possedute e indossate per personaggio. PF.cur = profilo in uso. Per spostarli su un altro
+   dispositivo c'e' il CODICE DI SALVATAGGIO (exportCode/importCode) */
+const PFK='grossetto-profili';let PF={cur:null,list:{}};
+const obj=v=>v&&typeof v=='object'&&!Array.isArray(v)?v:{};
+const norm=p=>{const own={},eq={};for(const[k,v]of Object.entries(obj(p.own)))if(Array.isArray(v))own[k]=v.filter(x=>typeof x=='string');
+for(const[k,v]of Object.entries(obj(p.eq)))if(typeof v=='string')eq[k]=v;
+return{n:String(p.n||'GIOCATORE').toUpperCase().slice(0,12),ced:Math.max(0,Math.min(9999999,p.ced|0)),own,eq}};
+try{const v=JSON.parse(localStorage.getItem(PFK)||'null');if(v&&v.list){for(const k in obj(v.list))PF.list[k]=norm(v.list[k]);PF.cur=v.cur}}catch(e){}
+if(!PF.list[PF.cur])PF.cur=Object.keys(PF.list)[0]||null;
+let SAVE=PF.cur?PF.list[PF.cur]:norm({});/* senza profilo (prima del primo avvio) non si salva nulla */
+function save(){if(!PF.cur)return;try{localStorage.setItem(PFK,JSON.stringify(PF))}catch(e){}}
+/* nome valido: 1-12 tra lettere, numeri e spazi, diverso dagli altri profili; restituisce un errore o '' */
+function nameErr(n,skip){if(!/^[A-Z0-9ÀÈÉÌÒÙ ]{1,12}$/.test(n))return'Da 1 a 12 lettere o numeri';if(Object.entries(PF.list).some(([k,p])=>k!=skip&&p.n==n))return'Esiste già un profilo con questo nome';return''}
+function newProfile(data){const id='p'+Date.now().toString(36)+(Math.random()*1e6|0).toString(36);PF.list[id]=norm(data);PF.cur=id;SAVE=PF.list[id];save();return id}
+function useProfile(id){if(PF.list[id]){PF.cur=id;SAVE=PF.list[id];save()}}
+function delProfile(id){delete PF.list[id];if(PF.cur==id){PF.cur=Object.keys(PF.list)[0]||null;SAVE=PF.cur?PF.list[PF.cur]:norm({})}
+try{localStorage.setItem(PFK,JSON.stringify(PF))}catch(e){}}
+/* codice di salvataggio: GRS1-<controllo>-<dati in base64>; il controllo scarta codici copiati male */
+const ck=t=>{let h=7;for(const ch of t)h=(h*31+ch.charCodeAt(0))%1679616;return h.toString(36).toUpperCase().padStart(4,'0')};
+function exportCode(){const b=btoa(unescape(encodeURIComponent(JSON.stringify({n:SAVE.n,c:SAVE.ced,o:SAVE.own,e:SAVE.eq})))).replace(/=+$/,'');return'GRS1-'+ck(b)+'-'+b}
+function importCode(code){const m=String(code).replace(/\s+/g,'').match(/^GRS1-([0-9A-Z]{4})-([A-Za-z0-9+/]+)$/i);if(!m||ck(m[2])!=m[1].toUpperCase())return null;
+try{const d=JSON.parse(decodeURIComponent(escape(atob(m[2]))));return norm({n:d.n,ced:d.c,own:d.o,eq:d.e})}catch(e){return null}}
+const skinsOf=n=>[{id:'base',n:'ORIGINALE',p:0},...(SKINS[n]||[])];
+const owns=(n,id)=>id=='base'||(SAVE.own[n]||[]).includes(id);
+/* skin indossata (torna ORIGINALE se quella salvata non esiste piu') */
+const eqSkin=n=>{const id=SAVE.eq[n];return id&&owns(n,id)&&skinsOf(n).some(k=>k.id==id)?id:'base'};
+/** compra una skin (si indossa dalla selezione, pulsante SKIN); false se gia' posseduta, inesistente o cedolini insufficienti */
+function buy(n,id){const k=skinsOf(n).find(k=>k.id==id);if(!k||owns(n,id)||SAVE.ced<k.p)return false;SAVE.ced-=k.p;(SAVE.own[n]=SAVE.own[n]||[]).push(id);save();return true}
+function equip(n,id){if(owns(n,id)){SAVE.eq[n]=id;save()}}
+/* set di sprite di una skin: copia dell'originale (stesse misure e mosse) con le immagini della cartella
+   skin-<id>, caricato alla prima richiesta; ogni file mancante ricade su quello originale */
+const SKC={};
+function skinSet(n,id){const base=SPRSET[n];if(!base||id=='base')return base;const key=n+'/'+id;if(SKC[key])return SKC[key];
+const ss=SKC[key]={...base,im:{},left:0,skin:id},P='assets/characters/'+base.d+'/';
+const one=(file,set)=>{ss.left++;const im=new Image();let fb=0;im.onload=()=>{ss.left--;set&&set(im)};
+im.onerror=()=>{if(fb++)ss.left--;else im.src=P+file+'.webp?v='+VER};im.src=P+'skin-'+id+'/'+file+'.webp?v='+VER;return im};
+ss.front=one(base.d+'-front');for(const a of Object.keys(base.n))one(base.d+'-'+a,im=>{ss.im[a]=im});if(base.pj)ss.pi=one(base.pj);return ss}
+const wal=()=>{document.querySelectorAll('.wallet').forEach(e=>e.textContent=SAVE.ced+' CEDOLINI');const pc=$('#pchip');if(pc)pc.textContent=SAVE.n};
 for(const [k,ss] of Object.entries(SPRSET)){const fase=DEMO.includes(k)?1:2,P='assets/characters/'+ss.d+'/';ss.im={};ss.left=0;
 const add=(src,set)=>{ss.left++;return ldImg(P+src+'.webp',fase,ok=>{ss.left--;if(ok&&set)set()})};
 /* vista frontale per la selezione (tools/build_fronts.py) */
@@ -224,7 +303,7 @@ function arenaFit(h){ARH=Math.max(208,h);ARY=FY-(ARA?ARA.fy:.87)*ARH;const hw2=A
 
 {const v=document.getElementById('ver');if(v)v.textContent='v'+VER}
 const SPR_H=0.55*384/2, SPRK=SPR_H/SPRB; /* altezza sprite ~55% del canvas, in coordinate mondo */
-function draw(f,x,y,pose,sc){const L=f.L,s=pose||f.st,t=f.t,e=f.ext||0;const ss=SPRSET[L.n],SPR=ss&&ss.im,SPRN=ss&&ss.n;sc=(sc||1)*(L.big?1.12:1)*(ss&&ss.sc||1);
+function draw(f,x,y,pose,sc){const L=f.L,s=pose||f.st,t=f.t,e=f.ext||0;const ss=f.ss||SPRSET[L.n],SPR=ss&&ss.im,SPRN=ss&&ss.n;sc=(sc||1)*(L.big?1.12:1)*(ss&&ss.sc||1);
 if(!(SPR&&SPR.idle))return;/* niente sprite (ancora in caricamento): non si disegna nulla */
 let name='idle',fi=0;
 if(s=='walk'){name='walk';fi=(t/12|0)%SPRN.walk}
@@ -255,12 +334,12 @@ const MV={p:{su:5,ac:9,re:5,d:5,r:34,st:11,kb:2},k:{su:5,ac:9,re:5,d:7,r:41,st:1
 let G=null,T=0,mode='arc',tour=0,pickI=0,keys={},TR={},PS=[],PJ=[],last=0,acc=0,ZP=1,XMIN=18,XMAX=334,demo=[{L:CH[0],x:88,face:1,st:'idle',t:0,ext:0,y:0},{L:CH[7],x:264,face:-1,st:'idle',t:0,ext:0,y:0}];
 arenaFit(208);
 function mk(L,x,face,ai,lv){return{L,x,y:0,vx:0,vy:0,face,hp:100,tr:100,sp:0,st:'idle',t:0,atk:null,did:0,stun:0,blk:0,cr:0,rep:{m:'',n:0,t:-999},ai,lv,ob:0,hd:{},wins:0,ext:0}}
-function sh(id){document.querySelectorAll('.scr').forEach(e=>e.classList.toggle('on',e.id==id));$('#tc').classList.toggle('on',id==''&&touchOn());if(id)touchReset();if(id&&id!='s-title')focusFirst()}
+function sh(id){if(id=='s-menu'||id=='s-shop'||id=='s-prof')wal();document.querySelectorAll('.scr').forEach(e=>e.classList.toggle('on',e.id==id));$('#tc').classList.toggle('on',id==''&&touchOn());if(id)touchReset();if(id&&id!='s-title')focusFirst()}
 const touchOn=()=>O.touch==2?false:O.touch==1||matchMedia('(pointer:coarse)').matches;
 function spark(x,y,col){for(let i=0;i<9;i++)PS.push({x,y,vx:(Math.random()-.5)*4,vy:-Math.random()*3,l:14,col})}
 function newRound(){const a=G.a,b=G.b;CAMX=176;a.cmb=b.cmb=0;a.x=176-88/ZP;b.x=176+88/ZP;for(const f of[a,b]){f.y=0;f.vx=f.vy=0;f.hp=100;f.tr=100;f.sp=0;f.st='idle';f.atk=null;f.stun=0;f.rep.n=0}a.face=1;b.face=-1;G.ph='intro';G.pt=100;G.tm=3600;PJ=[]}
-function startMatch(pi,oi,lv){if(!ready(CH[pi].n)||!ready(CH[oi].n)||!ARENAS.some(A=>A.im.naturalWidth)){sh('s-load');ldShow();clearTimeout(startMatch.w);startMatch.w=setTimeout(()=>startMatch(pi,oi,lv),150);return}
-pickArena();G={a:mk(CH[pi],88,1),b:mk(CH[oi],264,-1,1,lv),rd:1,pi,oi,lv,hs:0,sh:0,pz:0};newRound();sh('');pl=true;sfx('ui')}
+function startMatch(pi,oi,lv){const sa=skinSet(CH[pi].n,eqSkin(CH[pi].n)),sb=SPRSET[CH[oi].n];if(!ready(sa)||!ready(sb)||!ARENAS.some(A=>A.im.naturalWidth)){sh('s-load');ldShow();clearTimeout(startMatch.w);startMatch.w=setTimeout(()=>startMatch(pi,oi,lv),150);return}
+pickArena();G={a:mk(CH[pi],88,1),b:mk(CH[oi],264,-1,1,lv),rd:1,pi,oi,lv,hs:0,sh:0,pz:0,er:{round:0,perfect:0}};G.a.ss=sa;G.b.ss=sb;newRound();sh('');pl=true;sfx('ui')}
 /* memoria comandi: un colpo premuto resta valido per 10 fotogrammi (~1/6 s), cosi' se lo premi mentre
    finisce l'attacco precedente parte appena possibile invece di andare perso */
 function pin(){const i={};for(const k of'lrudbpkhs')i[k]=!!(keys[k]||tk[k]||(TR[k]&&T-TR[k]<=10));return i}
@@ -273,7 +352,7 @@ if(bl){v*=.1;d.vx=a.face*2;sfx('blk');spark(d.x+d.face*12,-36,'#7fe8ff')}
 else{a.cmb=T-(a.cmbT||-999)<80?(a.cmb||0)+1:1;a.cmbT=T;d.hT=T;d.stun=m.st;d.st='hit';d.t=0;d.atk=null;d.vx=a.face*m.kb;if(d.y>=0&&m.kb>5)d.vy=-3;sfx('hit');spark(d.x-a.face*4,-36,'#ffd23f');if(O.vib&&navigator.vibrate)navigator.vibrate(m.kb>5?40:15)}
 d.hp-=v;a.sp=Math.min(100,a.sp+v*1.4);d.sp=Math.min(100,d.sp+v*.8);G.hs=bl?2:m.kb>5?7:4;G.sh=bl?0:m.kb>5?10:5;
 if(d.hp<=0){d.hp=0;d.vx=a.face*3;d.vy=-4;endRound(a,'K.O.')}}
-function endRound(w,txt){if(G.ph!='play')return;G.ph='ko';G.pt=150;G.w=w;G.txt=txt;w.wins++;const l=w==G.a?G.b:G.a;l.st='ko';l.atk=null;l.t=0;sfx('ko')}
+function endRound(w,txt){if(G.ph!='play')return;G.ph='ko';G.pt=150;G.w=w;G.txt=txt;w.wins++;if(w==G.a){G.er.round++;if(w.hp>=100)G.er.perfect++}const l=w==G.a?G.b:G.a;l.st='ko';l.atk=null;l.t=0;sfx('ko')}
 function upd(f,o,i){f.t++;
 if(f.st=='ko'){f.vx*=.92;f.x+=f.vx;f.vy+=.5;f.y=Math.min(0,f.y+f.vy);if(f.y>=0)f.vy=0;return}
 const gr=f.y>=0&&f.vy>=0;
@@ -328,6 +407,11 @@ t.className=win?'win':'lose';
 if(win){if(mode=='tor'&&tour>=2){t.textContent='CAMPIONE DI GROSSETTO!';s.textContent='Hai battuto tutti, anche il boss.';bn.style.display='none'}
 else{t.textContent='VITTORIA!';s.textContent=mode=='tor'?'Prossimo avversario: '+CH[TOR[tour+1]].n:'';bn.style.display='';bn.textContent='PROSSIMO';bn.onclick=()=>{if(mode=='tor')tour++;nextFight()}}}
 else{t.textContent='SCONFITTA';s.textContent='';bn.style.display='';bn.textContent='RIVINCITA';bn.onclick=()=>nextFight(1)}
+/* cedolini guadagnati (tabella REW) */
+const mul=1+((G.lv||2)-2)*REW.lvk,parts=[[win?'VITTORIA':'PARTECIPAZIONE',win?REW.win:REW.lose],['ROUND VINTI',G.er.round*REW.round],['PERFETTO',G.er.perfect*REW.perfect]];
+if(win&&mode=='tor'&&tour>=2)parts.push(['TORNEO',REW.tour]);
+const tot=Math.round(parts.reduce((a,q)=>a+q[1],0)*mul);SAVE.ced+=tot;save();G.earn=tot;
+$('#e-c').innerHTML='+'+tot+' CEDOLINI<div class="small">'+parts.filter(q=>q[1]).map(q=>q[0]+' '+q[1]).join(' · ')+(mul!=1?' · DIFFICOLTÀ x'+mul.toFixed(2):'')+'</div>';
 sh('s-end');pl=false}
 function nextFight(again){if(mode=='tor'){startMatch(pickI,TOR[tour],TLV[tour])}else{let o=again?G.oi:Math.random()*8|0;while(o==pickI)o=Math.random()*8|0;startMatch(pickI,o,again?G.lv:2+(Math.random()*3|0))}}
 /* ---------- render ---------- */
@@ -336,9 +420,9 @@ function TxO(s,x,y,z,col,oc,al){c.font=z+'px '+FT;c.textAlign=al||'center';const
 for(const[dx,dy]of[[-o,0],[o,0],[0,-o],[0,o],[-o,-o],[o,o],[-o,o],[o,-o]])c.fillText(s,x+dx,y+dy);c.fillStyle=col;c.fillText(s,x,y)}
 /* ritratti HUD: testa ritagliata dalla posa idle (sprite reale o disegno procedurale), in cache quando gli sprite sono caricati */
 const PT={};
-function portrait(L){const ss=SPRSET[L.n],ok=!ss||!!ss.im.idle,key=L.n+ok;if(PT[key])return PT[key];
+function portrait(f){const L=f.L,ss=f.ss||SPRSET[L.n],ok=!ss||!!ss.im.idle,key=L.n+(ss&&ss.skin||'')+ok;if(PT[key])return PT[key];
 const t=document.createElement('canvas');t.width=160;t.height=260;const sv=c;c=t.getContext('2d');c.imageSmoothingEnabled=false;
-try{draw({L,face:1,st:'idle',t:0,ext:0,cr:0},80,252,'idle',1.4)}finally{c=sv}
+try{draw({L,ss,face:1,st:'idle',t:0,ext:0,cr:0},80,252,'idle',1.4)}finally{c=sv}
 const d=t.getContext('2d').getImageData(0,0,160,260).data,A=(x,y)=>d[(y*160+x)*4+3]>128;let y0=-1,y1=0;
 for(let y=0;y<260;y++)for(let x=0;x<160;x++)if(A(x,y)){if(y0<0)y0=y;y1=y;break}
 const o=document.createElement('canvas');o.width=o.height=32;
@@ -349,7 +433,7 @@ function hud(){const sec=Math.max(0,Math.ceil(G.tm/60));
 for(const[f,d]of[[G.a,1],[G.b,-1]]){const px=d>0?4:W-32,bw=120,bx=d>0?35:W-35-bw;
 /* ritratto con cornice oro: lampeggia rosso quando colpito, scuro se KO */
 c.fillStyle='#000';c.fillRect(px-1,3,30,30);c.fillStyle='#ffd23f';c.fillRect(px,4,28,28);c.fillStyle='#1b2450';c.fillRect(px+1,5,26,26);
-c.save();c.beginPath();c.rect(px+1,5,26,26);c.clip();const pt=portrait(f.L);
+c.save();c.beginPath();c.rect(px+1,5,26,26);c.clip();const pt=portrait(f);
 if(d<0){c.translate(px+27,5);c.scale(-1,1);c.drawImage(pt,0,0,26,26);c.setTransform(2,0,0,2,0,0)}else c.drawImage(pt,px+1,5,26,26);
 if(T-(f.hT||-99)<8){c.fillStyle='rgba(255,50,50,.55)';c.fillRect(px+1,5,26,26)}
 if(f.hp<=0){c.fillStyle='rgba(0,0,0,.6)';c.fillRect(px+1,5,26,26)}c.restore();
@@ -457,7 +541,7 @@ const a=G.a,b=G.b;for(const f of[a,b])shadow(f);
 const order=a.y<b.y?[b,a]:[a,b];litLayer(()=>{for(const f of order)draw(f,f.x,FY+f.y)},TR2,[a.x,b.x]);
 fogPass();dustPass(true);
 for(const p of PJ){const x=p.x,y=FY+(p.y==null?-30:p.y),d=p.vx>0?1:-1;c.save();c.translate(x,y);c.scale(d,1);c.imageSmoothingEnabled=false;
-const ps=SPRSET[p.o.L.n]||{},PI=ps.pi;
+const ps=p.o.ss||SPRSET[p.o.L.n]||{},PI=ps.pi;
 if(PI&&PI.complete&&PI.naturalWidth){if(ps.pjn>1){const n=ps.pjn,fw=PI.width/n,ph=ps.pjh||48,fi=ps.pjf!=null?ps.pjf:ps.pjg?Math.min(n-1,Math.max(0,p.t)/6|0):ps.pji?(p.t<5?0:1+((p.t/8|0)%(n-1))):(p.t/6|0)%n,k2=ph/PI.height;if(ps.pjs){const k3=SPRK*ps.pjs*(ps.sc||1);c.drawImage(PI,fi*fw,0,fw,PI.height,-2*k3,-PI.height*k3/2,fw*k3,PI.height*k3)}else c.drawImage(PI,fi*fw,0,fw,PI.height,-fw*k2/2,ps.pjy||-18,fw*k2,ph)}
 else{/* bancale di BEPPE: dritto, senza ruotare, largo come quello che tiene in mano */const ph=ps.pjh||30,pw=ps.pjw||PI.width*ph/PI.height;c.drawImage(PI,-pw/2,-ph/2,pw,ph)}}
 c.restore()}
@@ -471,7 +555,7 @@ function loop(ts){requestAnimationFrame(loop);acc+=Math.min(50,ts-last);last=ts;
 let selI=0,lastPT='mouse';
 const selList=()=>CH.map((L,i)=>i).filter(i=>!(mode=='tor'&&i>4));
 function setSel(i,dir){selI=i;const L=CH[i],cl=v=>Math.round(Math.min(1,Math.max(.12,v))*100)+'%';$('#pvn').textContent=L.n;
-$('#pvs').style.width=cl((L.sp-1.1)/.8);$('#pvp').style.width=cl((L.pw-.75)/.6);$('#pvx').innerHTML='SPECIALE: <b>'+(L.ms||'CARRELLINO')+'</b>'+(L.big?' <span style="color:#ff6a6a">· BOSS</span>':'');
+$('#pvs').style.width=cl((L.sp-1.1)/.8);$('#pvp').style.width=cl((L.pw-.75)/.6);$('#pvx').innerHTML='SPECIALE: <b>'+(L.ms||'CARRELLINO')+'</b>'+(L.big?' <span style="color:#ff6a6a">· BOSS</span>':'')+(eqSkin(L.n)!='base'?' · SKIN: <b>'+skinsOf(L.n).find(k=>k.id==eqSkin(L.n)).n+'</b>':'');
 const L2=selList();$('#dots').innerHTML=L2.map(j=>'<i class="'+(j==i?'on':'')+'"></i>').join('');
 const cv=$('#pvc');if(dir){cv.classList.remove('in','inl');void cv.offsetWidth;cv.classList.add(dir>0?'in':'inl')}}
 /* scorre al dipendente precedente/successivo (in giro) */
@@ -485,12 +569,61 @@ $('#sel-l').onclick=()=>selStep(-1);$('#sel-r').onclick=()=>selStep(1);
 st.addEventListener('pointerup',e=>{if(sx==null)return;const d=e.clientX-sx;sx=null;if(Math.abs(d)>30)selStep(d<0?1:-1)});st.addEventListener('pointercancel',()=>{sx=null})}
 /* anteprima a tutto schermo: vista frontale (dalla tavola di riferimento) con un leggero respiro,
    altrimenti la posa di guardia animata; altezze nelle stesse proporzioni del gioco */
-function selAnim(){if(!$('#s-sel').classList.contains('on'))return;const sv=c,L=CH[selI],ss=SPRSET[L.n],fr=ss&&ss.front;
+function selAnim(){if(!$('#s-sel').classList.contains('on'))return;const sv=c,L=CH[selI],sk=skinSet(L.n,eqSkin(L.n)),ss=SPRSET[L.n],fr=sk.front&&sk.front.naturalWidth?sk.front:ss&&ss.front;
 try{c=$('#pvc').getContext('2d');c.imageSmoothingEnabled=false;c.clearRect(0,0,300,420);
 const kk=(ss&&ss.sc||1)*(L.big?1.12:1)/1.12;/* il piu' grande (boss) occupa tutta l'altezza */
 if(fr&&fr.complete&&fr.naturalWidth){const h=404*(ss.fk||kk)*(1+Math.sin(T/22)*.008),w=fr.naturalWidth*h/fr.naturalHeight;c.drawImage(fr,150-w/2,416-h,w,h)}}finally{c=sv}}
 $('#b-go').onclick=()=>go(selI);
-const GO={menu:()=>{G=null;pl=false;sh('s-menu')},arc:()=>{mode='arc';fillSel();sh('s-sel')},tor:()=>{mode='tor';fillSel();sh('s-sel')},set:()=>sh('s-set')};
+/* scheda di una skin: anteprima (vista frontale della skin, o l'originale se manca), nome, personaggio, pulsante */
+const skImg=(n,id)=>{const d=SPRSET[n].d,b='assets/characters/'+d+'/'+d+'-front.webp?v='+VER;return'<img alt="" src="'+(id=='base'?b:'assets/characters/'+d+'/skin-'+id+'/'+d+'-front.webp?v='+VER)+'" onerror="this.onerror=null;this.src=\''+b+'\'">'};
+const card=(n,k,btn,on)=>'<div class="card'+(on?' on':'')+'">'+skImg(n,k.id)+'<b>'+k.n+'</b><span>'+n+'</span>'+btn+'</div>';
+const hook=(el,fn)=>el.querySelectorAll('[data-k]').forEach(b=>{b.addEventListener('mouseenter',()=>focusB(b));b.onclick=()=>{if(b.disabled)return;au();fn(b.dataset.n,b.dataset.k)}});
+/* negozio: tutte le skin in vendita (SKINS) di tutti i personaggi; comprata, si indossa dalla selezione (SKIN) */
+function fillShop(foc){wal();const L=CH.flatMap(L=>(SKINS[L.n]||[]).map(k=>[L.n,k]));
+$('#shl').innerHTML=L.length?L.map(([n,k])=>{const o=owns(n,k.id),no=!o&&SAVE.ced<k.p;
+return card(n,k,'<button class="b'+(o||no?' alt':'')+'" data-n="'+n+'" data-k="'+k.id+'"'+(o||no?' disabled':'')+'>'+(o?'ACQUISTATA':k.p+' CEDOLINI')+'</button>')}).join('')
+:'<div class="small empty">Nessuna skin in vendita per ora: le nuove skin dei dipendenti arriveranno presto.<br>Intanto combatti e accumula cedolini!</div>';
+hook($('#shl'),(n,id)=>{if(buy(n,id)){sfx('ui');fillShop(n+'/'+id)}});
+const f=foc&&$('#shl [data-n="'+foc.split('/')[0]+'"][data-k="'+foc.split('/')[1]+'"]');if(f)focusB(f.closest('.card').nextElementSibling?.querySelector('.b:not([disabled])')||btns($('#s-shop')).find(b=>!b.disabled))}
+/* skin del dipendente scelto in selezione: ORIGINALE e quelle comprate si indossano, le altre rimandano al negozio */
+function fillSkin(){const n=CH[selI].n,eq=eqSkin(n);$('#skt').textContent='SKIN DI '+n;
+$('#skl').innerHTML=skinsOf(n).map(k=>{const o=owns(n,k.id),u=eq==k.id;
+return card(n,k,'<button class="b'+(u||!o?' alt':'')+'" data-n="'+n+'" data-k="'+k.id+'"'+(u||!o?' disabled':'')+'>'+(u?'IN USO':o?'INDOSSA':'NEGOZIO · '+k.p)+'</button>',u)}).join('')+
+(skinsOf(n).length<2?'<div class="small empty">Per ora '+n+' ha solo la skin originale: le nuove skin si comprano nel NEGOZIO con i cedolini.</div>':'');
+hook($('#skl'),(n,id)=>{equip(n,id);sfx('ui');fillSkin();setSel(selI)})}
+$('#b-skin').onclick=()=>{au();sfx('ui');fillSkin();sh('s-skin')};$('#sk-x').onclick=()=>{sfx('ui');sh('s-sel')};
+/* profili: elenco (USA / ELIMINA), nuovo, codice di salvataggio da copiare o da inserire */
+function fillProf(){const L=Object.entries(PF.list);$('#pfl').innerHTML=L.map(([id,p])=>'<div class="pf'+(id==PF.cur?' on':'')+'"><span>'+p.n+'</span><i>'+p.ced+' CEDOLINI</i>'+
+(id==PF.cur?'<button class="b alt" disabled>IN USO</button>':'<button class="b" data-pu="'+id+'">USA</button>')+'<button class="b alt" data-pd="'+id+'">ELIMINA</button></div>').join('');
+$('#pfl').querySelectorAll('.b').forEach(b=>b.addEventListener('mouseenter',()=>focusB(b)));
+$('#pfl').querySelectorAll('[data-pu]').forEach(b=>b.onclick=()=>{au();sfx('ui');useProfile(b.dataset.pu);fillProf();wal()});
+$('#pfl').querySelectorAll('[data-pd]').forEach(b=>b.onclick=()=>{au();sfx('ui');pform('del',0,b.dataset.pd)})}
+/* modulo: m = 'new' (nome), 'imp' (incolla un codice), 'code' (mostra il proprio codice), 'del' (conferma);
+   first = primo avvio, senza profili: non si puo' tornare indietro */
+let PFM={};
+function pform(m,first,id){PFM={m,first,id};const I=$('#pff-i'),C=$('#pff-c'),ok=$('#pff-ok'),b2=$('#pff-2');
+$('#pff-e').textContent='';I.value='';C.value='';I.style.display=m=='new'?'':'none';C.style.display=m=='imp'||m=='code'?'':'none';C.readOnly=m=='code';
+$('#pff-x').style.display=first?'none':'';b2.style.display=m=='code'||(first&&m=='new')||(first&&m=='imp')?'':'none';
+const T={new:[first?'BENVENUTO!':'NUOVO PROFILO',first?'Scegli il tuo nome: cedolini e skin restano salvati in questo profilo.':'Nome del nuovo profilo:','CREA'],
+imp:['INSERISCI CODICE','Incolla il codice di salvataggio copiato dall\'altro dispositivo:','CARICA'],
+code:['IL MIO CODICE','Copia questo codice e inseriscilo nell\'altro dispositivo (PROFILI > INSERISCI CODICE). Contiene cedolini e skin di '+SAVE.n+'.','FATTO'],
+del:['ELIMINA PROFILO','Eliminare '+(PF.list[id]||{}).n+'? Cedolini e skin andranno persi (salva prima il suo codice se ti serve).','ELIMINA']}[m];
+$('#pff-t').textContent=T[0];$('#pff-l').textContent=T[1];ok.textContent=T[2];b2.textContent=m=='code'?'COPIA':m=='new'?'HO UN CODICE':'NUOVO PROFILO';
+if(m=='code')C.value=exportCode();sh('s-pform');if(m=='new')I.focus();else if(m=='imp')C.focus()}
+$('#pf-new').onclick=()=>pform('new');$('#pf-code').onclick=()=>pform('code');$('#pf-imp').onclick=()=>pform('imp');
+$('#pff-x').onclick=()=>{fillProf();sh('s-prof')};
+$('#pff-i').addEventListener('input',e=>{const v=e.target.value.toUpperCase();if(v!=e.target.value)e.target.value=v});
+$('#pff-2').onclick=()=>{au();sfx('ui');const {m,first}=PFM;if(m=='code'){const C=$('#pff-c');C.select();
+(navigator.clipboard?navigator.clipboard.writeText(C.value):Promise.reject()).then(()=>$('#pff-e').textContent='Copiato!',()=>{try{document.execCommand('copy');$('#pff-e').textContent='Copiato!'}catch(e){$('#pff-e').textContent='Selezionalo e copialo a mano'}})}
+else pform(m=='new'?'imp':'new',first)};
+$('#pff-ok').onclick=()=>{au();const {m,first,id}=PFM,er=t=>{$('#pff-e').textContent=t;sfx('ui')};
+if(m=='new'){const n=$('#pff-i').value.trim().replace(/\s+/g,' ').toUpperCase(),e=nameErr(n);if(e)return er(e);newProfile({n})}
+else if(m=='imp'){const d=importCode($('#pff-c').value);if(!d)return er('Codice non valido: controlla di averlo copiato tutto');
+let n=d.n,i=2;while(nameErr(n))n=(d.n.slice(0,10)+' '+i++).slice(0,12);newProfile({...d,n})}
+else if(m=='del'){delProfile(id);if(!PF.cur)return pform('new',1)}
+sfx('ui');if(first){sh('s-menu');return}fillProf();sh('s-prof')};
+
+const GO={menu:()=>{G=null;pl=false;sh('s-menu')},arc:()=>{mode='arc';fillSel();sh('s-sel')},tor:()=>{mode='tor';fillSel();sh('s-sel')},set:()=>sh('s-set'),shop:()=>{fillShop();sh('s-shop');focusB(btns($('#s-shop')).find(b=>!b.disabled))},prof:()=>{fillProf();sh('s-prof')}};
 /* navigazione da tastiera nei menu: frecce/WASD per spostarsi, INVIO/SPAZIO/J per confermare, ESC per tornare */
 const vis=()=>[...document.querySelectorAll('.scr.on')].find(e=>e.id!='s-title');
 const btns=s=>[...s.querySelectorAll('.b')].filter(b=>b.offsetParent&&!b.closest('#grid'));
@@ -499,16 +632,19 @@ function focusFirst(){const s=vis();if(s&&s.id!='s-sel')focusB(btns(s)[0])}
 document.querySelectorAll('.scr .b').forEach(b=>b.addEventListener('mouseenter',()=>focusB(b)));
 function menuKey(e,s){const k=e.code,nx=['ArrowDown','ArrowRight','KeyS','KeyD'].includes(k),pv=['ArrowUp','ArrowLeft','KeyW','KeyA'].includes(k),ok=['Enter','Space','KeyJ','NumpadEnter'].includes(k);
 if(s.id=='s-sel'){if(k=='ArrowRight'||k=='KeyD'){e.preventDefault();selStep(1)}else if(k=='ArrowLeft'||k=='KeyA'){e.preventDefault();selStep(-1)}
-else if(ok){e.preventDefault();go(selI)}else if(k=='Escape'||k=='Backspace'){sfx('ui');GO.menu()}return}
-if(k=='Escape'&&(s.id=='s-set')){sfx('ui');GO.menu();return}
+else if(ok){e.preventDefault();go(selI)}else if(k=='KeyK'){e.preventDefault();$('#b-skin').click()}else if(k=='Escape'||k=='Backspace'){sfx('ui');GO.menu()}return}
+if(k=='Escape'&&(s.id=='s-set'||s.id=='s-shop'||s.id=='s-prof')){sfx('ui');GO.menu();return}
+if(k=='Escape'&&s.id=='s-pform'&&!PFM.first){sfx('ui');$('#pff-x').click();return}
+if(s.id=='s-skin'&&(k=='Escape'||k=='Backspace')){$('#sk-x').click();return}
 const B=btns(s);if(!B.length)return;const j=B.findIndex(b=>b.classList.contains('f'));
 if(nx||pv){e.preventDefault();sfx('ui');focusB(B[((j<0?0:j)+(nx?1:B.length-1))%B.length])}else if(ok){e.preventDefault();(B[j]||B[0]).click()}}
 document.addEventListener('click',e=>{const t=e.target.closest('[data-go]');if(t){au();sfx('ui');GO[t.dataset.go]()}});
-$('#s-title').onclick=()=>{if(LD.p1>0)return;au();pl=true;sh('s-menu')};
+$('#s-title').onclick=()=>{if(LD.p1>0)return;au();pl=true;if(PF.cur)sh('s-menu');else pform('new',1)};
 function pause(v){if(!G||G.ph=='end')return;G.pz=v;pl=!v;sh(v?'s-pause':'')}
 $('#b-res').onclick=()=>pause(0);$('#pz').onpointerdown=()=>pause(1);
 const KM={KeyA:'l',ArrowLeft:'l',KeyD:'r',ArrowRight:'r',KeyW:'u',ArrowUp:'u',KeyS:'d',ArrowDown:'d',KeyJ:'h',KeyK:'k',KeyL:'p',KeyI:'s',Space:'b',ShiftLeft:'b',ShiftRight:'b'};
-addEventListener('keydown',e=>{if($('#s-title').classList.contains('on')){$('#s-title').click();return}
+addEventListener('keydown',e=>{if(e.target&&/^(INPUT|TEXTAREA)$/.test(e.target.tagName)){if(e.code=='Enter'&&e.target.tagName=='INPUT'){e.preventDefault();$('#pff-ok').click()}else if(e.code=='Escape')e.target.blur();return}
+if($('#s-title').classList.contains('on')){$('#s-title').click();return}
 const sc=vis();if(sc&&!(sc.id=='s-pause'&&(e.code=='Escape'||e.code=='KeyP'))){menuKey(e,sc);return}
 if(e.code=='Escape'||e.code=='KeyP'){pause(G&&!G.pz?1:0);return}const k=KM[e.code];if(!k)return;e.preventDefault();if(!keys[k]&&'pkhs'.includes(k))TR[k]=T;keys[k]=1});
 addEventListener('keyup',e=>{const k=KM[e.code];if(k)keys[k]=0});

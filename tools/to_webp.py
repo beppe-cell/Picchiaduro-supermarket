@@ -1,6 +1,6 @@
 """Converte gli sprite PNG dei personaggi nei WebP che il gioco carica davvero.
 
-I PNG in assets/characters/<nome>/ restano i file di lavoro (li producono gli altri strumenti in
+I PNG in assets/characters/<nome>/ (e nelle cartelle delle skin, <nome>/skin-<id>/) restano i file di lavoro (li producono gli altri strumenti in
 tools/); index.html carica i .webp accanto, circa 3 volte piu' leggeri a parita' di aspetto
 (qualita' 90, trasparenza senza perdita). Va rilanciato dopo ogni modifica agli sprite.
 
@@ -21,7 +21,8 @@ def main():
     tutti = '--tutti' in sys.argv
     radice = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets', 'characters')
     fatti = prima = dopo = 0
-    for png in sorted(glob.glob(os.path.join(radice, '*', '*.png'))):
+    pngs = glob.glob(os.path.join(radice, '*', '*.png')) + glob.glob(os.path.join(radice, '*', 'skin-*', '*.png'))
+    for png in sorted(pngs):
         if png.endswith('-anteprima.png'):
             continue
         webp = png[:-4] + '.webp'
