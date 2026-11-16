@@ -54,8 +54,12 @@ prima che i suoi due lottatori siano pronti compare una breve schermata di caric
    dell'originale (`<nome>-<animazione>.webp`, proiettile, `<nome>-front.webp`; fai i PNG come al solito e
    lancia `tools/to_webp.py`, che converte anche le cartelle `skin-*`). Un file che manca resta quello
    originale: una skin può cambiare anche solo alcune animazioni.
+   Dai fogli pose: `python3 -B tools/build_character.py <nome> <A> <B> <C> --out
+   assets/characters/<nome>/skin-<id>`; vista per la selezione: aggiungi la tavola in `BOARDS` di
+   `tools/build_fronts.py` (chiave `<nome>/skin-<id>`) e lancia `build_fronts.py <nome>/skin-<id>`.
 2. Aggiungi la skin in `SKINS` dentro `index.html`, es. `BEPPE:[{id:'natale',n:'BABBO BEPPE',p:400}]`
-   (`n` nome nel negozio, `p` prezzo in cedolini) e aumenta `VER`.
+   (`n` nome nel negozio, `p` prezzo in cedolini; `nf` se un'animazione ha un numero di fotogrammi
+   diverso dall'originale, es. `nf:{fall:2,win:2}`) e aumenta `VER`.
 
 ## Personaggi
 
@@ -69,6 +73,9 @@ prima che i suoi due lottatori siano pronti compare una breve schermata di caric
 | FALSA | sprite disegnati (`assets/characters/falsa/`) | Risata al telefono (onda sonora) |
 | ANGEL | sprite disegnati (`assets/characters/angel/`) | Picchiata angelica (volo corpo a corpo) |
 | PAULUX (boss) | sprite disegnati (`assets/characters/paulux/`) | Carica del transpallet (corpo a corpo) |
+| ANDREI | sprite disegnati (`assets/characters/andrei/`) | Piede di porco (corpo a corpo) |
+
+Skin in vendita nel negozio: **MATTEO SHALOM** (500 cedolini, `assets/characters/matteo/skin-israele/`).
 
 ## Comandi
 
@@ -115,6 +122,9 @@ assets/
     angel/                     angel-<animazione>.png (speciale corpo a corpo, senza proiettile)
       sorgenti/                tavola IMG_5469, fogli pose IMG_5470–5472, speciale IMG_5473
     paulux/                    paulux-<animazione>.png (speciale corpo a corpo col transpallet)
+    andrei/                    andrei-<animazione>.png (speciale corpo a corpo col piede di porco)
+      sorgenti/                tavola IMG_5494, fogli pose IMG_5495–5497, speciale IMG_5498
+    matteo/skin-israele/       skin MATTEO SHALOM; sorgenti/: tavola IMG_5489, fogli pose IMG_5490, 5491, 5493
       sorgenti/                tavola IMG_5476, fogli pose IMG_5477–5479, speciale IMG_5480
 docs/reference/                immagini di riferimento per lo stile
 docs/sprite-guide/             fogli pose e prompt per creare un personaggio con Gemini

@@ -3,7 +3,7 @@ Prende le figure intere della tavola da sinistra a destra, le porta alla scala d
 del personaggio (stessa distanza vita-piedi) e scrive <nome>-special.png.
 Il proiettile, se c'e', si prepara a parte (vedi tools/build_luis_special.py).
 
-Uso: python3 -B tools/build_special.py <nome> <tavola> [--pose N]"""
+Uso: python3 -B tools/build_special.py <nome> <tavola> [--pose N] [--out CARTELLA] [--scala K]"""
 import argparse
 import os
 import sys
@@ -41,8 +41,10 @@ def main():
     ap.add_argument('--scala', type=float,
                     help='fattore di scala fisso (es. quello stampato da build_character.py) invece '
                          'della misura vita-piedi sulla maglia rossa')
+    ap.add_argument('--out', help='cartella di uscita (predefinita assets/characters/<nome>/; per una skin '
+                                  'assets/characters/<nome>/skin-<id>/)')
     a = ap.parse_args()
-    dst = os.path.join(HERE, '..', 'assets', 'characters', a.name)
+    dst = a.out or os.path.join(HERE, '..', 'assets', 'characters', a.name)
     if a.griglia:
         from build_character import load_sheet
         o = load_sheet(a.sheet, 'A')

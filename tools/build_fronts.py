@@ -2,7 +2,9 @@
 Prende dalla tavola di riferimento (sfondo magenta, tre viste: lato, fronte, retro) la figura centrale
 e la porta all'altezza dello sprite da fermo del personaggio, cosi' i rapporti di altezza tra i
 personaggi restano quelli del gioco. Chi non ha la tavola (Beppe) in selezione usa la guardia.
-Uso: python3 -B tools/build_fronts.py"""
+Le skin hanno la loro tavola: chiave '<nome>/skin-<id>', vista scritta nella cartella della skin e
+portata all'altezza della guardia della skin.
+Uso: python3 -B tools/build_fronts.py [chiave ...]   (senza chiavi: tutte; es. andrei matteo/skin-israele)"""
 import os
 import sys
 import numpy as np
@@ -21,6 +23,8 @@ BOARDS = {   # personaggio -> tavola di riferimento
     'falsa': 'falsa/sorgenti/tavola.png',
     'beppe': 'beppe/sorgenti/tavola.JPG',      # sfondo BIANCO (vedi white_key)
     'paulux': 'paulux/sorgenti/IMG_5476.jpeg',
+    'andrei': 'andrei/sorgenti/IMG_5494.jpeg',
+    'matteo/skin-israele': 'matteo/skin-israele/sorgenti/IMG_5489.jpeg',
 }
 WHITE_BG = {'beppe'}
 
@@ -39,21 +43,26 @@ def white_key(path):
     return np.concatenate([a, al[..., None]], -1)
 
 
-for name, board in BOARDS.items():
+keys = sys.argv[1:] or list(BOARDS)
+for k in keys:
+    if k not in BOARDS:
+        sys.exit('%s: tavola non registrata in BOARDS' % k)
+for dest in keys:
+    board, name = BOARDS[dest], dest.split('/')[0]
     o = white_key(CH + board) if name in WHITE_BG else key(CH + board)
     H = o.shape[0]
     figs = sorted([f for f in figures(o) if f['y1'] - f['y0'] > 0.4 * H], key=lambda f: f['x0'])
     if len(figs) != 3:
         sys.exit('%s: attese 3 viste nella tavola, trovate %d' % (name, len(figs)))
     front = figs[1]
-    idle = np.asarray(Image.open(CH + '%s/%s-idle.png' % (name, name)))
+    idle = np.asarray(Image.open(CH + '%s/%s-idle.png' % (dest, name)))
     ys = np.where(idle[..., 3].max(1) > 128)[0]
     target = ys.max() - ys.min() + 1                  # altezza della guardia nello sprite
     k = target / float(front['y1'] - front['y0'] + 1)
-    out = CH + '%s/%s-front.png' % (name, name)
+    out = CH + '%s/%s-front.png' % (dest, name)
     write_sheet(out, [frame_from_mask(o, front['mask'], k)])
     extra = ''
     if name in WHITE_BG:            # sfondo bianco: toglie l'alone chiaro sul contorno
         from defringe import defringe, harden
         extra = ', alone tolto: %d px + bordo grigio %d px' % (defringe(out), harden(out))
-    print('%s-front.png: scala %.3f, alta %d px%s' % (name, k, target, extra))
+    print('%s/%s-front.png: scala %.3f, alta %d px%s' % (dest, name, k, target, extra))
