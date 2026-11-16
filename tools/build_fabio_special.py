@@ -5,7 +5,8 @@ Sorgenti in assets/characters/fabio/sorgenti/:
   onda.jpeg      l'onda d'urto in 3 grandezze, da sinistra.
 Scrive fabio-special.png e fabio-shock.png.
 
-Le pose hanno la stessa scala della guardia (--scala, quella stampata da build_character.py).
+Le pose sono scalate in modo che la testa di Fabio sia grande come nella guardia (--scala): nel disegno
+Gemini l'ha fatto piu' grosso, quindi la scala e' piu' piccola di quella stampata da build_character.py.
 L'ancora di ogni posa e' il busto di Fabio (la maglia rossa), non il centro della figura: cosi' il
 sollevatore resta davanti a lui e Fabio non salta di lato tra la guardia e la speciale. Il tuffo (3a
 posa) e' sollevato da terra di --volo px. Nella 2a posa Fabio e le forche sono abbassati di --abbassa
@@ -39,8 +40,8 @@ def shirt_x(px):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('--scala', type=float, default=1.13)
-    ap.add_argument('--abbassa', type=int, default=160,
+    ap.add_argument('--scala', type=float, default=0.9)
+    ap.add_argument('--abbassa', type=int, default=170,
                     help='di quanti px abbassare Fabio e le forche nella 2a posa (0 = come nel disegno)')
     ap.add_argument('--volo', type=int, default=110, help='altezza da terra del tuffo, in px dello sprite')
     a = ap.parse_args()
