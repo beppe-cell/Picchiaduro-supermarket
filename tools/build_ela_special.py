@@ -1,12 +1,12 @@
-"""Mossa speciale di FALSA ("risata al telefono") da assets/characters/falsa/sorgenti/IMG_5474.jpeg:
+"""Mossa speciale di ELA ("risata al telefono") da assets/characters/ela/sorgenti/IMG_5474.jpeg:
 riga in alto 3 pose disegnate a MEZZO BUSTO (telefono all'orecchio, inizia a ridere, ride forte),
 riga in basso l'onda sonora della risata in 3 grandezze.
 
 Le pose sono tagliate sopra le ginocchia, quindi il busto viene montato sulle gambe della posa da
 fermo: la scala si prende dalla distanza testa-cartellino rosso (che porta alla cintura), il taglio
 e' all'altezza della cintura e i due pezzi si allineano sul centro del busto.
-Scrive falsa-special.png e falsa-laugh.png e stampa pjo (punto di uscita = bocca) per index.html.
-Uso: python3 -B tools/build_falsa_special.py"""
+Scrive ela-special.png e ela-laugh.png e stampa pjo (punto di uscita = bocca) per index.html.
+Uso: python3 -B tools/build_ela_special.py"""
 import os
 import sys
 import numpy as np
@@ -16,8 +16,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from spritekey import key, figures                       # noqa: E402
 from spritebuild import frame_from_mask, write_sheet     # noqa: E402
 
-SRC = 'assets/characters/falsa/sorgenti/IMG_5474.jpeg'
-DST = 'assets/characters/falsa/'
+SRC = 'assets/characters/ela/sorgenti/IMG_5474.jpeg'
+DST = 'assets/characters/ela/'
 SPRK = 0.55 * 384 / 2 / 400
 
 
@@ -60,7 +60,7 @@ top = sorted([f for f in figs if (f['y0'] + f['y1']) / 2 < H / 2 and f['mask'].s
 bottom = [f for f in figs if (f['y0'] + f['y1']) / 2 >= H / 2]
 assert len(top) == 3, 'attese 3 pose in alto, trovate %d' % len(top)
 
-idle = trim(np.asarray(Image.open(DST + 'falsa-idle.png')).astype(np.float32))
+idle = trim(np.asarray(Image.open(DST + 'ela-idle.png')).astype(np.float32))
 ib = badge(idle)
 k = None
 frames = []
@@ -87,7 +87,7 @@ for f in top:
     reg = out[:upper.shape[0], xu:xu + upper.shape[1]]
     reg[:] = np.where(upper[..., 3:4] > 0, upper, reg)
     frames.append(dict(px=out, ax=float(L)))
-cw, ch = write_sheet(DST + 'falsa-special.png', frames)
+cw, ch = write_sheet(DST + 'ela-special.png', frames)
 print('special: 3 pose (busto %.3f su gambe della guardia), celle %dx%d' % (k, cw, ch))
 
 # onda: le parti della riga in basso, per colonna; alla scala del busto, in gioco la riduce pjs.
@@ -109,10 +109,10 @@ for x0, x1 in ((0, W / 3), (W / 3, 2 * W / 3), (2 * W / 3, W)):
     c8 = np.where(al.any(0))[0][:8]
     fr['ay'] = float(np.where(al[:, c8].any(1))[0].mean())
     waves.append(fr)
-write_sheet(DST + 'falsa-laugh.png', waves, top=1, bot=1, left=True)
+write_sheet(DST + 'ela-laugh.png', waves, top=1, bot=1, left=True)
 
 # bocca nella posa 3: pelle piu' a destra nella parte alta della testa
-sp = np.asarray(Image.open(DST + 'falsa-special.png')).astype(int)
+sp = np.asarray(Image.open(DST + 'ela-special.png')).astype(int)
 c = sp[:, 2 * cw:3 * cw]
 ys = np.where(c[..., 3].max(1) > 128)[0]
 top_y, hgt = ys.min(), ys.max() - ys.min()

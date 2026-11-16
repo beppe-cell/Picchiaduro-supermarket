@@ -21,8 +21,26 @@ prima che i suoi due lottatori siano pronti compare una breve schermata di caric
 ## Modalità
 
 - **Arcade**: un incontro contro un collega a caso, al meglio dei 3 round.
-- **Torneo**: tre incontri di fila (ANGEL, FALSA e il boss PAULUX).
+- **Torneo**: tre incontri di fila (ANGEL, ELA e il boss BIGBOSS).
+- **Online**: sfida un altro giocatore in rete (vedi sotto).
 - **Impostazioni**: volume di musica ed effetti, controlli touch, vibrazione.
+
+## Online (senza server)
+
+- **CERCA AVVERSARIO**: abbina in automatico due giocatori che stanno cercando.
+- **CREA STANZA**: mostra un codice di 4 lettere da mandare all'amico, che lo scrive in **ENTRA CON CODICE**.
+- Poi ognuno sceglie il suo dipendente (con la sua skin) e si combatte; a fine incontro **RIVINCITA**
+  (serve il sì di tutti e due) o MENU. Chi crea la partita gioca a sinistra e la sua arena è a caso.
+- Si guadagnano cedolini come in arcade (difficoltà x1).
+
+Come funziona: il gioco non ha un server. I giocatori si trovano tramite i relay pubblici della rete
+Nostr (libreria [Trystero](https://github.com/dmotz/trystero) 0.26.0, copiata in
+`assets/vendor/trystero-nostr.mjs` da `tools/vendor_trystero.sh` e scaricata solo quando si apre ONLINE),
+poi i due browser si collegano direttamente (WebRTC). Le due copie del gioco simulano la stessa partita
+scambiandosi solo i comandi (lockstep con 4 fotogrammi di ritardo, circa 67 ms): ogni secondo confrontano
+un'impronta dello stato e se diverge l'HUD mostra DESYNC. Se l'avversario chiude o non risponde per 8
+secondi la partita si interrompe. Alcune reti (aziendali, alcuni operatori mobili) non permettono il
+collegamento diretto: in quel caso servirebbe un server TURN.
 
 ## Profili, cedolini e negozio
 
@@ -42,6 +60,10 @@ prima che i suoi due lottatori siano pronti compare una breve schermata di caric
   | Torneo completato | 150 |
   | Difficoltà della CPU | totale × (1 + (livello − 2) × 0,15) |
 
+- **Dipendenti da sbloccare**: ELA, ANGEL e BIGBOSS si affrontano ma non si possono scegliere finché
+  non li si batte nel TORNEO 5, 7 e 10 volte (tabella `UNL` in `index.html`). A fine incontro compare il
+  progresso (es. VITTORIE SU ANGEL: 3/7); nel negozio ogni scheda mostra barra e conteggio, e al
+  traguardo il pulsante SBLOCCA li rende giocabili in tutte le modalità (anche online).
 - **Negozio**: mostra subito tutte le skin in vendita, ognuna con anteprima, nome della skin, dipendente a
   cui appartiene e prezzo. Una skin comprata resta nel profilo.
 - **Skin in selezione**: nella scelta del dipendente il pulsante SKIN (tasto `K`) mostra le sue skin:
@@ -70,12 +92,13 @@ prima che i suoi due lottatori siano pronti compare una breve schermata di caric
 | VLAD | sprite disegnati (`assets/characters/vlad/`) | Spruzzino accecante |
 | LUIS | sprite disegnati (`assets/characters/luis/`) | Assolo distruttivo (onda sonora) |
 | ZANI | sprite disegnati (`assets/characters/zani/`) | Taglierino furioso (corpo a corpo) |
-| FALSA | sprite disegnati (`assets/characters/falsa/`) | Risata al telefono (onda sonora) |
+| ELA | sprite disegnati (`assets/characters/ela/`) | Risata al telefono (onda sonora) |
 | ANGEL | sprite disegnati (`assets/characters/angel/`) | Picchiata angelica (volo corpo a corpo) |
-| PAULUX (boss) | sprite disegnati (`assets/characters/paulux/`) | Carica del transpallet (corpo a corpo) |
+| BIGBOSS (boss) | sprite disegnati (`assets/characters/bigboss/`) | Carica del transpallet (corpo a corpo) |
 | ANDREI | sprite disegnati (`assets/characters/andrei/`) | Piede di porco (corpo a corpo) |
 
-Skin in vendita nel negozio: **MATTEO SHALOM** (500 cedolini, `assets/characters/matteo/skin-israele/`).
+Skin in vendita nel negozio: **MATTEO SHALOM** (500 cedolini, `assets/characters/matteo/skin-israele/`) e
+**LUIS EL MARIACHI** (500 cedolini, `assets/characters/luis/skin-mariachi/`: speciale con le maracas, stessa onda).
 
 ## Comandi
 
@@ -117,15 +140,18 @@ assets/
       sorgenti/                tavola, fogli pose IMG_5449–5452, speciale IMG_5454
     zani/                      zani-<animazione>.png (speciale corpo a corpo, senza proiettile)
       sorgenti/                tavola IMG_5456, fogli pose IMG_5458–5460, speciale IMG_5463
-    falsa/                     falsa-<animazione>.png, falsa-laugh.png (proiettile)
+    ela/                       ela-<animazione>.png, ela-laugh.png (proiettile)
       sorgenti/                tavola.png, foglio-A/B/C.png, speciale IMG_5474
     angel/                     angel-<animazione>.png (speciale corpo a corpo, senza proiettile)
       sorgenti/                tavola IMG_5469, fogli pose IMG_5470–5472, speciale IMG_5473
-    paulux/                    paulux-<animazione>.png (speciale corpo a corpo col transpallet)
+    bigboss/                   bigboss-<animazione>.png (speciale corpo a corpo col transpallet)
     andrei/                    andrei-<animazione>.png (speciale corpo a corpo col piede di porco)
       sorgenti/                tavola IMG_5494, fogli pose IMG_5495–5497, speciale IMG_5498
+    luis/skin-mariachi/        skin LUIS EL MARIACHI; sorgenti/: tavola IMG_5500, fogli IMG_5501–5504
+                               (fuori griglia: pose scelte a mano con tools/build_figure_map.py)
     matteo/skin-israele/       skin MATTEO SHALOM; sorgenti/: tavola IMG_5489, fogli pose IMG_5490, 5491, 5493
       sorgenti/                tavola IMG_5476, fogli pose IMG_5477–5479, speciale IMG_5480
+assets/vendor/                 trystero-nostr.mjs (multiplayer online, MIT)
 docs/reference/                immagini di riferimento per lo stile
 docs/sprite-guide/             fogli pose e prompt per creare un personaggio con Gemini
 tools/
@@ -134,13 +160,15 @@ tools/
   build_character.py           importa un personaggio dai 3 fogli pose (tutte le animazioni tranne la speciale)
   build_special.py             pose della speciale da una tavola a parte (con --taglio per pose che si toccano)
   build_luis_special.py        speciale di LUIS: chitarra e onda sonora
-  build_falsa_special.py       speciale di FALSA: busto col telefono sulle gambe della guardia, onda della risata
+  build_ela_special.py       speciale di ELA: busto col telefono sulle gambe della guardia, onda della risata
   build_extra_poses.py         aggiunge singole animazioni da un foglio pose (es. vittoria di Beppe)
   build_fronts.py              vista frontale di ogni personaggio (<nome>-front.png) per la selezione
   spritebuild.py               strumenti comuni: ritaglio, scala, allineamento, fogli PNG
   build_matteo_sprites.py      genera i PNG di Matteo dalle tavole sorgenti
   build_vlad_sprites.py        genera i PNG di Vlad dalle tavole sorgenti
   build_beppe_special.py       speciale di Beppe: afferra, tiene e lancia il bancale
+  build_figure_map.py          animazioni scegliendo a mano le figure, per fogli generati fuori griglia
+  vendor_trystero.sh           ricostruisce la libreria del multiplayer (assets/vendor/trystero-nostr.mjs)
   to_webp.py                   converte gli sprite PNG nei WebP caricati dal gioco (3 volte piu' leggeri)
   clean_white_residue.py       toglie il bianco di sfondo residuo dagli sprite
   spritekey.py                 scontorno del magenta e separazione dei frame

@@ -1,11 +1,11 @@
-"""Rigenera tutti gli sprite di PAULUX dalle sorgenti e ne corregge le proporzioni.
+"""Rigenera tutti gli sprite di BIGBOSS dalle sorgenti e ne corregge le proporzioni.
 
-Nei fogli pose Gemini ha disegnato PAULUX alto quanto Matteo: portato all'altezza di VLAD, testa e
+Nei fogli pose Gemini ha disegnato BIGBOSS alto quanto Matteo: portato all'altezza di VLAD, testa e
 busto risultavano piu' grandi di quelli degli altri. Qui le gambe (dalla cima dei jeans arancioni
-in giu') vengono allungate in verticale di LEG, cosi' in gioco PAULUX si puo' scalare di meno
-(SPRSET.PAULUX.sc) e restare alto come VLAD con testa e busto della stessa grandezza degli altri.
+in giu') vengono allungate in verticale di LEG, cosi' in gioco BIGBOSS si puo' scalare di meno
+(SPRSET.BIGBOSS.sc) e restare alto come VLAD con testa e busto della stessa grandezza degli altri.
 KO e caduta (gambe non verticali) non vengono allungati.
-Uso: python3 -B tools/build_paulux.py"""
+Uso: python3 -B tools/build_bigboss.py"""
 import os
 import subprocess
 import sys
@@ -14,7 +14,7 @@ from PIL import Image
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.join(HERE, '..')
-CH = os.path.join(ROOT, 'assets', 'characters', 'paulux')
+CH = os.path.join(ROOT, 'assets', 'characters', 'bigboss')
 SRC = os.path.join(CH, 'sorgenti')
 LEG = 1.16      # allungamento delle gambe
 FRAMES = {'idle': 1, 'walk': 2, 'punch': 5, 'kick': 5, 'heavy': 5, 'jump': 3, 'block': 1, 'crouch': 1,
@@ -42,14 +42,14 @@ def stretch_frame(c):
 
 def main():
     # 1. sprite dalle sorgenti (stesse opzioni usate per l'importazione)
-    run('build_character.py', 'paulux', os.path.join(SRC, 'IMG_5477.jpeg'), os.path.join(SRC, 'IMG_5478.jpeg'),
+    run('build_character.py', 'bigboss', os.path.join(SRC, 'IMG_5477.jpeg'), os.path.join(SRC, 'IMG_5478.jpeg'),
         os.path.join(SRC, 'IMG_5479.jpeg'))
-    run('build_extra_poses.py', 'paulux', 'A', os.path.join(SRC, 'IMG_5477.jpeg'), 'crouch=jump_up', '--scala', '1.096')
-    run('build_special.py', 'paulux', os.path.join(SRC, 'IMG_5480.jpeg'), '--linee', '--pose', '4', '--scala', '1.096')
+    run('build_extra_poses.py', 'bigboss', 'A', os.path.join(SRC, 'IMG_5477.jpeg'), 'crouch=jump_up', '--scala', '1.096')
+    run('build_special.py', 'bigboss', os.path.join(SRC, 'IMG_5480.jpeg'), '--linee', '--pose', '4', '--scala', '1.096')
     run('build_fronts.py')
     # 2. gambe allungate, celle ricomposte con i piedi sul bordo inferiore
     for anim, n in FRAMES.items():
-        p = os.path.join(CH, 'paulux-%s.png' % anim)
+        p = os.path.join(CH, 'bigboss-%s.png' % anim)
         a = np.asarray(Image.open(p).convert('RGBA'))
         cw = a.shape[1] // n
         cells = [stretch_frame(a[:, i * cw:(i + 1) * cw]) for i in range(n)]
@@ -58,7 +58,7 @@ def main():
         for i, c in enumerate(cells):
             out[H - c.shape[0]:, i * cw:(i + 1) * cw] = c
         Image.fromarray(out, 'RGBA').save(p, optimize=True)
-        print('paulux-%s.png: gambe x%.2f' % (anim, LEG))
+        print('bigboss-%s.png: gambe x%.2f' % (anim, LEG))
 
 
 if __name__ == '__main__':
