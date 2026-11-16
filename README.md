@@ -24,6 +24,39 @@ prima che i suoi due lottatori siano pronti compare una breve schermata di caric
 - **Torneo**: tre incontri di fila (ANGEL, FALSA e il boss PAULUX).
 - **Impostazioni**: volume di musica ed effetti, controlli touch, vibrazione.
 
+## Profili, cedolini e negozio
+
+- **Profili**: al primo avvio si sceglie un nome. Ogni profilo ha i suoi cedolini e le sue skin, salvati
+  nel browser (più persone possono giocare sullo stesso dispositivo). Dal menu, il pulsante col nome in
+  alto a sinistra apre PROFILI: cambia profilo, nuovo, elimina.
+- **Codice di salvataggio**: PROFILI > IL MIO CODICE mostra un codice (`GRS1-...`) da copiare;
+  sull'altro dispositivo PROFILI > INSERISCI CODICE (o HO UN CODICE al primo avvio) ricrea il profilo.
+  Il gioco non ha un server: senza il codice, cancellare i dati del browser cancella i progressi.
+- **Cedolini** (la moneta del gioco), a fine incontro, tabella `REW` in `index.html`:
+
+  | Voce | Cedolini |
+  |---|---|
+  | Vittoria / sconfitta | 50 / 15 |
+  | Ogni round vinto | 10 |
+  | Round perfetto (senza danni) | 20 |
+  | Torneo completato | 150 |
+  | Difficoltà della CPU | totale × (1 + (livello − 2) × 0,15) |
+
+- **Negozio**: mostra subito tutte le skin in vendita, ognuna con anteprima, nome della skin, dipendente a
+  cui appartiene e prezzo. Una skin comprata resta nel profilo.
+- **Skin in selezione**: nella scelta del dipendente il pulsante SKIN (tasto `K`) mostra le sue skin:
+  ORIGINALE e quelle comprate si indossano (INDOSSA / IN USO), le altre rimandano al negozio. La skin
+  indossata si vede in selezione, in combattimento e nel ritratto dell'HUD.
+
+### Aggiungere una skin
+
+1. Metti gli sprite in `assets/characters/<nome>/skin-<id>/` con gli **stessi nomi di file**
+   dell'originale (`<nome>-<animazione>.webp`, proiettile, `<nome>-front.webp`; fai i PNG come al solito e
+   lancia `tools/to_webp.py`, che converte anche le cartelle `skin-*`). Un file che manca resta quello
+   originale: una skin può cambiare anche solo alcune animazioni.
+2. Aggiungi la skin in `SKINS` dentro `index.html`, es. `BEPPE:[{id:'natale',n:'BABBO BEPPE',p:400}]`
+   (`n` nome nel negozio, `p` prezzo in cedolini) e aumenta `VER`.
+
 ## Personaggi
 
 | Nome | Grafica | Mossa speciale |
