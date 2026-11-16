@@ -20,11 +20,12 @@ BOARDS = {   # personaggio -> tavola di riferimento
     'luis': 'luis/sorgenti/IMG_5445.jpeg',
     'zani': 'zani/sorgenti/IMG_5456.jpeg',
     'angel': 'angel/sorgenti/IMG_5469.jpeg',
-    'falsa': 'falsa/sorgenti/tavola.png',
+    'ela': 'ela/sorgenti/tavola.png',
     'beppe': 'beppe/sorgenti/tavola.JPG',      # sfondo BIANCO (vedi white_key)
-    'paulux': 'paulux/sorgenti/IMG_5476.jpeg',
+    'bigboss': 'bigboss/sorgenti/IMG_5476.jpeg',
     'andrei': 'andrei/sorgenti/IMG_5494.jpeg',
     'matteo/skin-israele': 'matteo/skin-israele/sorgenti/IMG_5489.jpeg',
+    'luis/skin-mariachi': 'luis/skin-mariachi/sorgenti/IMG_5500.jpeg',
 }
 WHITE_BG = {'beppe'}
 
