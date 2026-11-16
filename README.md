@@ -1,4 +1,4 @@
-# GROSSETTO — Picchiaduro del supermercato
+# SUPERRISSA — Picchiaduro del supermercato
 
 Picchiaduro 2D in pixel art ambientato tra le corsie di un supermercato, giocabile nel browser
 (desktop e smartphone, in orizzontale e in verticale). Tutto il gioco è in un solo file, `index.html`:
@@ -49,7 +49,7 @@ collegamento diretto: in quel caso servirebbe un server TURN.
 - **Profili**: al primo avvio si sceglie un nome. Ogni profilo ha i suoi cedolini e le sue skin, salvati
   nel browser (più persone possono giocare sullo stesso dispositivo). Dal menu, il pulsante col nome in
   alto a sinistra apre PROFILI: cambia profilo, nuovo, elimina.
-- **Codice di salvataggio**: PROFILI > IL MIO CODICE mostra un codice (`GRS1-...`) da copiare;
+- **Codice di salvataggio**: PROFILI > IL MIO CODICE mostra un codice (`SPR1-...`) da copiare;
   sull'altro dispositivo PROFILI > INSERISCI CODICE (o HO UN CODICE al primo avvio) ricrea il profilo.
   Il gioco non ha un server: senza il codice, cancellare i dati del browser cancella i progressi.
 - **Cedolini** (la moneta del gioco), a fine incontro, tabella `REW` in `index.html`:
@@ -179,6 +179,8 @@ tools/
   build_hela_special.py      speciale di HELA: busto col telefono sulle gambe della guardia, onda della risata
   build_fabio_special.py       speciale di FABIO: pose col sollevatore (forche a meta' montante) e onda d'urto
   fix_zanna_mask.py             toglie la mascherina a ZANNA: trapianta la testa senza mascherina nelle pose che l'avevano
+  rename_sign.py               riscrive il nome del gioco sull'insegna appesa negli sfondi delle arene
+  replace_g_logo.py            sostituisce la G del logo sulle divise con la S di SUPERRISSA in tutti gli sprite
   build_astrea_special.py      rotolo di scontrino di ASTREA (3 fotogrammi allineati sul rotolo)
   build_porte_special.py       scatola di PORTE (--larga 140) (3 fotogrammi che ruotano, centrati sulla scatola)
   fix_crouch_legs.py           ripara l'accovacciato con le gambe tagliate (stinchi e stivali dallo stacco del salto)
