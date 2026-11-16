@@ -29,7 +29,24 @@ prima che i suoi due lottatori siano pronti compare una breve schermata di caric
 
 ## Online (senza server)
 
-- **CERCA AVVERSARIO**: abbina in automatico due giocatori che stanno cercando.
+- **RANKED** (online competitivo): abbina giocatori con punti vicini (la distanza accettata parte da
+  150 punti e si allarga di 10 al secondo di attesa). Si gioca un **set al meglio di 3 incontri**, ognuno al
+  meglio di 3 round; tra un incontro e l'altro si riparte da soli con gli stessi dipendenti. Regole uguali per
+  tutti: solo i dipendenti normali (niente mini boss e boss, anche se sbloccati), le skin sono solo estetiche.
+  **Chi abbandona perde**: uscire dal set, chiudere la pagina o perdere il collegamento a metà set conta come
+  sconfitta (il set in corso è salvato nel profilo e alla riapertura viene registrato), e l'avversario vince a
+  tavolino.
+  - **Punti** (Elo): si parte da 1000; si guadagnano o perdono più punti contro avversari più forti o più deboli
+    (K 40 nei primi 10 set, poi 24).
+  - **Divisioni**: BRONZO, ARGENTO (1100), ORO (1250), PLATINO (1400), CAMPIONE (1550). La prima volta in una
+    divisione si ricevono 300 / 600 / 1000 / 2000 cedolini; ogni set vinto dà 100 cedolini in più degli incontri.
+    Divisione e punti si vedono nella schermata ONLINE e nei profili; punti e set sono nel codice di salvataggio.
+  - **CLASSIFICA**: i migliori 50 con divisione, punti, set vinti/persi e personaggio più usato. Non c'è un
+    server: ogni giocatore firma la sua riga con una chiave del suo profilo (ECDSA, nel browser) e le righe
+    passano da un giocatore all'altro quando si incontrano (in ogni partita e quando la classifica è aperta),
+    quindi ognuno vede i giocatori che ha incontrato o di cui ha avuto notizia. La firma impedisce di modificare
+    la riga di un altro, non di truccare la propria: è una classifica tra colleghi, non un sistema anti-trucco.
+- **PARTITA FOR FUN**: abbina in automatico due giocatori che stanno cercando, senza punti.
 - **CREA STANZA**: mostra un codice di 4 lettere da mandare all'amico, che lo scrive in **ENTRA CON CODICE**.
 - Poi ognuno sceglie il suo dipendente (con la sua skin) e si combatte; a fine incontro **RIVINCITA**
   (serve il sì di tutti e due) o MENU. Chi crea la partita gioca a sinistra e la sua arena è a caso.
