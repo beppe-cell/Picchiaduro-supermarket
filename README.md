@@ -32,7 +32,8 @@ prima che i suoi due lottatori siano pronti compare una breve schermata di caric
 - **RANKED** (online competitivo): abbina giocatori con punti vicini (la distanza accettata parte da
   150 punti e si allarga di 10 al secondo di attesa). Si gioca un **set al meglio di 3 incontri**, ognuno al
   meglio di 3 round; tra un incontro e l'altro si riparte da soli con gli stessi dipendenti. Regole uguali per
-  tutti: solo i dipendenti normali (niente mini boss e boss, anche se sbloccati), le skin sono solo estetiche.
+  tutti: solo i dipendenti normali (niente mini boss e boss, anche se comprati), con **velocità e potenza uguali
+  per tutti** (1,5 e 1, anche per la speciale), e le skin sono solo estetiche.
   **Chi abbandona perde**: uscire dal set, chiudere la pagina o perdere il collegamento a metà set conta come
   sconfitta (il set in corso è salvato nel profilo e alla riapertura viene registrato), e l'avversario vince a
   tavolino.
@@ -83,15 +84,12 @@ collegamento diretto: in quel caso servirebbe un server TURN.
   | Torneo completato | 150 |
   | Difficoltà della CPU | totale × (1 + (livello − 2) × 0,15) |
 
-- **Dipendenti da sbloccare**: HELA, ANGEL, ASTREA e BIGBOSS si affrontano ma non si possono scegliere
-  finché non li si batte nel TORNEO 5, 7, 6 e 10 volte (tabella `UNL` in `index.html`). A fine incontro compare il
-  progresso (es. VITTORIE SU ANGEL: 3/7); nel negozio si vedono barra e conteggio, e al traguardo il
-  pulsante SBLOCCA li rende giocabili in tutte le modalità (anche online).
-- **Mini boss da comprare**: FABIO si affronta in ARCADE ma per sceglierlo va comprato nel negozio con
-  i cedolini (1500, tabella `PRZ` in `index.html`); poi è giocabile in tutte le modalità.
+- **Mini boss e boss da comprare**: FABIO, ANGEL, ASTREA, HELA e BIGBOSS si affrontano (in ARCADE e nel
+  TORNEO) ma per sceglierli vanno comprati nel negozio con i cedolini: FABIO 20000, ANGEL 30000, ASTREA 40000,
+  HELA 50000, BIGBOSS 100000 (tabella `PRZ` in `index.html`); poi sono giocabili in tutte le modalità
+  (tranne RANKED, dove si usano solo i dipendenti normali). Chi li aveva già sbloccati li tiene.
 - **Negozio**: come la scelta del dipendente, un articolo per schermata (frecce, trascinamento o tasti
-  ←/→): prima i dipendenti da sbloccare (sagoma scura finché non hai le vittorie, progresso e SBLOCCA),
-  poi i mini boss da comprare (prezzo e COMPRA),
+  ←/→): prima i mini boss e il boss da comprare (anteprima visibile, prezzo e COMPRA),
   poi tutte le skin in vendita con il dipendente a cui appartengono e il prezzo (COMPRA). Una skin
   comprata resta nel profilo.
 - **Skin in selezione**: nella scelta del dipendente il pulsante SKIN (tasto `K`) mostra le sue skin:
@@ -130,8 +128,8 @@ collegamento diretto: in quel caso servirebbe un server TURN.
 | ASTREA (mini boss) | sprite disegnati (`assets/characters/astrea/`) | Rotolo di scontrino che vola e si srotola (proiettile) |
 | PORTE | sprite disegnati (`assets/characters/porte/`) | Lancio della scatola (proiettile che ruota) |
 
-Skin in vendita nel negozio: **MATTEO SHALOM** (500 cedolini, `assets/characters/matteo/skin-israele/`) e
-**LUIS EL MARIACHI** (500 cedolini, `assets/characters/luis/skin-mariachi/`: speciale con le maracas, stessa onda).
+Skin in vendita nel negozio: **MATTEO SHALOM** (10000 cedolini, `assets/characters/matteo/skin-israele/`) e
+**LUIS EL MARIACHI** (10000 cedolini, `assets/characters/luis/skin-mariachi/`: speciale con le maracas, stessa onda).
 
 ## Comandi
 
