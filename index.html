@@ -160,7 +160,7 @@ h2{font-size:4.4cqw}
 <input id="on-i" maxlength="4" placeholder="CODICE" autocomplete="off" spellcheck="false" data-ok="on-j"></div>
 <div class="mlist" id="on-m"><button class="b" id="on-rq">RANKED</button><button class="b" id="on-q">PARTITA FOR FUN</button><button class="b alt" id="on-cr">CREA STANZA</button><button class="b alt" id="on-j">ENTRA CON CODICE</button><button class="b alt" id="on-lb">CLASSIFICA</button></div>
 <button class="b alt" id="on-x">INDIETRO</button></div>
-<div class="scr" id="s-rank"><h2>CLASSIFICA</h2><div class="small" id="rk-me"></div><div class="panel" id="rkl"></div><div class="small dim" id="rk-st"></div><button class="b alt" id="rk-x">INDIETRO</button></div>
+<div class="scr" id="s-rank"><h2>CLASSIFICA GLOBALE</h2><div class="small" id="rk-me"></div><div class="panel" id="rkl"></div><div class="small dim" id="rk-st"></div><button class="b alt" id="rk-x">INDIETRO</button></div>
 <div class="scr" id="s-wait"><h2>PRONTO!</h2><div class="small" id="w-s"></div><button class="b alt" id="w-x">ESCI</button></div>
 <div class="scr" id="s-shop"><h2>NEGOZIO</h2><div class="wallet"></div>
 <div class="stage" id="sh-st"><canvas id="shc" width="300" height="420"></canvas><button class="arr l" id="sh-l" aria-label="precedente">◀</button><button class="arr r" id="sh-r" aria-label="successivo">▶</button></div>
@@ -211,7 +211,7 @@ TOR=[...reg,...BOSSES.map(ix)];TLV=[...reg.map((_,i)=>i<reg.length/2?2:3),...BOS
 /* sprite dei personaggi: 1 riga per animazione in assets/characters/<nome>/, corpo in piedi normalizzato a 400px, piedi sul bordo inferiore, rivolti a destra.
    n = frame per animazione; pj = proiettile dello speciale (pjn frame); spT = soglie (tick) dei frame dello speciale se diverse dallo standard.
    hit/win sono opzionali: se mancano si usa la posa idle (inclinata quando colpito). */
-const SPRB=400,VER=61,SPRSET={
+const SPRB=400,VER=62,SPRSET={
 BEPPE:{d:'beppe',n:{idle:4,walk:4,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:3,ko:1,win:2},pj:'pallet',pjn:1,pjw:50,pjh:39.3,pjo:[62,-84],spT:[6,11]},
 MATTEO:{d:'matteo',n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:3,ko:1,win:3},pj:'matteo-cart',pjn:3,pjf:0,pjt:1,pjh:71.3,pjy:-40.8,spT:[5,11]},
 VLAD:{d:'vlad',sc:1.05,n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:2,ko:1,win:2},pj:'vlad-spray',pjn:3,pjs:.6,pjo:[33.8,-83.5],pji:1,spT:[5,11]},
@@ -286,10 +286,10 @@ MATTEO:[{id:'israele',n:'MATTEO SHALOM',p:10000,nf:{fall:2,win:2}}]};
 const PFK='superrissa-profili',PFK0='grossetto-profili';/* PFK0: nome di prima, letto se manca il nuovo */let PF={cur:null,list:{}};
 const obj=v=>v&&typeof v=='object'&&!Array.isArray(v)?v:{};
 /* dati delle partite RANKED nel profilo (vedi la sezione RANKED) */
-const normRk=r=>{r=obj(r);const ch={},K=obj(r.key),P=obj(r.pend),n=v=>Math.max(0,Math.min(99999,v|0));
+const normRk=r=>{r=obj(r);const ch={},P=obj(r.pend),n=v=>Math.max(0,Math.min(99999,v|0));
 for(const[k,v]of Object.entries(obj(r.ch)))if(CH.some(L=>L.n==k))ch[k]=n(v);
 return{e:typeof r.e=='number'&&isFinite(r.e)?Math.max(0,Math.min(4000,Math.round(r.e))):1000,w:n(r.w),l:n(r.l),top:Math.max(0,Math.min(4,r.top|0)),ch,
-key:['x','y','d'].every(q=>typeof K[q]=='string'&&/^[\w-]{43}$/.test(K[q]))?{x:K.x,y:K.y,d:K.d}:null,pend:typeof P.e=='number'&&isFinite(P.e)?{e:P.e}:null}};
+nk:/^[0-9a-f]{64}$/.test(r.nk)?r.nk:null,pk:/^[0-9a-f]{64}$/.test(r.pk)?r.pk:null,pend:typeof P.e=='number'&&isFinite(P.e)?{e:P.e}:null}};
 const norm=p=>{const own={},eq={};for(const[k,v]of Object.entries(obj(p.own)))if(Array.isArray(v))own[k]=v.filter(x=>typeof x=='string');
 for(const[k,v]of Object.entries(obj(p.eq)))if(typeof v=='string')eq[k]=v;
 for(const o of[own,eq])for(const[a,b]of[['FALSA','HELA'],['ELA','HELA'],['PAULUX','BIGBOSS'],['ZANI','ZANNA'],['PELATA','ASTREA']])if(a in o){o[b]=o[a];delete o[a]}/* vecchi nomi */
@@ -301,14 +301,17 @@ let SAVE=PF.cur?PF.list[PF.cur]:norm({});/* senza profilo (prima del primo avvio
 function save(){if(!PF.cur)return;try{localStorage.setItem(PFK,JSON.stringify(PF))}catch(e){}}
 /* ---------- RANKED (online competitivo) ----------
    Punti Elo per profilo (SAVE.rk: e punti, w/l set vinti/persi, top divisione piu' alta raggiunta, ch set
-   per personaggio, key chiave ECDSA del profilo, pend set in corso). Un set = al meglio di 3 incontri contro
+   per personaggio, nk/pk chiave Nostr del profilo (segreta/pubblica, esadecimale), pend set in corso). Un set = al meglio di 3 incontri contro
    un avversario della coda RANKED, solo con i dipendenti normali (niente mini boss e boss: uguali per
    tutti, anche per chi non li ha sbloccati). Chi abbandona perde: pend si salva all'inizio del set e, se la
    pagina si chiude prima della fine, alla riapertura conta come sconfitta.
-   Classifica senza server: ognuno firma la propria riga {k chiave pubblica, n nome, e punti, w, l,
-   c personaggio piu' usato, t ora} con la chiave del profilo; le righe passano da un giocatore all'altro
-   (stanza 'board' quando si apre CLASSIFICA, e a ogni incontro) e ognuno ne tiene una copia (RKB). La firma
-   impedisce di cambiare la riga di un altro, non di barare sulla propria. */
+   CLASSIFICA GLOBALE senza server nostro: ogni giocatore pubblica la sua riga come evento Nostr firmato
+   (kind 30078, tag d=RKTAG, contenuto {n nome, e punti, w, l, c personaggio piu' usato}) sui relay pubblici
+   RKR, che la conservano (un evento per giocatore: il nuovo sostituisce il vecchio). Aprendo CLASSIFICA si
+   leggono le righe di tutti da quei relay; a fine set la propria riga si ripubblica. Le righe passano anche
+   da un giocatore all'altro durante gli incontri. Ognuno tiene una copia (RKB) per quando la rete manca.
+   La firma impedisce di cambiare la riga di un altro, non di barare sulla propria. Firma e verifica:
+   assets/vendor/nostr-pure.mjs (nostr-tools), caricato solo quando serve. */
 const RKD=[{n:'BRONZO',m:0,c:'#e09a5e',p:0},{n:'ARGENTO',m:1100,c:'#d4dceb',p:300},{n:'ORO',m:1250,c:'#ffd23f',p:600},{n:'PLATINO',m:1400,c:'#7fe8d6',p:1000},{n:'CAMPIONE',m:1550,c:'#ff6a6a',p:2000}];
 const RKSET=100;/* cedolini per un set vinto (oltre a quelli dei singoli incontri); RKD.p: premio la prima volta in una divisione */
 const rkDiv=e=>{let d=0;RKD.forEach((x,i)=>{if(e>=x.m)d=i});return d};
@@ -321,28 +324,40 @@ r.e=Math.max(0,Math.round(old+K*((win?1:0)-E)));if(win)r.w++;else r.l++;r.pend=n
 const d=rkDiv(r.e),up=[];let bonus=0;for(let i=r.top+1;i<=d;i++){bonus+=RKD[i].p;up.push(RKD[i].n)}if(d>r.top)r.top=d;return{old,e:r.e,bonus,up,win}}
 /* set lasciati a meta' (pagina chiusa): sconfitta */
 for(const q of Object.values(PF.list))if(q.rk.pend){const x=rkApply(q.rk,false,q.rk.pend.e,null);q.ced+=x.bonus}save();
-const b64u=b=>btoa(String.fromCharCode(...new Uint8Array(b))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-const ub64=t=>Uint8Array.from(atob(t.replace(/-/g,'+').replace(/_/g,'/')),ch=>ch.charCodeAt(0));
-const EC={name:'ECDSA',namedCurve:'P-256'},ES={name:'ECDSA',hash:'SHA-256'};
-const rkMsg=x=>new TextEncoder().encode([x.k,x.n,x.e,x.w,x.l,x.c,x.t].join('|'));
 const rkFav=r=>(Object.entries(r.ch).sort((a,b)=>b[1]-a[1])[0]||[''])[0];
-const rkId=()=>SAVE.rk.key?SAVE.rk.key.x+'.'+SAVE.rk.key.y:'';
-/** la mia riga firmata, aggiunta alla copia locale; null se non ho ancora giocato set o il browser non firma */
-async function rkMine(){const r=SAVE.rk;if(!r.w&&!r.l)return null;try{if(!r.key){const k=await crypto.subtle.generateKey(EC,true,['sign','verify']),j=await crypto.subtle.exportKey('jwk',k.privateKey);r.key={x:j.x,y:j.y,d:j.d};save()}
-const K=r.key,x={k:K.x+'.'+K.y,n:SAVE.n,e:r.e,w:r.w,l:r.l,c:rkFav(r),t:Date.now()};
-const pk=await crypto.subtle.importKey('jwk',{kty:'EC',crv:'P-256',x:K.x,y:K.y,d:K.d,ext:true},EC,false,['sign']);x.s=b64u(await crypto.subtle.sign(ES,pk,rkMsg(x)));rkPut(x);return x}catch(e){return null}}
-const RKK='superrissa-classifica';let RKB={};try{RKB=obj(JSON.parse(localStorage.getItem(RKK)||'{}'))}catch(e){}
-const rkOk=x=>!!x&&typeof x.k=='string'&&/^[\w-]{43}\.[\w-]{43}$/.test(x.k)&&typeof x.n=='string'&&/^[A-Z0-9ÀÈÉÌÒÙ ]{1,12}$/.test(x.n)&&[x.e,x.w,x.l,x.t].every(v=>Number.isInteger(v)&&v>=0)
- &&x.e<=4000&&x.w+x.l<2e5&&(x.c===''||CH.some(L=>L.n==x.c))&&typeof x.s=='string'&&/^[\w-]{60,100}$/.test(x.s)&&x.t<Date.now()+864e5;
-function rkPut(x){RKB[x.k]=x;const L=Object.values(RKB);if(L.length>300){L.sort((a,b)=>b.e-a.e||b.t-a.t);RKB={};for(const y of L.slice(0,300))RKB[y.k]=y}
-try{localStorage.setItem(RKK,JSON.stringify(RKB))}catch(e){}}
-/** righe ricevute da un altro giocatore: si tengono solo quelle con firma valida e piu' recenti della copia */
-async function rkMerge(list){let n=0;if(!Array.isArray(list))return 0;for(const x of list.slice(0,150)){if(!rkOk(x)||(RKB[x.k]&&RKB[x.k].t>=x.t))continue;
-try{const[X,Y]=x.k.split('.'),pk=await crypto.subtle.importKey('jwk',{kty:'EC',crv:'P-256',x:X,y:Y,ext:true},EC,false,['verify']);
-if(await crypto.subtle.verify(ES,pk,ub64(x.s),rkMsg(x))){rkPut(x);n++}}catch(e){}}return n}
+const rkId=()=>SAVE.rk.pk||'';
+const RKTAG='superrissa-rank',RKR=window.RKRELAYS/* solo per i test */||['wss://relay.damus.io','wss://nos.lol','wss://relay.primal.net','wss://relay.nostr.band','wss://nostr.mom','wss://relay.snort.social'];
+let NOSTR=null;/** firma e verifica Nostr: si scarica solo quando serve */
+async function nostrLib(){if(!NOSTR)NOSTR=await import('./assets/vendor/nostr-pure.mjs?v='+VER);return NOSTR}
+const hex=u=>Array.from(u,b=>b.toString(16).padStart(2,'0')).join(''),unhex=h=>Uint8Array.from(h.match(/../g),x=>parseInt(x,16));
+/** riga della classifica da un evento Nostr (null se non e' una riga valida; la firma si controlla a parte) */
+function rkFromEv(v){try{if(!v||v.kind!==30078||typeof v.pubkey!='string'||!/^[0-9a-f]{64}$/.test(v.pubkey)||!Number.isInteger(v.created_at)||typeof v.content!='string'||v.content.length>400
+||!Array.isArray(v.tags)||!v.tags.some(t=>Array.isArray(t)&&t[0]=='d'&&t[1]==RKTAG))return null;const c=JSON.parse(v.content),x={k:v.pubkey,n:c.n,e:c.e,w:c.w,l:c.l,c:c.c||'',t:v.created_at*1000,ev:v};
+return typeof x.n=='string'&&/^[A-Z0-9ÀÈÉÌÒÙ ]{1,12}$/.test(x.n)&&[x.e,x.w,x.l].every(q=>Number.isInteger(q)&&q>=0)&&x.e<=4000&&x.w+x.l<2e5&&(x.c===''||CH.some(L=>L.n==x.c))&&x.t<Date.now()+864e5?x:null}catch(e){return null}}
+/** la mia riga firmata (aggiunta alla copia locale); null se non ho ancora giocato set o la libreria non si carica.
+    Se i dati non sono cambiati si riusa l'evento gia' firmato */
+async function rkMine(){const r=SAVE.rk;if(!r.w&&!r.l)return null;try{const N=await nostrLib();if(!r.nk||!r.pk){const sk=N.generateSecretKey();r.nk=hex(sk);r.pk=N.getPublicKey(sk);save()}
+const c={n:SAVE.n,e:r.e,w:r.w,l:r.l,c:rkFav(r)},o=RKB[r.pk];if(o&&o.ev&&['n','e','w','l','c'].every(q=>o[q]===c[q]))return o;
+const v=N.finalizeEvent({kind:30078,created_at:Math.max(Math.floor(Date.now()/1000),o?o.t/1000+1:0),tags:[['d',RKTAG],['t',RKTAG]],content:JSON.stringify(c)},unhex(r.nk)),x=rkFromEv(v);if(x)rkPut(x);return x}catch(e){return null}}
+const RKK='superrissa-classifica-2';let RKB={};try{RKB=obj(JSON.parse(localStorage.getItem(RKK)||'{}'))}catch(e){}
+function rkPut(x){RKB[x.k]=x;const L=Object.values(RKB);if(L.length>500){L.sort((a,b)=>b.e-a.e||b.t-a.t);RKB={};for(const y of L.slice(0,500))RKB[y.k]=y}
+clearTimeout(rkPut.t);rkPut.t=setTimeout(()=>{try{localStorage.setItem(RKK,JSON.stringify(RKB))}catch(e){}},300)}
+/** eventi ricevuti (dai relay o da un altro giocatore): si tengono solo righe valide, con firma giusta e piu' recenti della copia */
+async function rkMerge(list){let n=0;if(!Array.isArray(list))return 0;let N;try{N=await nostrLib()}catch(e){return 0}
+for(const v of list.slice(0,600)){const x=rkFromEv(v);if(!x||(RKB[x.k]&&RKB[x.k].t>=x.t))continue;try{if(N.verifyEvent(v)){rkPut(x);n++}}catch(e){}}return n}
+/** relay Nostr della classifica: pub = evento da pubblicare (la mia riga), read = leggere le righe di tutti.
+    Ogni relay si chiude dopo la risposta o dopo 7 s; risolve con il numero di relay che hanno risposto */
+function rkRelays(pub,read,onNew){return Promise.all(RKR.map(u=>new Promise(res=>{let ws,ok=0,done=0,buf=[];const pm=[],mg=l=>pm.push(rkMerge(l).then(n=>{if(n&&onNew)onNew()}));const sid='rk'+Math.random().toString(36).slice(2,8);
+ const end=()=>{if(done)return;done=1;clearTimeout(to);try{ws&&ws.close()}catch(e){}if(buf.length)mg(buf.splice(0));Promise.all(pm).then(()=>res(ok))},to=setTimeout(end,7000);
+ try{ws=new WebSocket(u)}catch(e){end();return}
+ ws.onopen=()=>{if(pub)ws.send(JSON.stringify(['EVENT',pub]));if(read)ws.send(JSON.stringify(['REQ',sid,{kinds:[30078],'#d':[RKTAG],limit:500}]));else setTimeout(end,3000)};
+ ws.onmessage=m=>{let d;try{d=JSON.parse(m.data)}catch(e){return}if(!Array.isArray(d))return;
+  if(d[0]=='EVENT'&&d[1]==sid){ok=1;buf.push(d[2]);if(buf.length>=50)mg(buf.splice(0))}
+  else if(d[0]=='EOSE'&&d[1]==sid){ok=1;try{ws.send(JSON.stringify(['CLOSE',sid]))}catch(e){}end()}else if(d[0]=='OK')ok=1};
+ ws.onerror=end;ws.onclose=end}))).then(a=>a.reduce((x,y)=>x+y,0))}
 const rkTop=n=>Object.values(RKB).filter(x=>Date.now()-x.t<90*864e5).sort((a,b)=>b.e-a.e||b.w-a.w||a.t-b.t).slice(0,n);
 /** righe da mandare a un altro giocatore: le migliori n piu' la mia */
-async function rkShare(n){const m=await rkMine(),t=rkTop(n);if(m&&!t.some(x=>x.k==m.k))t.push(m);return t}
+async function rkShare(n){const m=await rkMine(),t=rkTop(n);if(m&&!t.some(x=>x.k==m.k))t.push(m);return t.map(x=>x.ev).filter(Boolean)}
 const rkBadge=r=>{const d=rkDiv(r.e),nx=RKD[d+1];return'<span style="color:'+RKD[d].c+'">'+RKD[d].n+'</span> · '+r.e+' PUNTI · '+r.w+'V '+r.l+'S'+(nx?' · '+nx.n+' A '+nx.m:'')};
 /* nome valido: 1-12 tra lettere, numeri e spazi, diverso dagli altri profili; restituisce un errore o '' */
 function nameErr(n,skip){if(!/^[A-Z0-9ÀÈÉÌÒÙ ]{1,12}$/.test(n))return'Da 1 a 12 lettere o numeri';if(Object.entries(PF.list).some(([k,p])=>k!=skip&&p.n==n))return'Esiste già un profilo con questo nome';return''}
@@ -794,7 +809,7 @@ sfx('ui');if(first){sh('s-menu');return}fillProf();sh('s-prof')};
    stanza nuova, l'altro accetta se e' ancora libero. Stanza privata: codice di 4 lettere.
    Ogni NETH fotogrammi i due si scambiano un'impronta dello stato: se differisce compare DESYNC.
    NETV = versione del protocollo: giocatori con versioni diverse non si collegano. */
-const ONT='RANKED: set al meglio di 3 incontri contro chi ha punti vicini ai tuoi. PARTITA FOR FUN: senza punti.';
+const ONT='RANKED: set al meglio di 3 incontri, conta per punti e classifica. PARTITA FOR FUN: senza punti.';
 const NETV=2,NETD=6,NETH=60,NETAPP='superrissa-picchiaduro',NETK='lrudbpkhs',NETTO=8000;
 let NET=null,NETLIB=null;
 const netEnc=i=>{let v=0;for(let j=0;j<9;j++)if(i[NETK[j]])v|=1<<j;return v};
@@ -812,11 +827,13 @@ function netFail(t){netLeave();G=null;pl=false;sh('s-online');netUI(0);netSt(t)}
 async function netOpen(fn){try{netLeave();const L=await netLib();NET={me:L.selfId,L,ri:{},buf:{},lh:{},rh:{},m:0};fn()}
 catch(e){netFail('Rete non disponibile: controlla la connessione e riprova.')}}
 /* ricerca rapida */
-/* rk: coda RANKED (stanza a parte): si propone la partita solo a chi ha punti vicini; la distanza
-   accettata parte da 150 e cresce di 10 al secondo di attesa */
+/* rk: coda RANKED (stanza a parte). Con RKNEAR=1 si propone la partita solo a chi ha punti vicini (la
+   distanza accettata parte da 150 e cresce di 10 al secondo di attesa); con RKNEAR=0, finche' i giocatori
+   sono pochi, va bene chiunque sia in coda */
+const RKNEAR=0;
 function netCerca(rk){netOpen(()=>{const N=NET,me=SAVE.rk.e,lobby=N.lobby=N.L.joinRoom({appId:NETAPP},(rk?'rank-v':'lobby-v')+NETV),t0=performance.now(),pre=rk?'k-':'m-';
-const win=()=>150+(performance.now()-t0)/100,near=e=>!rk||Math.abs((typeof e=='number'?e:1000)-me)<=win();
-const st=()=>netSt(rk?'RANKED: CERCO UN AVVERSARIO TRA '+Math.max(0,me-win()|0)+' E '+(me+win()|0)+' PUNTI...':'CERCO UN AVVERSARIO...');
+const win=()=>150+(performance.now()-t0)/100,near=e=>!rk||!RKNEAR||Math.abs((typeof e=='number'?e:1000)-me)<=win();
+const st=()=>netSt(rk&&RKNEAR?'RANKED: CERCO UN AVVERSARIO TRA '+Math.max(0,me-win()|0)+' E '+(me+win()|0)+' PUNTI...':rk?'RANKED: CERCO UN AVVERSARIO...':'CERCO UN AVVERSARIO...');
 netUI(1);st();
 const ann=lobby.makeAction('ann'),prop=lobby.makeAction('prop'),free=()=>NET===N&&!N.room&&!N.pend;
 const say=p=>{if(free())ann.send({v:NETV,e:me},p?{target:p}:undefined)};
@@ -910,7 +927,7 @@ if(N&&N.rk&&N.set&&!N.rkDone){if(win)N.set.me++;else N.set.op++;const sc=N.set.m
 bn.onclick=()=>{if(!NET)return;NET.mre=1;NET.a.re.send({m:G.net.m});$('#e-s').textContent='IN ATTESA DI '+NET.pn+'...';netGo()}}
 /** fine di un set classificato: punti, premi, riga della classifica aggiornata (anche all'avversario) */
 function rkEnd(N,win){N.rkDone=1;const R=rkApply(SAVE.rk,win,N.pe,N.my?CH[N.my.c].n:null);if(win)R.bonus+=RKSET;SAVE.ced+=R.bonus;save();wal();
-rkMine().then(x=>{try{if(x&&N.a)N.a.lb.send([x])}catch(e){}});return R}
+rkMine().then(x=>{if(!x)return;try{if(N.a)nsend(N.a.lb,[x.ev],N.peer)}catch(e){}rkRelays(x.ev,0)});return R}
 const rkRes=R=>{const d=R.e-R.old;return'PUNTI '+R.old+' → <b>'+R.e+'</b> ('+(d>=0?'+':'')+d+')'+(R.bonus?' · +'+R.bonus+' CEDOLINI':'')+
  (R.up.length?'<br><b style="color:'+RKD[rkDiv(R.e)].c+'">NUOVA DIVISIONE: '+R.up[R.up.length-1]+'!</b>':'')+'<br>'+rkBadge(SAVE.rk)};
 /* schermata CLASSIFICA: la copia locale subito, poi si aggiorna con chi e' collegato (stanza 'board') */
@@ -920,12 +937,10 @@ function rkDraw(){const me=rkId(),T=rkTop(50);let h=T.map((x,i)=>rkRow(i+1,x,x.k
 if(me&&RKB[me]&&!T.some(x=>x.k==me))h+=rkRow(rkTop(1e4).findIndex(x=>x.k==me)+1,RKB[me],1);
 $('#rkl').innerHTML=h||'<div class="small">Ancora nessuno in classifica: gioca una partita RANKED per entrarci.</div>';$('#rk-me').innerHTML=SAVE.n+' · '+rkBadge(SAVE.rk)}
 function rkClose(){if(RK.room){const r=RK.room;RK.room=null;try{r.leave()}catch(e){}}}
-function rkShow(){rkClose();sh('s-rank');rkDraw();focusFirst();const st=$('#rk-st');st.textContent='AGGIORNO LA CLASSIFICA CON I GIOCATORI COLLEGATI...';
-rkMine().then(rkDraw);netLib().then(L=>{if(!$('#s-rank').classList.contains('on'))return;const room=RK.room=L.joinRoom({appId:NETAPP},'board-v1'),lb=room.makeAction('lb');
- room.onPeerJoin=p=>rkShare(100).then(t=>{if(RK.room===room&&t.length)lb.send(t,{target:p})});
- lb.onMessage=d=>rkMerge(d).then(n=>{if(n&&RK.room===room)rkDraw()});
- setTimeout(()=>{if(RK.room===room)st.textContent=Object.keys(RKB).length+' GIOCATORI CONOSCIUTI · la classifica si aggiorna con chi è collegato e a ogni partita'},5000)},
- ()=>{st.textContent='Rete non disponibile: questa è l\'ultima classifica salvata.'})}
+function rkShow(){rkClose();sh('s-rank');rkDraw();focusFirst();const st=$('#rk-st'),my=++rkShow.n;st.textContent='CARICO LA CLASSIFICA GLOBALE...';
+rkMine().then(x=>{rkDraw();return rkRelays(x&&x.ev,1,()=>{if(rkShow.n==my)rkDraw()})}).then(k=>{if(rkShow.n!=my)return;rkDraw();
+ const n=rkTop(1e4).length;st.textContent=k?'CLASSIFICA GLOBALE · '+n+' GIOCATORI · '+k+'/'+RKR.length+' SERVER':'Rete non disponibile: questa è l\'ultima classifica salvata ('+n+' giocatori).'})}
+rkShow.n=0;
 $('#on-q').onclick=()=>{au();sfx('ui');netCerca()};$('#on-rq').onclick=()=>{au();sfx('ui');netCerca(1)};$('#on-lb').onclick=()=>{au();sfx('ui');rkShow()};
 $('#rk-x').onclick=()=>{sfx('ui');rkClose();GO.online()};$('#on-cr').onclick=()=>{au();sfx('ui');netCrea()};$('#on-j').onclick=()=>{au();sfx('ui');netEntra()};
 $('#on-x').onclick=()=>{sfx('ui');if(NET){netLeave();netUI(0);netSt(ONT)}else GO.menu()};
