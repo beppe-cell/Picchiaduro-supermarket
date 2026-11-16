@@ -1,14 +1,14 @@
-"""Proiettile della speciale di PELATA: il rotolo di scontrino che vola e si srotola.
+"""Proiettile della speciale di ASTREA: il rotolo di scontrino che vola e si srotola.
 
-Sorgente: assets/characters/pelata/sorgenti/scontrino.jpeg, 3 disegni (in alto a sinistra il rotolo
+Sorgente: assets/characters/astrea/sorgenti/scontrino.jpeg, 3 disegni (in alto a sinistra il rotolo
 intero, in alto a destra il rotolo con un pezzo di carta, in basso la lunga striscia srotolata).
-Scrive pelata-receipt.png: 3 celle uguali, in ognuna il ROTOLO (davanti, a destra) sta sempre nello
+Scrive astrea-receipt.png: 3 celle uguali, in ognuna il ROTOLO (davanti, a destra) sta sempre nello
 stesso punto (a meta' altezza, a PJR px dal bordo sinistro) e la carta srotolata si allunga dietro.
 Il rotolo si trova dal foro marrone al centro (il piu' a destra, nel disegno con la spirale).
 Stampa i valori pjh, pjy, pjr per SPRSET (con la scala del personaggio --sc).
 Le pose della speciale si fanno con tools/build_special.py.
 
-Uso: python3 -B tools/build_pelata_special.py [--rotolo PX] [--sc 0.9]"""
+Uso: python3 -B tools/build_astrea_special.py [--rotolo PX] [--sc 0.9]"""
 import argparse
 import os
 import sys
@@ -22,7 +22,7 @@ sys.path.insert(0, HERE)
 from spritekey import key, figures                       # noqa: E402
 from spritebuild import frame_from_mask, SPRITE_H        # noqa: E402
 
-DIR = os.path.join(HERE, '..', 'assets', 'characters', 'pelata')
+DIR = os.path.join(HERE, '..', 'assets', 'characters', 'astrea')
 SPR_WORLD = 0.55 * 384 / 2      # altezza in gioco di uno sprite alto SPRITE_H (SPR_H in index.html)
 
 
@@ -81,10 +81,10 @@ def main():
         x, y = int(round(i * cw + left - cx)), int(round(half - cy))
         h, w = fr.shape[:2]
         out[y:y + h, x:x + w] = fr
-    Image.fromarray(np.clip(out, 0, 255).astype(np.uint8), 'RGBA').save(os.path.join(DIR, 'pelata-receipt.png'),
+    Image.fromarray(np.clip(out, 0, 255).astype(np.uint8), 'RGBA').save(os.path.join(DIR, 'astrea-receipt.png'),
                                                                          optimize=True)
     kw = SPR_WORLD / SPRITE_H * a.sc
-    print('pelata-receipt.png: 3 fotogrammi, celle %dx%d, scala %.3f' % (cw, ch, k))
+    print('astrea-receipt.png: 3 fotogrammi, celle %dx%d, scala %.3f' % (cw, ch, k))
     print("SPRSET: pjn:3,pjg:1,pjh:%.1f,pjy:%.1f,pjr:%d" % (ch * kw, -half * kw, int(round(left))))
 
 

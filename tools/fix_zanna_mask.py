@@ -1,7 +1,7 @@
-"""Toglie la mascherina chirurgica a ZANI negli sprite finiti (assets/characters/zani/).
+"""Toglie la mascherina chirurgica a ZANNA negli sprite finiti (assets/characters/zanna/).
 
 Gemini l'ha disegnata in alcune pose del foglio A (guardia, passo, salto, accovacciato, parata), e la
-guardia e' anche l'ultimo fotogramma di pugno, calcio e colpo forte. ZANI non porta la mascherina.
+guardia e' anche l'ultimo fotogramma di pugno, calcio e colpo forte. ZANNA non porta la mascherina.
 Per ogni fotogramma con la mascherina la testa viene sostituita con quella del 1o fotogramma del
 calcio (stessa angolazione, senza mascherina): la posizione si trova confrontando i capelli, poi si
 copiano capelli, viso e collo. Nella parata le mani coprono il viso: li' la testa nuova si copia
@@ -9,7 +9,7 @@ solo sopra le mani, che restano davanti.
 I pixel della mascherina rimasti fuori dalla testa nuova diventano pelle (collo).
 La mascherina e' il pezzo blu-grigio piu' grande in alto: i riflessi azzurri sparsi sui capelli non contano.
 
-Uso: python3 -B tools/fix_zani_mask.py   (poi python3 -B tools/to_webp.py)
+Uso: python3 -B tools/fix_zanna_mask.py   (poi python3 -B tools/to_webp.py)
 Si puo' rilanciare: i fotogrammi gia' corretti non hanno piu' mascherina e restano come sono."""
 import os
 
@@ -17,7 +17,7 @@ import numpy as np
 from PIL import Image
 from scipy import ndimage as nd
 
-DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets', 'characters', 'zani')
+DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets', 'characters', 'zanna')
 N = {'idle': 1, 'walk': 2, 'jump': 3, 'crouch': 1, 'block': 1, 'punch': 5, 'kick': 5, 'heavy': 5}
 DONOR = ('kick', 0)                       # testa senza mascherina
 DONOR_BOX = (8, 100, 90, 195)             # y0, y1, x0, x1 della testa nel fotogramma donatore
@@ -41,7 +41,7 @@ def is_red(a):
 
 
 def frames(name):
-    a = np.asarray(Image.open(os.path.join(DIR, 'zani-%s.png' % name)).convert('RGBA')).copy()
+    a = np.asarray(Image.open(os.path.join(DIR, 'zanna-%s.png' % name)).convert('RGBA')).copy()
     w = a.shape[1] // N[name]
     return a, w
 
@@ -98,8 +98,8 @@ def main():
                 f[left, :3] = skin
             changed.append('%d (testa a %d,%d)' % (i, xa, ya))
         if changed:
-            Image.fromarray(a, 'RGBA').save(os.path.join(DIR, 'zani-%s.png' % name), optimize=True)
-            print('zani-%s.png: %s' % (name, ', '.join(changed)))
+            Image.fromarray(a, 'RGBA').save(os.path.join(DIR, 'zanna-%s.png' % name), optimize=True)
+            print('zanna-%s.png: %s' % (name, ', '.join(changed)))
 
 
 if __name__ == '__main__':
