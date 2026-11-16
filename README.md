@@ -29,8 +29,9 @@ prima che i suoi due lottatori siano pronti compare una breve schermata di caric
 
 ## Online (senza server)
 
-- **RANKED** (online competitivo): abbina giocatori con punti vicini (la distanza accettata parte da
-  150 punti e si allarga di 10 al secondo di attesa). Si gioca un **set al meglio di 3 incontri**, ognuno al
+- **RANKED** (online competitivo): abbina chiunque sia in coda RANKED (per ora i giocatori sono pochi; con
+  `RKNEAR=1` in `index.html` si abbinano solo punti vicini: distanza da 150 punti che si allarga di 10 al
+  secondo di attesa). Si gioca un **set al meglio di 3 incontri**, ognuno al
   meglio di 3 round; tra un incontro e l'altro si riparte da soli con gli stessi dipendenti. Regole uguali per
   tutti: solo i dipendenti normali (niente mini boss e boss, anche se comprati), con **velocità e potenza uguali
   per tutti** (1,5 e 1, anche per la speciale), e le skin sono solo estetiche.
@@ -42,11 +43,13 @@ prima che i suoi due lottatori siano pronti compare una breve schermata di caric
   - **Divisioni**: BRONZO, ARGENTO (1100), ORO (1250), PLATINO (1400), CAMPIONE (1550). La prima volta in una
     divisione si ricevono 300 / 600 / 1000 / 2000 cedolini; ogni set vinto dà 100 cedolini in più degli incontri.
     Divisione e punti si vedono nella schermata ONLINE e nei profili; punti e set sono nel codice di salvataggio.
-  - **CLASSIFICA**: i migliori 50 con divisione, punti, set vinti/persi e personaggio più usato. Non c'è un
-    server: ogni giocatore firma la sua riga con una chiave del suo profilo (ECDSA, nel browser) e le righe
-    passano da un giocatore all'altro quando si incontrano (in ogni partita e quando la classifica è aperta),
-    quindi ognuno vede i giocatori che ha incontrato o di cui ha avuto notizia. La firma impedisce di modificare
-    la riga di un altro, non di truccare la propria: è una classifica tra colleghi, non un sistema anti-trucco.
+  - **CLASSIFICA GLOBALE**: i migliori 50 di tutti i giocatori, con divisione, punti, set vinti/persi e
+    personaggio più usato. Non c'è un server nostro: ogni giocatore pubblica la sua riga come evento Nostr
+    firmato (kind 30078) su sei relay pubblici (`RKR` in `index.html`), che la conservano; aprendo la
+    classifica si leggono le righe di tutti da quei relay, e a fine set la propria si ripubblica. Ognuno
+    tiene anche una copia per quando la rete manca. Firma e verifica con `assets/vendor/nostr-pure.mjs`
+    (nostr-tools 2.25.4, da `tools/vendor_nostr.sh`). La firma impedisce di modificare la riga di un altro,
+    non di truccare la propria: è una classifica tra colleghi, non un sistema anti-trucco.
 - **PARTITA FOR FUN**: abbina in automatico due giocatori che stanno cercando, senza punti.
 - **CREA STANZA**: mostra un codice di 4 lettere da mandare all'amico, che lo scrive in **ENTRA CON CODICE**.
 - Poi ognuno sceglie il suo dipendente (con la sua skin) e si combatte; a fine incontro **RIVINCITA**
@@ -187,6 +190,7 @@ assets/
     matteo/skin-israele/       skin MATTEO SHALOM; sorgenti/: tavola IMG_5489, fogli pose IMG_5490, 5491, 5493
       sorgenti/                tavola IMG_5476, fogli pose IMG_5477–5479, speciale IMG_5480
 assets/vendor/                 trystero-nostr.mjs (multiplayer online, MIT)
+                               nostr-pure.mjs (firma e verifica Nostr per la classifica globale, Unlicense/MIT)
 docs/reference/                immagini di riferimento per lo stile
 docs/sprite-guide/             fogli pose e prompt per creare un personaggio con Gemini
 tools/
@@ -211,6 +215,7 @@ tools/
   build_beppe_special.py       speciale di Beppe: afferra, tiene e lancia il bancale
   build_figure_map.py          animazioni scegliendo a mano le figure, per fogli generati fuori griglia
   vendor_trystero.sh           ricostruisce la libreria del multiplayer (assets/vendor/trystero-nostr.mjs)
+  vendor_nostr.sh              ricostruisce le funzioni Nostr della classifica (assets/vendor/nostr-pure.mjs)
   to_webp.py                   converte gli sprite PNG nei WebP caricati dal gioco (3 volte piu' leggeri)
   clean_white_residue.py       toglie il bianco di sfondo residuo dagli sprite
   spritekey.py                 scontorno del magenta e separazione dei frame
