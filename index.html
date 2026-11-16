@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="it"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#0a0a14"><title>Grossetto</title>
+<meta name="theme-color" content="#0a0a14"><title>Superrissa</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
 :root{color-scheme:dark;--r:#d42a2a;--rd:#7a1010;--c:#35e0ff;--m:#ff3df0;--y:#ffd23f;--yd:#b8860b;--n:#1b2450;--nd:#0c1230}
@@ -14,11 +14,11 @@ html,body{margin:0;height:100%;height:100dvh;background:#05070f;color:#fff;font-
 .scr.on{display:flex}
 #s-title{background:radial-gradient(ellipse at 50% 40%,rgba(5,8,20,.15),rgba(5,8,20,.85) 80%)}
 h2{margin:0;color:#fff;font-size:2.8cqw;line-height:1.3;text-shadow:-.3cqw 0 var(--r),.3cqw 0 var(--r),0 -.3cqw var(--r),0 .3cqw var(--r),.3cqw .5cqw 0 #000}
-/* logo GROSSETTO: insegna del supermercato */
+/* logo SUPERRISSA: insegna del supermercato */
 .logo{display:flex;flex-direction:column;align-items:center;gap:1cqw;transform:rotate(-3deg)}
 .logo .top{display:flex;align-items:center;gap:1.6cqw}
 .badge{width:7.5cqw;height:7.5cqw;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ff5a4a,var(--r) 55%,var(--rd));border:.5cqw solid #fff;box-shadow:0 0 0 .4cqw #000,.4cqw .7cqw 0 .4cqw #000;display:flex;align-items:center;justify-content:center;font-size:4cqw;color:#fff;text-shadow:.3cqw .3cqw 0 var(--rd)}
-.lt{font-size:8.4cqw;line-height:1;color:#fff4c2;letter-spacing:.3cqw;
+.lt{font-size:7.6cqw;line-height:1;color:#fff4c2;letter-spacing:.3cqw;
 text-shadow:0 .25cqw 0 var(--y),0 .5cqw 0 var(--yd),-.45cqw 0 var(--r),.45cqw 0 var(--r),0 -.45cqw var(--r),0 .95cqw var(--r),-.45cqw .5cqw var(--r),.45cqw .5cqw var(--r),-.8cqw 0 #000,.8cqw 0 #000,0 -.8cqw #000,0 1.3cqw #000,-.8cqw .9cqw #000,.8cqw .9cqw #000,1.1cqw 1.8cqw 0 rgba(0,0,0,.6)}
 .rib{background:var(--r);color:#fff;font-size:1.6cqw;padding:.9cqw 3.4cqw;border-top:.3cqw solid #ff7a6a;border-bottom:.3cqw solid var(--rd);box-shadow:0 .5cqw 0 #000;clip-path:polygon(0 0,100% 0,97% 50%,100% 100%,0 100%,3% 50%);letter-spacing:.1cqw}
 .logo.sm{transform:rotate(-2deg) scale(.55);margin:-4.6cqw 0 -3.6cqw}
@@ -140,10 +140,10 @@ h2{font-size:4.4cqw}
 </style></head><body>
 <div id="app"><div id="wrap"><canvas id="g" width="704" height="384"></canvas>
 <div id="tc"><div id="stick"><div class="base"></div><div class="knob"></div></div><div id="acts"><div class="a pp" data-k="p">PUGNO</div><div class="a kk" data-k="k">CALCIO</div><div class="a hh" data-k="h">FORTE</div><div class="a ss" data-k="s">SPECIALE</div><div class="a bb" data-k="b">PARATA</div></div><button id="pz">II</button></div>
-<div class="scr on" id="s-title"><div class="logo"><div class="top"><div class="badge">G</div><div class="lt">GROSSETTO</div></div><div class="rib">PICCHIADURO DEL SUPERMERCATO</div></div>
+<div class="scr on" id="s-title"><div class="logo"><div class="top"><div class="badge">S</div><div class="lt">SUPERRISSA</div></div><div class="rib">PICCHIADURO DEL SUPERMERCATO</div></div>
 <div class="blink">TOCCA O PREMI UN TASTO</div><div class="small dim" id="ver"></div></div>
 <div class="scr" id="s-load"><h2>CARICAMENTO</h2><div class="small" id="ld-p"></div></div>
-<div class="scr" id="s-menu"><div class="logo sm"><div class="top"><div class="badge">G</div><div class="lt">GROSSETTO</div></div></div>
+<div class="scr" id="s-menu"><div class="logo sm"><div class="top"><div class="badge">S</div><div class="lt">SUPERRISSA</div></div></div>
 <nav class="mlist"><button class="b" data-go="arc" data-d="Sfida un collega a caso. Al meglio dei 3 round.">ARCADE</button><button class="b" data-go="tor" data-d="Tutti i colleghi uno dopo l'altro, poi i mini boss FABIO, ANGEL, ASTREA ed HELA e infine il boss BIGBOSS.">TORNEO</button><button class="b" data-go="online" data-d="Sfida un altro giocatore in rete: cerca un avversario o crea una stanza con un codice.">ONLINE</button><button class="b alt" data-go="shop" data-d="Spendi i cedolini guadagnati combattendo: skin alternative per i dipendenti.">NEGOZIO</button><button class="b alt" data-go="set" data-d="Musica, effetti, controlli touch e vibrazione.">IMPOSTAZIONI</button></nav>
 <div id="mdesc"></div><div class="wallet"></div><button class="b alt" id="pchip" data-go="prof" data-d="Profili e codice di salvataggio per spostare i progressi su un altro dispositivo."></button></div>
 <div class="scr" id="s-prof"><h2>PROFILI</h2><div class="panel" id="pfl"></div>
@@ -206,7 +206,7 @@ TOR=[...reg,...BOSSES.map(ix)];TLV=[...reg.map((_,i)=>i<reg.length/2?2:3),...BOS
 /* sprite dei personaggi: 1 riga per animazione in assets/characters/<nome>/, corpo in piedi normalizzato a 400px, piedi sul bordo inferiore, rivolti a destra.
    n = frame per animazione; pj = proiettile dello speciale (pjn frame); spT = soglie (tick) dei frame dello speciale se diverse dallo standard.
    hit/win sono opzionali: se mancano si usa la posa idle (inclinata quando colpito). */
-const SPRB=400,VER=57,SPRSET={
+const SPRB=400,VER=58,SPRSET={
 BEPPE:{d:'beppe',n:{idle:4,walk:4,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:3,ko:1,win:2},pj:'pallet',pjn:1,pjw:50,pjh:39.3,pjo:[62,-84],spT:[6,11]},
 MATTEO:{d:'matteo',n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:3,ko:1,win:3},pj:'matteo-cart',pjn:3,pjf:0,pjt:1,pjh:71.3,pjy:-40.8,spT:[5,11]},
 VLAD:{d:'vlad',sc:1.05,n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:2,ko:1,win:2},pj:'vlad-spray',pjn:3,pjs:.6,pjo:[33.8,-83.5],pji:1,spT:[5,11]},
@@ -278,14 +278,14 @@ MATTEO:[{id:'israele',n:'MATTEO SHALOM',p:500,nf:{fall:2,win:2}}]};
 /* i progressi stanno nel browser (localStorage), un profilo per giocatore: n = nome, ced = cedolini,
    own/eq = skin possedute e indossate per personaggio. PF.cur = profilo in uso. Per spostarli su un altro
    dispositivo c'e' il CODICE DI SALVATAGGIO (exportCode/importCode) */
-const PFK='grossetto-profili';let PF={cur:null,list:{}};
+const PFK='superrissa-profili',PFK0='grossetto-profili';/* PFK0: nome di prima, letto se manca il nuovo */let PF={cur:null,list:{}};
 const obj=v=>v&&typeof v=='object'&&!Array.isArray(v)?v:{};
 const norm=p=>{const own={},eq={};for(const[k,v]of Object.entries(obj(p.own)))if(Array.isArray(v))own[k]=v.filter(x=>typeof x=='string');
 for(const[k,v]of Object.entries(obj(p.eq)))if(typeof v=='string')eq[k]=v;
 for(const o of[own,eq])for(const[a,b]of[['FALSA','HELA'],['ELA','HELA'],['PAULUX','BIGBOSS'],['ZANI','ZANNA'],['PELATA','ASTREA']])if(a in o){o[b]=o[a];delete o[a]}/* vecchi nomi */
 const prog={},unl={};const NEW={FALSA:'HELA',ELA:'HELA',PAULUX:'BIGBOSS',ZANI:'ZANNA',PELATA:'ASTREA'};for(const[k,v]of Object.entries(obj(p.prog)))prog[NEW[k]||k]=Math.max(0,Math.min(999,v|0));for(const[k,v]of Object.entries(obj(p.unl)))if(v)unl[NEW[k]||k]=1;
 return{n:String(p.n||'GIOCATORE').toUpperCase().slice(0,12),ced:Math.max(0,Math.min(9999999,p.ced|0)),own,eq,prog,unl}};
-try{const v=JSON.parse(localStorage.getItem(PFK)||'null');if(v&&v.list){for(const k in obj(v.list))PF.list[k]=norm(v.list[k]);PF.cur=v.cur}}catch(e){}
+try{const v=JSON.parse(localStorage.getItem(PFK)||localStorage.getItem(PFK0)||'null');if(v&&v.list){for(const k in obj(v.list))PF.list[k]=norm(v.list[k]);PF.cur=v.cur}}catch(e){}
 if(!PF.list[PF.cur])PF.cur=Object.keys(PF.list)[0]||null;
 let SAVE=PF.cur?PF.list[PF.cur]:norm({});/* senza profilo (prima del primo avvio) non si salva nulla */
 function save(){if(!PF.cur)return;try{localStorage.setItem(PFK,JSON.stringify(PF))}catch(e){}}
@@ -295,10 +295,10 @@ function newProfile(data){const id='p'+Date.now().toString(36)+(Math.random()*1e
 function useProfile(id){if(PF.list[id]){PF.cur=id;SAVE=PF.list[id];save()}}
 function delProfile(id){delete PF.list[id];if(PF.cur==id){PF.cur=Object.keys(PF.list)[0]||null;SAVE=PF.cur?PF.list[PF.cur]:norm({})}
 try{localStorage.setItem(PFK,JSON.stringify(PF))}catch(e){}}
-/* codice di salvataggio: GRS1-<controllo>-<dati in base64>; il controllo scarta codici copiati male */
+/* codice di salvataggio: SPR1-<controllo>-<dati in base64> (si leggono anche i vecchi GRS1-); il controllo scarta codici copiati male */
 const ck=t=>{let h=7;for(const ch of t)h=(h*31+ch.charCodeAt(0))%1679616;return h.toString(36).toUpperCase().padStart(4,'0')};
-function exportCode(){const b=btoa(unescape(encodeURIComponent(JSON.stringify({n:SAVE.n,c:SAVE.ced,o:SAVE.own,e:SAVE.eq,g:SAVE.prog,u:SAVE.unl})))).replace(/=+$/,'');return'GRS1-'+ck(b)+'-'+b}
-function importCode(code){const m=String(code).replace(/\s+/g,'').match(/^GRS1-([0-9A-Z]{4})-([A-Za-z0-9+/]+)$/i);if(!m||ck(m[2])!=m[1].toUpperCase())return null;
+function exportCode(){const b=btoa(unescape(encodeURIComponent(JSON.stringify({n:SAVE.n,c:SAVE.ced,o:SAVE.own,e:SAVE.eq,g:SAVE.prog,u:SAVE.unl})))).replace(/=+$/,'');return'SPR1-'+ck(b)+'-'+b}
+function importCode(code){const m=String(code).replace(/\s+/g,'').match(/^(?:SPR1|GRS1)-([0-9A-Z]{4})-([A-Za-z0-9+/]+)$/i);if(!m||ck(m[2])!=m[1].toUpperCase())return null;
 try{const d=JSON.parse(decodeURIComponent(escape(atob(m[2]))));return norm({n:d.n,ced:d.c,own:d.o,eq:d.e,prog:d.g,unl:d.u})}catch(e){return null}}
 /* personaggi da sbloccare: si gioca con loro solo dopo averli battuti nel TORNEO tante volte quante
    indicate qui (SAVE.prog conta le vittorie, SAVE.unl i personaggi sbloccati dal negozio) */
@@ -476,7 +476,7 @@ if(G.ph=='ko'&&--G.pt<=0){const w=G.w;if(w.wins>=2)endMatch(w==G.me);else{G.rd++
 if(G.sh>0)G.sh--}
 function endMatch(win){G.ph='end';const t=$('#e-t'),s=$('#e-s'),bn=$('#b-nx');
 t.className=win?'win':'lose';
-if(win){if(mode=='tor'&&tour>=TOR.length-1){t.textContent='CAMPIONE DI GROSSETTO!';s.textContent='Hai battuto tutti, anche il boss.';bn.style.display='none'}
+if(win){if(mode=='tor'&&tour>=TOR.length-1){t.textContent='CAMPIONE DI SUPERRISSA!';s.textContent='Hai battuto tutti, anche il boss.';bn.style.display='none'}
 else{t.textContent='VITTORIA!';s.textContent=mode=='tor'?'Prossimo avversario: '+CH[TOR[tour+1]].n+(MINI.includes(CH[TOR[tour+1]].n)?' (MINI BOSS)':TOR[tour+1]==TOR[TOR.length-1]?' (BOSS)':'')+' · incontro '+(tour+2)+'/'+TOR.length:'';bn.style.display='';bn.textContent='PROSSIMO';bn.onclick=()=>{if(mode=='tor')tour++;nextFight()}}}
 else{t.textContent='SCONFITTA';s.textContent='';bn.style.display='';bn.textContent='RIVINCITA';bn.onclick=()=>nextFight(1)}
 /* cedolini guadagnati (tabella REW) */
@@ -740,7 +740,7 @@ sfx('ui');if(first){sh('s-menu');return}fillProf();sh('s-prof')};
    stanza nuova, l'altro accetta se e' ancora libero. Stanza privata: codice di 4 lettere.
    Ogni NETH fotogrammi i due si scambiano un'impronta dello stato: se differisce compare DESYNC.
    NETV = versione del protocollo: giocatori con versioni diverse non si collegano. */
-const NETV=1,NETD=4,NETH=60,NETAPP='grossetto-picchiaduro',NETK='lrudbpkhs',NETTO=8000;
+const NETV=1,NETD=4,NETH=60,NETAPP='superrissa-picchiaduro',NETK='lrudbpkhs',NETTO=8000;
 let NET=null,NETLIB=null;
 const netEnc=i=>{let v=0;for(let j=0;j<9;j++)if(i[NETK[j]])v|=1<<j;return v};
 const netDec=v=>{const i={};for(let j=0;j<9;j++)if(v>>j&1)i[NETK[j]]=1;return i};

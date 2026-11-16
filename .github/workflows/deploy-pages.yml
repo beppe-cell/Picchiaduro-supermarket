@@ -1,4 +1,4 @@
-name: Deploy GROSSETTO to GitHub Pages
+name: Deploy SUPERRISSA to GitHub Pages
 
 on:
   push:
