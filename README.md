@@ -79,7 +79,8 @@ collegamento diretto: in quel caso servirebbe un server TURN.
    lancia `tools/to_webp.py`, che converte anche le cartelle `skin-*`). Un file che manca resta quello
    originale: una skin può cambiare anche solo alcune animazioni.
    Dai fogli pose: `python3 -B tools/build_character.py <nome> <A> <B> <C> --out
-   assets/characters/<nome>/skin-<id>`; vista per la selezione: aggiungi la tavola in `BOARDS` di
+   assets/characters/<nome>/skin-<id>` (aggiungi `--tieni-blu` se la skin ha parti blu, come kippah e
+   stella di MATTEO SHALOM: altrimenti la pulizia delle linee guida azzurre le buca); vista per la selezione: aggiungi la tavola in `BOARDS` di
    `tools/build_fronts.py` (chiave `<nome>/skin-<id>`) e lancia `build_fronts.py <nome>/skin-<id>`.
 2. Aggiungi la skin in `SKINS` dentro `index.html`, es. `BEPPE:[{id:'natale',n:'BABBO BEPPE',p:400}]`
    (`n` nome nel negozio, `p` prezzo in cedolini; `nf` se un'animazione ha un numero di fotogrammi

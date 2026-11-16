@@ -44,6 +44,19 @@ ANIMS = [('idle', ['idle']), ('walk', ['idle', 'walk']),
          ('hit', ['hit']), ('fall', ['hit', 'fall']), ('ko', ['ko']), ('win', ['win_0', 'win_1'])]
 
 
+# --tieni-blu: il blu del personaggio (es. kippah, stella, divisa blu) non si tocca; si toglie solo il blu
+# che forma linee dritte e lunghe (guide e tratteggi), oltre al ciano e alla striscia delle etichette
+KEEP_BLUE = False
+
+
+def guide_lines(blue, n=60, gap=14):
+    """pixel blu che stanno su una linea orizzontale o verticale lunga almeno n px (i tratteggi con
+    buchi fino a gap px contano come linea intera), un po' allargati per prendere l'alone del JPEG"""
+    h = nd.binary_opening(nd.binary_closing(blue, np.ones((1, gap))), np.ones((1, n)))
+    v = nd.binary_opening(nd.binary_closing(blue, np.ones((gap, 1))), np.ones((n, 1)))
+    return nd.binary_dilation(h | v, iterations=2) & blue
+
+
 def load_sheet(path, sheet):
     """RGBA float con sfondo magenta e guide ciano trasparenti.
     Il ciano puro si toglie ovunque. Le sue sfumature (ciano mescolato al magenta e al JPEG: toni
@@ -80,6 +93,12 @@ def load_sheet(path, sheet):
         for xx in (x0, x1 - 1):
             zone[y0:y1, max(0, xx - band):xx + band] = True
         zone[int(y0 + g['feet'] * (y1 - y0)) - band:y1, x0:x1] = True   # linea dei piedi ed etichetta
+    if KEEP_BLUE:
+        strip = np.zeros((H, W), bool)   # striscia delle etichette sotto la linea dei piedi: tutto via
+        for c, (x0, y0, x1, y1) in cell_boxes(sheet, W, H):
+            strip[int(y0 + g['feet'] * (y1 - y0)) + band:int(y1), int(x0):int(x1)] = True
+        o[..., 3][cyan | (blue & zone & (guide_lines(blue) | strip))] = 0
+        return o
     o[..., 3][cyan | (blue & zone)] = 0
     return o
 
@@ -140,7 +159,12 @@ def main():
     ap.add_argument('--cella', action='append', default=[], metavar='ID=FOGLIO',
                     help='prende la casella ID da un\'altra versione dello stesso foglio '
                          '(es. win_1=IMG_5452.jpeg); ripetibile')
+    ap.add_argument('--tieni-blu', action='store_true',
+                    help='il personaggio ha parti blu (kippah, stemmi, divisa): toglie solo il blu delle '
+                         'linee guida dritte, non quello del disegno')
     a = ap.parse_args()
+    global KEEP_BLUE
+    KEEP_BLUE = a.tieni_blu
     name = a.name.lower()
     out_dir = a.out or os.path.join(HERE, '..', 'assets', 'characters', name)
     os.makedirs(out_dir, exist_ok=True)
