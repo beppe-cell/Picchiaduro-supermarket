@@ -18,7 +18,7 @@ BOARDS = {   # personaggio -> tavola di riferimento
     'matteo': 'matteo/sorgenti/IMG_5407.JPG',
     'vlad': 'vlad/sorgenti/IMG_5422.JPG',
     'luis': 'luis/sorgenti/IMG_5445.jpeg',
-    'zani': 'zani/sorgenti/IMG_5456.jpeg',
+    'zanna': 'zanna/sorgenti/IMG_5456.jpeg',
     'angel': 'angel/sorgenti/IMG_5469.jpeg',
     'hela': 'hela/sorgenti/tavola.png',
     'beppe': 'beppe/sorgenti/tavola.JPG',      # sfondo BIANCO (vedi white_key)
@@ -26,7 +26,7 @@ BOARDS = {   # personaggio -> tavola di riferimento
     'andrei': 'andrei/sorgenti/IMG_5494.jpeg',
     'fabio': 'fabio/sorgenti/tavola.jpeg',
     'cominz': 'cominz/sorgenti/tavola.jpeg',
-    'pelata': 'pelata/sorgenti/tavola.jpeg',
+    'astrea': 'astrea/sorgenti/tavola.jpeg',
     'porte': 'porte/sorgenti/tavola.jpeg',
     'matteo/skin-israele': 'matteo/skin-israele/sorgenti/IMG_5489.jpeg',
     'luis/skin-mariachi': 'luis/skin-mariachi/sorgenti/IMG_5500.jpeg',
