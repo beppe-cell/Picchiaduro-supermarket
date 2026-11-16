@@ -62,10 +62,12 @@ collegamento diretto: in quel caso servirebbe un server TURN.
 
 - **Dipendenti da sbloccare**: ELA, ANGEL e BIGBOSS si affrontano ma non si possono scegliere finché
   non li si batte nel TORNEO 5, 7 e 10 volte (tabella `UNL` in `index.html`). A fine incontro compare il
-  progresso (es. VITTORIE SU ANGEL: 3/7); nel negozio ogni scheda mostra barra e conteggio, e al
-  traguardo il pulsante SBLOCCA li rende giocabili in tutte le modalità (anche online).
-- **Negozio**: mostra subito tutte le skin in vendita, ognuna con anteprima, nome della skin, dipendente a
-  cui appartiene e prezzo. Una skin comprata resta nel profilo.
+  progresso (es. VITTORIE SU ANGEL: 3/7); nel negozio si vedono barra e conteggio, e al traguardo il
+  pulsante SBLOCCA li rende giocabili in tutte le modalità (anche online).
+- **Negozio**: come la scelta del dipendente, un articolo per schermata (frecce, trascinamento o tasti
+  ←/→): prima i dipendenti da sbloccare (sagoma scura finché non hai le vittorie, progresso e SBLOCCA),
+  poi tutte le skin in vendita con il dipendente a cui appartengono e il prezzo (COMPRA). Una skin
+  comprata resta nel profilo.
 - **Skin in selezione**: nella scelta del dipendente il pulsante SKIN (tasto `K`) mostra le sue skin:
   ORIGINALE e quelle comprate si indossano (INDOSSA / IN USO), le altre rimandano al negozio. La skin
   indossata si vede in selezione, in combattimento e nel ritratto dell'HUD.
