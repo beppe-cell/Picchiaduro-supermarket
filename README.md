@@ -21,7 +21,9 @@ prima che i suoi due lottatori siano pronti compare una breve schermata di caric
 ## Modalità
 
 - **Arcade**: un incontro contro un collega a caso, al meglio dei 3 round.
-- **Torneo**: tre incontri di fila (ANGEL, ELA e il boss BIGBOSS).
+- **Torneo**: prima tutti i colleghi con la felpa rossa tranne quello scelto (in ordine casuale), poi i
+  mini boss FABIO, ANGEL, PELATA ed HELA e per finire il boss BIGBOSS. Mini boss e boss vanno sempre affrontati,
+  anche se li hai scelti tu (tabelle `BOSSES` e `TBL` in `index.html`).
 - **Online**: sfida un altro giocatore in rete (vedi sotto).
 - **Impostazioni**: volume di musica ed effetti, controlli touch, vibrazione.
 
@@ -60,12 +62,15 @@ collegamento diretto: in quel caso servirebbe un server TURN.
   | Torneo completato | 150 |
   | Difficoltà della CPU | totale × (1 + (livello − 2) × 0,15) |
 
-- **Dipendenti da sbloccare**: ELA, ANGEL e BIGBOSS si affrontano ma non si possono scegliere finché
-  non li si batte nel TORNEO 5, 7 e 10 volte (tabella `UNL` in `index.html`). A fine incontro compare il
+- **Dipendenti da sbloccare**: HELA, ANGEL, PELATA e BIGBOSS si affrontano ma non si possono scegliere
+  finché non li si batte nel TORNEO 5, 7, 6 e 10 volte (tabella `UNL` in `index.html`). A fine incontro compare il
   progresso (es. VITTORIE SU ANGEL: 3/7); nel negozio si vedono barra e conteggio, e al traguardo il
   pulsante SBLOCCA li rende giocabili in tutte le modalità (anche online).
+- **Mini boss da comprare**: FABIO si affronta in ARCADE ma per sceglierlo va comprato nel negozio con
+  i cedolini (1500, tabella `PRZ` in `index.html`); poi è giocabile in tutte le modalità.
 - **Negozio**: come la scelta del dipendente, un articolo per schermata (frecce, trascinamento o tasti
   ←/→): prima i dipendenti da sbloccare (sagoma scura finché non hai le vittorie, progresso e SBLOCCA),
+  poi i mini boss da comprare (prezzo e COMPRA),
   poi tutte le skin in vendita con il dipendente a cui appartengono e il prezzo (COMPRA). Una skin
   comprata resta nel profilo.
 - **Skin in selezione**: nella scelta del dipendente il pulsante SKIN (tasto `K`) mostra le sue skin:
@@ -95,10 +100,14 @@ collegamento diretto: in quel caso servirebbe un server TURN.
 | VLAD | sprite disegnati (`assets/characters/vlad/`) | Spruzzino accecante |
 | LUIS | sprite disegnati (`assets/characters/luis/`) | Assolo distruttivo (onda sonora) |
 | ZANI | sprite disegnati (`assets/characters/zani/`) | Taglierino furioso (corpo a corpo) |
-| ELA | sprite disegnati (`assets/characters/ela/`) | Risata al telefono (onda sonora) |
-| ANGEL | sprite disegnati (`assets/characters/angel/`) | Picchiata angelica (volo corpo a corpo) |
+| HELA (mini boss) | sprite disegnati (`assets/characters/hela/`) | Risata al telefono (onda sonora) |
+| ANGEL (mini boss) | sprite disegnati (`assets/characters/angel/`) | Picchiata angelica (volo corpo a corpo) |
 | BIGBOSS (boss) | sprite disegnati (`assets/characters/bigboss/`) | Carica del transpallet (corpo a corpo) |
 | ANDREI | sprite disegnati (`assets/characters/andrei/`) | Piede di porco (corpo a corpo) |
+| FABIO (mini boss) | sprite disegnati (`assets/characters/fabio/`) | Schianto dal sollevatore: sale sulle forche, si tuffa e l'onda d'urto corre sul pavimento |
+| COMINZ | sprite disegnati (`assets/characters/cominz/`) | Falce e martello (corpo a corpo) |
+| PELATA (mini boss) | sprite disegnati (`assets/characters/pelata/`) | Rotolo di scontrino che vola e si srotola (proiettile) |
+| PORTE | sprite disegnati (`assets/characters/porte/`) | Lancio della scatola (proiettile che ruota) |
 
 Skin in vendita nel negozio: **MATTEO SHALOM** (500 cedolini, `assets/characters/matteo/skin-israele/`) e
 **LUIS EL MARIACHI** (500 cedolini, `assets/characters/luis/skin-mariachi/`: speciale con le maracas, stessa onda).
@@ -143,12 +152,16 @@ assets/
       sorgenti/                tavola, fogli pose IMG_5449–5452, speciale IMG_5454
     zani/                      zani-<animazione>.png (speciale corpo a corpo, senza proiettile)
       sorgenti/                tavola IMG_5456, fogli pose IMG_5458–5460, speciale IMG_5463
-    ela/                       ela-<animazione>.png, ela-laugh.png (proiettile)
+    hela/                      hela-<animazione>.png, hela-laugh.png (proiettile)
       sorgenti/                tavola.png, foglio-A/B/C.png, speciale IMG_5474
     angel/                     angel-<animazione>.png (speciale corpo a corpo, senza proiettile)
       sorgenti/                tavola IMG_5469, fogli pose IMG_5470–5472, speciale IMG_5473
     bigboss/                   bigboss-<animazione>.png (speciale corpo a corpo col transpallet)
     andrei/                    andrei-<animazione>.png (speciale corpo a corpo col piede di porco)
+    fabio/                     fabio-<animazione>.png, fabio-shock.png (onda d'urto della speciale)
+    cominz/                    cominz-<animazione>.png (speciale corpo a corpo con falce e martello)
+    pelata/                    pelata-<animazione>.png, pelata-receipt.png (rotolo di scontrino)
+    porte/                     porte-<animazione>.png, porte-box.png (scatola che ruota)
       sorgenti/                tavola IMG_5494, fogli pose IMG_5495–5497, speciale IMG_5498
     luis/skin-mariachi/        skin LUIS EL MARIACHI; sorgenti/: tavola IMG_5500, fogli IMG_5501–5504
                                (fuori griglia: pose scelte a mano con tools/build_figure_map.py)
@@ -163,7 +176,12 @@ tools/
   build_character.py           importa un personaggio dai 3 fogli pose (tutte le animazioni tranne la speciale)
   build_special.py             pose della speciale da una tavola a parte (con --taglio per pose che si toccano)
   build_luis_special.py        speciale di LUIS: chitarra e onda sonora
-  build_ela_special.py       speciale di ELA: busto col telefono sulle gambe della guardia, onda della risata
+  build_hela_special.py      speciale di HELA: busto col telefono sulle gambe della guardia, onda della risata
+  build_fabio_special.py       speciale di FABIO: pose col sollevatore (forche a meta' montante) e onda d'urto
+  fix_zani_mask.py             toglie la mascherina a ZANI: trapianta la testa senza mascherina nelle pose che l'avevano
+  build_pelata_special.py      rotolo di scontrino di PELATA (3 fotogrammi allineati sul rotolo)
+  build_porte_special.py       scatola di PORTE (--larga 140) (3 fotogrammi che ruotano, centrati sulla scatola)
+  fix_crouch_legs.py           ripara l'accovacciato con le gambe tagliate (stinchi e stivali dallo stacco del salto)
   build_extra_poses.py         aggiunge singole animazioni da un foglio pose (es. vittoria di Beppe)
   build_fronts.py              vista frontale di ogni personaggio (<nome>-front.png) per la selezione
   spritebuild.py               strumenti comuni: ritaglio, scala, allineamento, fogli PNG
