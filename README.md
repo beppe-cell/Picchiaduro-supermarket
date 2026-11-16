@@ -56,8 +56,12 @@ Come funziona: il gioco non ha un server. I giocatori si trovano tramite i relay
 Nostr (libreria [Trystero](https://github.com/dmotz/trystero) 0.26.0, copiata in
 `assets/vendor/trystero-nostr.mjs` da `tools/vendor_trystero.sh` e scaricata solo quando si apre ONLINE),
 poi i due browser si collegano direttamente (WebRTC). Le due copie del gioco simulano la stessa partita
-scambiandosi solo i comandi (lockstep con 4 fotogrammi di ritardo, circa 67 ms): ogni secondo confrontano
-un'impronta dello stato e se diverge l'HUD mostra DESYNC. Se l'avversario chiude o non risponde per 8
+scambiandosi solo i comandi (lockstep): ogni secondo confrontano un'impronta dello stato e se diverge
+l'HUD mostra DESYNC. Il ritardo dei comandi si adatta alla connessione: i due browser si mandano un ping
+ogni 400 ms e prima di ogni incontro si sceglie un ritardo tra 3 e 12 fotogrammi (mezzo ping alto più 2:
+circa 80 ms su una buona connessione, fino a 200 ms su una lenta), così la partita non si ferma ad aspettare
+i comandi; se un lato resta indietro l'altro rallenta di pochissimo invece di bloccarsi. Il ping si vede in
+basso durante la partita (verde, giallo sopra 120 ms, rosso sopra 220 ms). Se l'avversario chiude o non risponde per 8
 secondi la partita si interrompe. Alcune reti (aziendali, alcuni operatori mobili) non permettono il
 collegamento diretto: in quel caso servirebbe un server TURN.
 
