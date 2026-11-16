@@ -14,6 +14,10 @@ python3 -m http.server 8080   # poi http://localhost:8080
 
 Ogni push su `main` pubblica il gioco su GitHub Pages (`.github/workflows/deploy-pages.yml`).
 
+All'apertura il gioco carica prima solo l'arena e i due lottatori della schermata iniziale (con la
+percentuale al posto di "TOCCA O PREMI UN TASTO"), poi il resto in sottofondo; se un incontro parte
+prima che i suoi due lottatori siano pronti compare una breve schermata di caricamento.
+
 ## Modalità
 
 - **Arcade**: un incontro contro un collega a caso, al meglio dei 3 round.
@@ -60,9 +64,9 @@ assets/
     arena-orizzontale.jpeg     corsia centrale; con arena-magazzino, -casse, -ortofrutta, -surgelati,
                                -parcheggio sono le 6 arene (una a caso per incontro, entrambi gli
                                orientamenti; in verticale la telecamera scorre)
-    arena-supermercato.png     vecchia arena (riserva se l'immagine non carica)
-    corridoio-verticale.jpeg   vecchia arena verticale (non piu' usata)
   characters/
+    <nome>/                    <nome>-<animazione>.png (file di lavoro) e .webp (quelli caricati dal
+                               gioco, generati da tools/to_webp.py), <nome>-front per la selezione
     beppe/                     beppe-<animazione>.png, pallet.png (proiettile)
       sorgenti/                disegni originali, foglio reazioni IMG_5475 (colpito e vittoria)
     matteo/                    matteo-<animazione>.png, matteo-cart.png (proiettile)
@@ -94,6 +98,7 @@ tools/
   build_matteo_sprites.py      genera i PNG di Matteo dalle tavole sorgenti
   build_vlad_sprites.py        genera i PNG di Vlad dalle tavole sorgenti
   build_beppe_special.py       speciale di Beppe: afferra, tiene e lancia il bancale
+  to_webp.py                   converte gli sprite PNG nei WebP caricati dal gioco (3 volte piu' leggeri)
   clean_white_residue.py       toglie il bianco di sfondo residuo dagli sprite
   spritekey.py                 scontorno del magenta e separazione dei frame
 ```
@@ -106,7 +111,8 @@ tools/
    scipy`) crea tutte le animazioni tranne la speciale, che si fa a parte. Formato: un PNG per animazione,
    `<nome>-<animazione>.png`, frame affiancati a larghezza uguale, piedi sul bordo inferiore,
    personaggio in piedi alto circa 400 px.
-3. Registra il personaggio in `SPRSET` dentro `index.html` (cartella, numero di frame per
+3. `python3 -B tools/to_webp.py` crea i `.webp` che il gioco carica davvero.
+4. Registra il personaggio in `SPRSET` dentro `index.html` (cartella, numero di frame per
    animazione, proiettile) e aumenta `VER` per svuotare la cache dei browser.
 
 Animazioni riconosciute: `idle`, `walk`, `punch`, `kick`, `heavy`, `special`, `jump`, `block`,
