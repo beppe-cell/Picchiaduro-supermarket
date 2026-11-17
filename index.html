@@ -215,7 +215,7 @@ TOR=[...reg,...BOSSES.map(ix)];TLV=[...reg.map((_,i)=>i<reg.length/2?2:3),...BOS
 /* sprite dei personaggi: 1 riga per animazione in assets/characters/<nome>/, corpo in piedi normalizzato a 400px, piedi sul bordo inferiore, rivolti a destra.
    n = frame per animazione; pj = proiettile dello speciale (pjn frame); spT = soglie (tick) dei frame dello speciale se diverse dallo standard.
    hit/win sono opzionali: se mancano si usa la posa idle (inclinata quando colpito). */
-const SPRB=400,VER=63,SPRSET={
+const SPRB=400,VER=64,SPRSET={
 BEPPE:{d:'beppe',n:{idle:4,walk:4,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:3,ko:1,win:2},pj:'pallet',pjn:1,pjw:50,pjh:39.3,pjo:[62,-84],spT:[6,11]},
 MATTEO:{d:'matteo',n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:3,ko:1,win:3},pj:'matteo-cart',pjn:3,pjf:0,pjt:1,pjh:71.3,pjy:-40.8,spT:[5,11]},
 VLAD:{d:'vlad',sc:1.05,n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:2,ko:1,win:2},pj:'vlad-spray',pjn:3,pjs:.6,pjo:[33.8,-83.5],pji:1,spT:[5,11]},
@@ -828,8 +828,13 @@ $('#on-code').style.display=code?'':'none';if(code)$('#on-c').textContent=code;$
 function netLeave(){if(!NET)return;const n=NET;clearInterval(n.pi);if(n.rk&&n.set&&!n.rkDone)rkEnd(n,false);/* lasciare un set classificato = sconfitta */NET=null;clearTimeout(n.nx);clearInterval(n.ti);clearTimeout(n.to);for(const r of[n.lobby,n.room])try{r&&r.leave()}catch(e){}}
 /** errore o fine collegamento: torna alla schermata ONLINE con un messaggio */
 function netFail(t){netLeave();G=null;pl=false;sh('s-online');netUI(0);netSt(t)}
-async function netOpen(fn){try{netLeave();const L=await netLib();NET={me:L.selfId,L,ri:{},buf:{},lh:{},rh:{},m:0};fn()}
-catch(e){netFail('Rete non disponibile: controlla la connessione e riprova.')}}
+/** apre il collegamento e poi fa fn. Mentre la libreria si scarica si vede subito COLLEGAMENTO... con ANNULLA;
+    i tocchi ripetuti nel frattempo non contano, e ANNULLA (netOpen.tok) ferma tutto anche a meta' */
+async function netOpen(fn){if(netOpen.busy)return;const tok=++netOpen.tok;netOpen.busy=1;
+try{netLeave();netUI(1);netSt('COLLEGAMENTO ALLA RETE...');const L=await netLib();
+ if(tok!==netOpen.tok||!$('#s-online').classList.contains('on'))return;NET={me:L.selfId,L,ri:{},buf:{},lh:{},rh:{},m:0};fn()}
+catch(e){if(tok===netOpen.tok)netFail('Rete non disponibile: controlla la connessione e riprova.')}finally{if(tok===netOpen.tok)netOpen.busy=0}}
+netOpen.tok=0;
 /* ricerca rapida */
 /* rk: coda RANKED (stanza a parte). Con RKNEAR=1 si propone la partita solo a chi ha punti vicini (la
    distanza accettata parte da 150 e cresce di 10 al secondo di attesa); con RKNEAR=0, finche' i giocatori
@@ -850,7 +855,7 @@ prop.onMessage=(d,{peerId:p})=>{if(NET!==N||!d)return;
  if(d.code&&free()&&near(d.e)){prop.send({ok:1,code:d.code},{target:p});netMatch(pre+d.code,'TROVATO! COLLEGAMENTO...',0,rk)}else prop.send({no:1},{target:p})}})}
 /* stanza privata */
 function netCrea(){netOpen(()=>{const c=netCode();netMatch('r-'+c,'Manda questo codice all\'avversario e aspetta che entri:',c)})}
-function netEntra(){const c=$('#on-i').value.trim().toUpperCase();if(!/^[A-Z]{4}$/.test(c)){netSt('Il codice è di 4 lettere.');return}
+function netEntra(){const c=$('#on-i').value.trim().toUpperCase();if(!/^[A-Z]{4}$/.test(c)){netSt(c?'Il codice è di 4 lettere.':'Scrivi qui sopra il codice di 4 lettere che ti ha mandato l\'avversario.');$('#on-i').focus();return}
 netOpen(()=>netMatch('r-'+c,'ENTRO NELLA STANZA '+c+'...'))}
 /** stanza della partita (dalla ricerca o col codice): saluto, scelta dei dipendenti, partite */
 function netMatch(id,msg,code,rk){const N=NET;clearInterval(N.ti);N.pend=null;N.rk=!!rk;
@@ -947,11 +952,11 @@ rkMine().then(x=>{rkDraw();return rkRelays(x&&x.ev,1,()=>{if(rkShow.n==my)rkDraw
 rkShow.n=0;
 $('#on-q').onclick=()=>{au();sfx('ui');netCerca()};$('#on-rq').onclick=()=>{au();sfx('ui');netCerca(1)};$('#on-lb').onclick=()=>{au();sfx('ui');rkShow()};
 $('#rk-x').onclick=()=>{sfx('ui');rkClose();GO.online()};$('#on-cr').onclick=()=>{au();sfx('ui');netCrea()};$('#on-j').onclick=()=>{au();sfx('ui');netEntra()};
-$('#on-x').onclick=()=>{sfx('ui');if(NET){netLeave();netUI(0);netSt(ONT)}else GO.menu()};
+$('#on-x').onclick=()=>{sfx('ui');if(NET||netOpen.busy){netOpen.tok++;netOpen.busy=0;netLeave();netUI(0);netSt(ONT)}else GO.menu()};
 $('#w-x').onclick=()=>{sfx('ui');netFail('Partita annullata.')};
 $('#on-cp').onclick=()=>{const t=$('#on-c').textContent;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>netSt('Codice copiato: mandalo all\'avversario.'),()=>{})};
 $('#on-i').addEventListener('input',e=>{const v=e.target.value.toUpperCase().replace(/[^A-Z]/g,'');if(v!=e.target.value)e.target.value=v});
-const GO={menu:()=>{netLeave();G=null;pl=false;sh('s-menu')},online:()=>{netUI(0);netSt(ONT);sh('s-online')},arc:()=>{mode='arc';fillSel();sh('s-sel')},tor:()=>{mode='tor';fillSel();sh('s-sel')},set:()=>sh('s-set'),shop:()=>{for(const it of shopItems())if(it.k)skFront(it.n,it.k.id);/* precarica le anteprime */fillShop();sh('s-shop')},prof:()=>{fillProf();sh('s-prof')}};
+const GO={menu:()=>{netLeave();G=null;pl=false;sh('s-menu')},online:()=>{netUI(0);netSt(ONT);sh('s-online');netLib().catch(()=>{})/* si scarica subito: il primo tocco e' rapido */},arc:()=>{mode='arc';fillSel();sh('s-sel')},tor:()=>{mode='tor';fillSel();sh('s-sel')},set:()=>sh('s-set'),shop:()=>{for(const it of shopItems())if(it.k)skFront(it.n,it.k.id);/* precarica le anteprime */fillShop();sh('s-shop')},prof:()=>{fillProf();sh('s-prof')}};
 /* navigazione da tastiera nei menu: frecce/WASD per spostarsi, INVIO/SPAZIO/J per confermare, ESC per tornare */
 const vis=()=>[...document.querySelectorAll('.scr.on')].find(e=>e.id!='s-title');
 const btns=s=>[...s.querySelectorAll('.b')].filter(b=>b.offsetParent&&!b.closest('#grid'));
