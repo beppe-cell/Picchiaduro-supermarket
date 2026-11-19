@@ -88,8 +88,8 @@ collegamento diretto: in quel caso servirebbe un server TURN.
   | Difficoltà della CPU | totale × (1 + (livello − 2) × 0,15) |
 
 - **Mini boss e boss da comprare**: FABIO, ANGEL, ASTREA, HELA e BIGBOSS si affrontano (in ARCADE e nel
-  TORNEO) ma per sceglierli vanno comprati nel negozio con i cedolini: FABIO 20000, ANGEL 30000, ASTREA 40000,
-  HELA 50000, BIGBOSS 100000 (tabella `PRZ` in `index.html`); poi sono giocabili in tutte le modalità
+  TORNEO) ma per sceglierli vanno comprati nel negozio con i cedolini: FABIO 2000, ANGEL 2500, ASTREA 3000,
+  HELA 4000, BIGBOSS 5000 (tabella `PRZ` in `index.html`); poi sono giocabili in tutte le modalità
   (tranne RANKED, dove si usano solo i dipendenti normali). Chi li aveva già sbloccati li tiene.
 - **Negozio**: come la scelta del dipendente, un articolo per schermata (frecce, trascinamento o tasti
   ←/→): prima i mini boss e il boss da comprare (anteprima visibile, prezzo e COMPRA),
@@ -131,8 +131,8 @@ collegamento diretto: in quel caso servirebbe un server TURN.
 | ASTREA (mini boss) | sprite disegnati (`assets/characters/astrea/`) | Rotolo di scontrino che vola e si srotola (proiettile) |
 | PORTE | sprite disegnati (`assets/characters/porte/`) | Lancio della scatola (proiettile che ruota) |
 
-Skin in vendita nel negozio: **MATTEO SHALOM** (10000 cedolini, `assets/characters/matteo/skin-israele/`) e
-**LUIS EL MARIACHI** (10000 cedolini, `assets/characters/luis/skin-mariachi/`: speciale con le maracas, stessa onda).
+Skin in vendita nel negozio: **MATTEO SHALOM** (1500 cedolini, `assets/characters/matteo/skin-israele/`) e
+**LUIS EL MARIACHI** (1500 cedolini, `assets/characters/luis/skin-mariachi/`: speciale con le maracas, stessa onda).
 
 ## Comandi
 
