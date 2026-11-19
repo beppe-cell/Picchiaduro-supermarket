@@ -65,6 +65,7 @@ text-shadow:0 .25cqw 0 var(--y),0 .5cqw 0 var(--yd),-.45cqw 0 var(--r),.45cqw 0 
 #pfl{gap:.9cqw;min-width:56cqw;max-height:22cqw;overflow-y:auto}.pf{display:flex;align-items:center;gap:1.4cqw;width:100%;font-size:1.5cqw}.pf span{flex:1;text-align:left}.pf i{font-style:normal;color:var(--y);font-size:1.2cqw}
 .pf .b{min-width:0;font-size:1.2cqw;padding:.7cqw 1.2cqw}.pf.on span{color:var(--y)}#s-prof .row .b,#s-pform .row .b{min-width:16cqw;font-size:1.5cqw}
 #on-c{font-size:3cqw;color:var(--y);letter-spacing:.6cqw;text-shadow:.25cqw .25cqw 0 #000}#on-rk{font-size:1.3cqw;color:#fff}
+#on-cnt{position:absolute;top:.8cqw;left:1.5cqw;font-size:1.1cqw;color:#fff;background:rgba(5,8,20,.75);border:.3cqw solid var(--y);outline:.25cqw solid #000;padding:.6cqw 1.1cqw;text-shadow:.2cqw .2cqw 0 #000}#on-cnt b{color:#9fe89f}#on-cnt i{display:inline-block;width:1cqw;height:1cqw;border-radius:50%;background:#5fdc5f;margin-right:.8cqw;box-shadow:0 0 .6cqw #5fdc5f;animation:bl 1.4s steps(2) infinite}
 /* etichetta NEW RANKED sopra il pulsante ONLINE del menu */
 .newtag{position:absolute;top:-.5cqw;left:-1.8cqw;background:var(--y);color:#1a1200;font-size:.72cqw;line-height:1;padding:.35cqw .55cqw;border:.18cqw solid #000;box-shadow:0 .25cqw 0 #000;text-shadow:none;white-space:nowrap;pointer-events:none;transform:rotate(-8deg);transform-origin:center;animation:ntag .55s ease-in-out infinite alternate}
 @keyframes ntag{from{transform:rotate(-8deg) scale(1);filter:brightness(1)}to{transform:rotate(-4deg) scale(1.15) translateY(-.2cqw);filter:brightness(1.25)}}
@@ -128,7 +129,7 @@ h2{font-size:4.4cqw}
 .wallet{font-size:2.8cqw;top:4cqw;right:4cqw;padding:1.4cqw 2.2cqw}.wallet::before{width:2.2cqw;height:2.8cqw}#e-c{font-size:4cqw}
 #pchip{font-size:2.6cqw;top:4cqw;left:4cqw;padding:1.4cqw 2.2cqw}#pchip::before{width:2.2cqw;height:2.2cqw}
 #pfl{min-width:86cqw;max-height:60cqw;gap:2cqw}.pf{font-size:3cqw}.pf i{font-size:2.4cqw}.pf .b{font-size:2.4cqw;padding:1.4cqw 2cqw}#s-prof .row,#s-pform .row{flex-wrap:wrap}#s-prof .row .b,#s-pform .row .b{min-width:36cqw;font-size:2.8cqw}
-#s-online .mlist{display:flex}.newtag{font-size:1.5cqw;top:-1.1cqw;left:-3cqw;padding:.7cqw 1cqw}#rkl{min-width:92cqw;max-height:96cqw;gap:1.2cqw}.rkr{font-size:2.6cqw}.rkr b{width:5cqw}.rkr em{width:19cqw}.rkr i{width:10cqw}.rkr small{display:none}#on-rk{font-size:2.6cqw}
+#s-online .mlist{display:flex}#on-cnt{font-size:2.4cqw;top:3cqw;left:3cqw;padding:1.2cqw 2cqw}#on-cnt i{width:2cqw;height:2cqw;margin-right:1.4cqw}.newtag{font-size:1.5cqw;top:-1.1cqw;left:-3cqw;padding:.7cqw 1cqw}#rkl{min-width:92cqw;max-height:96cqw;gap:1.2cqw}.rkr{font-size:2.6cqw}.rkr b{width:5cqw}.rkr em{width:19cqw}.rkr i{width:10cqw}.rkr small{display:none}#on-rk{font-size:2.6cqw}
 #pff-i,#on-i{font-size:4cqw;width:70cqw}#on-c{font-size:7cqw}#s-online .panel{min-width:86cqw}#on-st{max-width:84cqw}#pff-c{font-size:2.6cqw;width:84cqw;height:30cqw}
 #s-skin{gap:3cqw;padding:16cqw 0 6cqw}.unl{font-size:2.8cqw}.cat{gap:3cqw;max-height:110cqw}.card{width:40cqw;padding:2cqw 1.6cqw;gap:1cqw}.card img{height:32cqw}.card b{font-size:2.8cqw}.card span{font-size:2.3cqw}.card .b{font-size:2.3cqw;padding:1.6cqw .6cqw}.empty{max-width:84cqw}
 .row{font-size:2.8cqw}.row .b{min-width:34cqw}input[type=range]{width:44cqw}
@@ -159,7 +160,7 @@ h2{font-size:4.4cqw}
 <button class="b alt" data-go="menu">INDIETRO</button></div>
 <div class="scr" id="s-pform"><h2 id="pff-t"></h2><div class="panel"><div class="small" id="pff-l"></div><input id="pff-i" maxlength="12" autocomplete="off" spellcheck="false"><textarea id="pff-c" spellcheck="false"></textarea><div class="small" id="pff-e"></div></div>
 <div class="row"><button class="b alt" id="pff-x">INDIETRO</button><button class="b alt" id="pff-2"></button><button class="b" id="pff-ok"></button></div></div>
-<div class="scr" id="s-online"><h2>ONLINE</h2><div class="panel"><div id="on-rk"></div><div class="small" id="on-st"></div>
+<div class="scr" id="s-online"><div id="on-cnt"></div><h2>ONLINE</h2><div class="panel"><div id="on-rk"></div><div class="small" id="on-st"></div>
 <div class="row" id="on-code"><span id="on-c"></span><button class="b alt" id="on-cp">COPIA</button></div>
 <input id="on-i" maxlength="4" placeholder="CODICE" autocomplete="off" spellcheck="false" data-ok="on-j"></div>
 <div class="mlist" id="on-m"><button class="b" id="on-rq">RANKED</button><button class="b" id="on-q">PARTITA FOR FUN</button><button class="b alt" id="on-cr">CREA STANZA</button><button class="b alt" id="on-j">ENTRA CON CODICE</button><button class="b alt" id="on-lb">CLASSIFICA</button></div>
@@ -215,7 +216,7 @@ TOR=[...reg,...BOSSES.map(ix)];TLV=[...reg.map((_,i)=>i<reg.length/2?2:3),...BOS
 /* sprite dei personaggi: 1 riga per animazione in assets/characters/<nome>/, corpo in piedi normalizzato a 400px, piedi sul bordo inferiore, rivolti a destra.
    n = frame per animazione; pj = proiettile dello speciale (pjn frame); spT = soglie (tick) dei frame dello speciale se diverse dallo standard.
    hit/win sono opzionali: se mancano si usa la posa idle (inclinata quando colpito). */
-const SPRB=400,VER=66,SPRSET={
+const SPRB=400,VER=67,SPRSET={
 BEPPE:{d:'beppe',n:{idle:4,walk:4,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:3,ko:1,win:2},pj:'pallet',pjn:1,pjw:50,pjh:39.3,pjo:[62,-84],spT:[6,11]},
 MATTEO:{d:'matteo',n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:3,ko:1,win:3},pj:'matteo-cart',pjn:3,pjf:0,pjt:1,pjh:71.3,pjy:-40.8,spT:[5,11]},
 VLAD:{d:'vlad',sc:1.05,n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:2,ko:1,win:2},pj:'vlad-spray',pjn:3,pjs:.6,pjo:[33.8,-83.5],pji:1,spT:[5,11]},
@@ -813,6 +814,14 @@ sfx('ui');if(first){sh('s-menu');return}fillProf();sh('s-prof')};
    stanza nuova, l'altro accetta se e' ancora libero. Stanza privata: codice di 4 lettere.
    Ogni NETH fotogrammi i due si scambiano un'impronta dello stato: se differisce compare DESYNC.
    NETV = versione del protocollo: giocatori con versioni diverse non si collegano. */
+/* giocatori online: chi e' nella sezione ONLINE (o gioca online) sta nella stanza 'presenza' e conta chi
+   c'e' dentro, se stesso compreso. Si entra aprendo ONLINE e si esce tornando al menu */
+const PRES={room:null,peers:new Set()};
+function presDraw(){const e=$('#on-cnt');if(e)e.innerHTML=PRES.room?'<i></i>GIOCATORI ONLINE: <b>'+(PRES.peers.size+1)+'</b>':'<i></i>GIOCATORI ONLINE: ...'}
+function presOn(){presDraw();if(PRES.room||presOn.go)return;presOn.go=1;netLib().then(L=>{presOn.go=0;if(PRES.room||!presOn.want)return;
+ const r=PRES.room=L.joinRoom({appId:NETAPP},'presenza-v1');PRES.peers=new Set();
+ r.onPeerJoin=p=>{if(PRES.room===r){PRES.peers.add(p);presDraw()}};r.onPeerLeave=p=>{if(PRES.room===r){PRES.peers.delete(p);presDraw()}};presDraw()},()=>{presOn.go=0})}
+function presOff(){presOn.want=0;if(PRES.room){const r=PRES.room;PRES.room=null;PRES.peers.clear();try{r.leave()}catch(e){}}}
 const ONT='RANKED: set al meglio di 3 incontri, conta per punti e classifica. PARTITA FOR FUN: senza punti.';
 const NETV=2,NETD=6,NETH=60,NETAPP='superrissa-picchiaduro',NETK='lrudbpkhs',NETTO=8000;
 let NET=null,NETLIB=null;
@@ -956,7 +965,7 @@ $('#on-x').onclick=()=>{sfx('ui');if(NET||netOpen.busy){netOpen.tok++;netOpen.bu
 $('#w-x').onclick=()=>{sfx('ui');netFail('Partita annullata.')};
 $('#on-cp').onclick=()=>{const t=$('#on-c').textContent;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>netSt('Codice copiato: mandalo all\'avversario.'),()=>{})};
 $('#on-i').addEventListener('input',e=>{const v=e.target.value.toUpperCase().replace(/[^A-Z]/g,'');if(v!=e.target.value)e.target.value=v});
-const GO={menu:()=>{netLeave();G=null;pl=false;sh('s-menu')},online:()=>{netUI(0);netSt(ONT);sh('s-online');netLib().catch(()=>{})/* si scarica subito: il primo tocco e' rapido */},arc:()=>{mode='arc';fillSel();sh('s-sel')},tor:()=>{mode='tor';fillSel();sh('s-sel')},set:()=>sh('s-set'),shop:()=>{for(const it of shopItems())if(it.k)skFront(it.n,it.k.id);/* precarica le anteprime */fillShop();sh('s-shop')},prof:()=>{fillProf();sh('s-prof')}};
+const GO={menu:()=>{netLeave();presOff();G=null;pl=false;sh('s-menu')},online:()=>{netUI(0);netSt(ONT);sh('s-online');presOn.want=1;presOn();netLib().catch(()=>{})/* si scarica subito: il primo tocco e' rapido */},arc:()=>{mode='arc';fillSel();sh('s-sel')},tor:()=>{mode='tor';fillSel();sh('s-sel')},set:()=>sh('s-set'),shop:()=>{for(const it of shopItems())if(it.k)skFront(it.n,it.k.id);/* precarica le anteprime */fillShop();sh('s-shop')},prof:()=>{fillProf();sh('s-prof')}};
 /* navigazione da tastiera nei menu: frecce/WASD per spostarsi, INVIO/SPAZIO/J per confermare, ESC per tornare */
 const vis=()=>[...document.querySelectorAll('.scr.on')].find(e=>e.id!='s-title');
 const btns=s=>[...s.querySelectorAll('.b')].filter(b=>b.offsetParent&&!b.closest('#grid'));
