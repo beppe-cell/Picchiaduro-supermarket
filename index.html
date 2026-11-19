@@ -215,7 +215,7 @@ TOR=[...reg,...BOSSES.map(ix)];TLV=[...reg.map((_,i)=>i<reg.length/2?2:3),...BOS
 /* sprite dei personaggi: 1 riga per animazione in assets/characters/<nome>/, corpo in piedi normalizzato a 400px, piedi sul bordo inferiore, rivolti a destra.
    n = frame per animazione; pj = proiettile dello speciale (pjn frame); spT = soglie (tick) dei frame dello speciale se diverse dallo standard.
    hit/win sono opzionali: se mancano si usa la posa idle (inclinata quando colpito). */
-const SPRB=400,VER=65,SPRSET={
+const SPRB=400,VER=66,SPRSET={
 BEPPE:{d:'beppe',n:{idle:4,walk:4,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:3,ko:1,win:2},pj:'pallet',pjn:1,pjw:50,pjh:39.3,pjo:[62,-84],spT:[6,11]},
 MATTEO:{d:'matteo',n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:3,ko:1,win:3},pj:'matteo-cart',pjn:3,pjf:0,pjt:1,pjh:71.3,pjy:-40.8,spT:[5,11]},
 VLAD:{d:'vlad',sc:1.05,n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:2,ko:1,win:2},pj:'vlad-spray',pjn:3,pjs:.6,pjo:[33.8,-83.5],pji:1,spT:[5,11]},
@@ -280,7 +280,7 @@ const REW={win:50,lose:15,round:10,perfect:20,tour:150,lvk:.15};
    numero diverso dall'originale (es. {fall:2,win:2}), ov = valori di SPRSET diversi (es. pjo, l'uscita
    del proiettile della speciale). ORIGINALE ('base') e' sempre posseduta.
    Esempio: BEPPE:[{id:'natale',n:'BABBO BEPPE',p:1500}] (prezzi tra 1500 e 5000) con i file in assets/characters/beppe/skin-natale/ */
-const SKINS={BEPPE:[],VLAD:[],
+const SKINS={BEPPE:[],VLAD:[{id:'pump',n:'VLAD IN PUMP',ms:'LANCIO DEL MANUBRIO',p:1500,ov:{pjn:3,pjs:0,pji:0,pjh:35,pjy:-17.5,pjo:[52,-78]}}],
 LUIS:[{id:'mariachi',n:'LUIS EL MARIACHI',p:1500,ov:{pjo:[28,-92]}}],ZANNA:[],HELA:[],ANGEL:[],BIGBOSS:[],ANDREI:[],
 MATTEO:[{id:'israele',n:'MATTEO SHALOM',p:1500,nf:{fall:2,win:2}}]};
 /* ---------- profili ---------- */
@@ -704,7 +704,7 @@ function loop(ts){requestAnimationFrame(loop);acc+=Math.min(50,ts-last);last=ts;
 let selI=0,lastPT='mouse';
 const selList=()=>mode=='net'&&NET&&NET.rk?rkList():CH.map((L,i)=>i).filter(i=>!locked(CH[i].n));/* RANKED: solo i dipendenti normali *//* i personaggi da comprare (PRZ) non si scelgono */
 function setSel(i,dir){selI=i;const rk=mode=='net'&&NET&&NET.rk,L=rk?rkL(CH[i]):CH[i],cl=v=>Math.round(Math.min(1,Math.max(.12,v))*100)+'%';$('#pvn').textContent=L.n;
-$('#pvs').style.width=cl((L.sp-1.1)/.8);$('#pvp').style.width=cl((L.pw-.75)/.6);$('#pvx').innerHTML='SPECIALE: <b>'+(L.ms||'CARRELLINO')+'</b>'+(rk?' <span style="color:#7fe8d6">· RANKED: VELOCITÀ E POTENZA UGUALI PER TUTTI</span>':L.big?' <span style="color:#ff6a6a">· BOSS</span>':MINI.includes(L.n)?' <span style="color:#ffb347">· MINI BOSS</span>':'')+(eqSkin(L.n)!='base'?' · SKIN: <b>'+skinsOf(L.n).find(k=>k.id==eqSkin(L.n)).n+'</b>':'');
+$('#pvs').style.width=cl((L.sp-1.1)/.8);$('#pvp').style.width=cl((L.pw-.75)/.6);$('#pvx').innerHTML='SPECIALE: <b>'+((skinsOf(L.n).find(k=>k.id==eqSkin(L.n))||{}).ms||L.ms||'CARRELLINO')+'</b>'+(rk?' <span style="color:#7fe8d6">· RANKED: VELOCITÀ E POTENZA UGUALI PER TUTTI</span>':L.big?' <span style="color:#ff6a6a">· BOSS</span>':MINI.includes(L.n)?' <span style="color:#ffb347">· MINI BOSS</span>':'')+(eqSkin(L.n)!='base'?' · SKIN: <b>'+skinsOf(L.n).find(k=>k.id==eqSkin(L.n)).n+'</b>':'');
 const L2=selList();$('#dots').innerHTML=L2.map(j=>'<i class="'+(j==i?'on':'')+'"></i>').join('');
 const cv=$('#pvc');if(dir){cv.classList.remove('in','inl');void cv.offsetWidth;cv.classList.add(dir>0?'in':'inl')}}
 /* scorre al dipendente precedente/successivo (in giro) */

@@ -110,7 +110,8 @@ collegamento diretto: in quel caso servirebbe un server TURN.
    stella di MATTEO SHALOM: altrimenti la pulizia delle linee guida azzurre le buca); vista per la selezione: aggiungi la tavola in `BOARDS` di
    `tools/build_fronts.py` (chiave `<nome>/skin-<id>`) e lancia `build_fronts.py <nome>/skin-<id>`.
 2. Aggiungi la skin in `SKINS` dentro `index.html`, es. `BEPPE:[{id:'natale',n:'BABBO BEPPE',p:400}]`
-   (`n` nome nel negozio, `p` prezzo in cedolini; `nf` se un'animazione ha un numero di fotogrammi
+   (`n` nome nel negozio, `p` prezzo in cedolini; `ms` nome della speciale se la skin la cambia;
+   `ov` valori di SPRSET da cambiare, es. il proiettile; `nf` se un'animazione ha un numero di fotogrammi
    diverso dall'originale, es. `nf:{fall:2,win:2}`) e aumenta `VER`.
 
 ## Personaggi
@@ -132,7 +133,9 @@ collegamento diretto: in quel caso servirebbe un server TURN.
 | PORTE | sprite disegnati (`assets/characters/porte/`) | Lancio della scatola (proiettile che ruota) |
 
 Skin in vendita nel negozio: **MATTEO SHALOM** (1500 cedolini, `assets/characters/matteo/skin-israele/`) e
-**LUIS EL MARIACHI** (1500 cedolini, `assets/characters/luis/skin-mariachi/`: speciale con le maracas, stessa onda).
+**LUIS EL MARIACHI** (1500 cedolini, `assets/characters/luis/skin-mariachi/`: speciale con le maracas, stessa onda)
+e **VLAD IN PUMP** (1500 cedolini, `assets/characters/vlad/skin-pump/`: a torso nudo da palestra, speciale
+"lancio del manubrio" con il manubrio che vola ruotando al posto dello spruzzo; stessi danni).
 
 ## Comandi
 
@@ -187,6 +190,7 @@ assets/
       sorgenti/                tavola IMG_5494, fogli pose IMG_5495–5497, speciale IMG_5498
     luis/skin-mariachi/        skin LUIS EL MARIACHI; sorgenti/: tavola IMG_5500, fogli IMG_5501–5504
                                (fuori griglia: pose scelte a mano con tools/build_figure_map.py)
+    vlad/skin-pump/            skin VLAD IN PUMP; sorgenti/: tavola, foglio-A/B/C, speciale (tools/build_vlad_pump_special.py)
     matteo/skin-israele/       skin MATTEO SHALOM; sorgenti/: tavola IMG_5489, fogli pose IMG_5490, 5491, 5493
       sorgenti/                tavola IMG_5476, fogli pose IMG_5477–5479, speciale IMG_5480
 assets/vendor/                 trystero-nostr.mjs (multiplayer online, MIT)
@@ -202,6 +206,7 @@ tools/
   build_hela_special.py      speciale di HELA: busto col telefono sulle gambe della guardia, onda della risata
   build_fabio_special.py       speciale di FABIO: pose col sollevatore (forche a meta' montante) e onda d'urto
   fix_zanna_mask.py             toglie la mascherina a ZANNA: trapianta la testa senza mascherina nelle pose che l'avevano
+  build_vlad_pump_special.py   speciale e manubrio della skin VLAD IN PUMP
   rename_sign.py               riscrive il nome del gioco sull'insegna appesa negli sfondi delle arene
   replace_g_logo.py            sostituisce la G del logo sulle divise con la S di SUPERRISSA in tutti gli sprite
   build_astrea_special.py      rotolo di scontrino di ASTREA (3 fotogrammi allineati sul rotolo)
