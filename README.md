@@ -63,12 +63,15 @@ poi i due browser si collegano direttamente (WebRTC). Tutti usano la stessa list
 `index.html`): senza, la libreria ne sceglierebbe 5 poco noti in base al nome del gioco. Nella schermata ONLINE si
 vede quanti giocatori ci sono e quanti sono in coda RANKED e FOR FUN (sono code separate: per giocare insieme va
 scelta la stessa); se l'avversario trovato non si collega entro 25 secondi si torna a cercare da soli. Le due copie del gioco simulano la stessa partita
-scambiandosi solo i comandi (lockstep): ogni secondo confrontano un'impronta dello stato e se diverge
-l'HUD mostra DESYNC. Il ritardo dei comandi si adatta alla connessione: i due browser si mandano un ping
-ogni 400 ms e prima di ogni incontro si sceglie un ritardo tra 3 e 12 fotogrammi (mezzo ping alto più 2:
-circa 80 ms su una buona connessione, fino a 200 ms su una lenta), così la partita non si ferma ad aspettare
-i comandi; se un lato resta indietro l'altro rallenta di pochissimo invece di bloccarsi. Il ping si vede in
-basso durante la partita (verde, giallo sopra 120 ms, rosso sopra 220 ms). Se l'avversario chiude o non risponde per 8
+scambiandosi solo i comandi, con il **rollback netcode** (come i picchiaduro moderni): i tuoi comandi valgono
+quasi subito (2 fotogrammi, circa 33 ms) e quelli dell'avversario non ancora arrivati vengono previsti
+(ripetendo il suo ultimo comando); quando arriva il comando vero, se la previsione era sbagliata il gioco torna
+all'ultimo fotogramma sicuro e ricalcola fino ad ora, senza suoni doppi. Solo con un ping altissimo il ritardo
+sale (fino a 8 fotogrammi) per non dover ricalcolare troppo; la previsione va avanti al massimo 14 fotogrammi.
+Chi è troppo avanti rispetto all'altro rallenta di mezzo fotogramma. Ogni secondo, sui fotogrammi confermati, le
+due copie confrontano un'impronta dello stato: se diverge l'HUD mostra DESYNC. La fine dell'incontro conta solo
+quando è confermata da tutti e due. Il ping si vede in basso durante la partita (verde, giallo sopra 120 ms,
+rosso sopra 220 ms). Se l'avversario chiude o non risponde per 8
 secondi la partita si interrompe. Alcune reti (aziendali, alcuni operatori mobili) non permettono il
 collegamento diretto: in quel caso servirebbe un server TURN.
 
