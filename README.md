@@ -59,7 +59,10 @@ prima che i suoi due lottatori siano pronti compare una breve schermata di caric
 Come funziona: il gioco non ha un server. I giocatori si trovano tramite i relay pubblici della rete
 Nostr (libreria [Trystero](https://github.com/dmotz/trystero) 0.26.0, copiata in
 `assets/vendor/trystero-nostr.mjs` da `tools/vendor_trystero.sh` e scaricata solo quando si apre ONLINE),
-poi i due browser si collegano direttamente (WebRTC). Le due copie del gioco simulano la stessa partita
+poi i due browser si collegano direttamente (WebRTC). Tutti usano la stessa lista di dieci relay (`NETRELAYS` in
+`index.html`): senza, la libreria ne sceglierebbe 5 poco noti in base al nome del gioco. Nella schermata ONLINE si
+vede quanti giocatori ci sono e quanti sono in coda RANKED e FOR FUN (sono code separate: per giocare insieme va
+scelta la stessa); se l'avversario trovato non si collega entro 25 secondi si torna a cercare da soli. Le due copie del gioco simulano la stessa partita
 scambiandosi solo i comandi (lockstep): ogni secondo confrontano un'impronta dello stato e se diverge
 l'HUD mostra DESYNC. Il ritardo dei comandi si adatta alla connessione: i due browser si mandano un ping
 ogni 400 ms e prima di ogni incontro si sceglie un ritardo tra 3 e 12 fotogrammi (mezzo ping alto più 2:

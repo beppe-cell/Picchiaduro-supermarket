@@ -65,7 +65,7 @@ text-shadow:0 .25cqw 0 var(--y),0 .5cqw 0 var(--yd),-.45cqw 0 var(--r),.45cqw 0 
 #pfl{gap:.9cqw;min-width:56cqw;max-height:22cqw;overflow-y:auto}.pf{display:flex;align-items:center;gap:1.4cqw;width:100%;font-size:1.5cqw}.pf span{flex:1;text-align:left}.pf i{font-style:normal;color:var(--y);font-size:1.2cqw}
 .pf .b{min-width:0;font-size:1.2cqw;padding:.7cqw 1.2cqw}.pf.on span{color:var(--y)}#s-prof .row .b,#s-pform .row .b{min-width:16cqw;font-size:1.5cqw}
 #on-c{font-size:3cqw;color:var(--y);letter-spacing:.6cqw;text-shadow:.25cqw .25cqw 0 #000}#on-rk{font-size:1.3cqw;color:#fff}
-#on-cnt{position:absolute;top:.8cqw;left:1.5cqw;font-size:1.1cqw;color:#fff;background:rgba(5,8,20,.75);border:.3cqw solid var(--y);outline:.25cqw solid #000;padding:.6cqw 1.1cqw;text-shadow:.2cqw .2cqw 0 #000}#on-cnt b{color:#9fe89f}#on-cnt i{display:inline-block;width:1cqw;height:1cqw;border-radius:50%;background:#5fdc5f;margin-right:.8cqw;box-shadow:0 0 .6cqw #5fdc5f;animation:bl 1.4s steps(2) infinite}
+#on-cnt{position:absolute;top:.8cqw;left:1.5cqw;font-size:1.1cqw;color:#fff;background:rgba(5,8,20,.75);border:.3cqw solid var(--y);outline:.25cqw solid #000;padding:.6cqw 1.1cqw;text-shadow:.2cqw .2cqw 0 #000}#on-cnt b{color:#9fe89f}#on-cnt small{font-size:inherit;color:#cfd6ff}#on-cnt i{display:inline-block;width:1cqw;height:1cqw;border-radius:50%;background:#5fdc5f;margin-right:.8cqw;box-shadow:0 0 .6cqw #5fdc5f;animation:bl 1.4s steps(2) infinite}
 /* etichetta NEW RANKED sopra il pulsante ONLINE del menu */
 .newtag{position:absolute;top:-.5cqw;left:-1.8cqw;background:var(--y);color:#1a1200;font-size:.72cqw;line-height:1;padding:.35cqw .55cqw;border:.18cqw solid #000;box-shadow:0 .25cqw 0 #000;text-shadow:none;white-space:nowrap;pointer-events:none;transform:rotate(-8deg);transform-origin:center;animation:ntag .55s ease-in-out infinite alternate}
 @keyframes ntag{from{transform:rotate(-8deg) scale(1);filter:brightness(1)}to{transform:rotate(-4deg) scale(1.15) translateY(-.2cqw);filter:brightness(1.25)}}
@@ -216,7 +216,7 @@ TOR=[...reg,...BOSSES.map(ix)];TLV=[...reg.map((_,i)=>i<reg.length/2?2:3),...BOS
 /* sprite dei personaggi: 1 riga per animazione in assets/characters/<nome>/, corpo in piedi normalizzato a 400px, piedi sul bordo inferiore, rivolti a destra.
    n = frame per animazione; pj = proiettile dello speciale (pjn frame); spT = soglie (tick) dei frame dello speciale se diverse dallo standard.
    hit/win sono opzionali: se mancano si usa la posa idle (inclinata quando colpito). */
-const SPRB=400,VER=67,SPRSET={
+const SPRB=400,VER=68,SPRSET={
 BEPPE:{d:'beppe',n:{idle:4,walk:4,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:3,ko:1,win:2},pj:'pallet',pjn:1,pjw:50,pjh:39.3,pjo:[62,-84],spT:[6,11]},
 MATTEO:{d:'matteo',n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:3,ko:1,win:3},pj:'matteo-cart',pjn:3,pjf:0,pjt:1,pjh:71.3,pjy:-40.8,spT:[5,11]},
 VLAD:{d:'vlad',sc:1.05,n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:2,ko:1,win:2},pj:'vlad-spray',pjn:3,pjs:.6,pjo:[33.8,-83.5],pji:1,spT:[5,11]},
@@ -817,13 +817,33 @@ sfx('ui');if(first){sh('s-menu');return}fillProf();sh('s-prof')};
 /* giocatori online: chi e' nella sezione ONLINE (o gioca online) sta nella stanza 'presenza' e conta chi
    c'e' dentro, se stesso compreso. Si entra aprendo ONLINE e si esce tornando al menu */
 const PRES={room:null,peers:new Set()};
-function presDraw(){const e=$('#on-cnt');if(e)e.innerHTML=PRES.room?'<i></i>GIOCATORI ONLINE: <b>'+(PRES.peers.size+1)+'</b>':'<i></i>GIOCATORI ONLINE: ...'}
+function presDraw(){const e=$('#on-cnt');if(!e)return;if(!PRES.room){e.innerHTML='<i></i>GIOCATORI ONLINE: ...';return}
+const v=[...PRES.peers.values(),presMe()],n=k=>v.filter(x=>x==k).length;
+e.innerHTML='<i></i>GIOCATORI ONLINE: <b>'+v.length+'</b>'+(n('rank')||n('fun')?'<small> · IN CODA RANKED <b>'+n('rank')+'</b> · FOR FUN <b>'+n('fun')+'</b></small>':'')}
 function presOn(){presDraw();if(PRES.room||presOn.go)return;presOn.go=1;netLib().then(L=>{presOn.go=0;if(PRES.room||!presOn.want)return;
- const r=PRES.room=L.joinRoom({appId:NETAPP},'presenza-v1');PRES.peers=new Set();
- r.onPeerJoin=p=>{if(PRES.room===r){PRES.peers.add(p);presDraw()}};r.onPeerLeave=p=>{if(PRES.room===r){PRES.peers.delete(p);presDraw()}};presDraw()},()=>{presOn.go=0})}
-function presOff(){presOn.want=0;if(PRES.room){const r=PRES.room;PRES.room=null;PRES.peers.clear();try{r.leave()}catch(e){}}}
+ const r=PRES.room=netJoin(L,'presenza-v1');PRES.peers=new Map();const st=PRES.act=r.makeAction('st');
+ r.onPeerJoin=p=>{if(PRES.room===r){PRES.peers.set(p,'');presDraw();nsend(st,{s:presMe()},p)}};
+ r.onPeerLeave=p=>{if(PRES.room===r){PRES.peers.delete(p);presDraw()}};
+ st.onMessage=(d,{peerId:p})=>{if(PRES.room===r&&d&&typeof d.s=='string'&&d.s.length<8){PRES.peers.set(p,d.s);presDraw()}};presDraw()},()=>{presOn.go=0})}
+/** cosa sto facendo, per gli altri nella stanza presenza: in coda RANKED, in coda FOR FUN, in partita, nel menu */
+const presMe=()=>NET&&NET.lobby?(NET.rkq?'rank':'fun'):NET&&(NET.peer||NET.room)?'play':'menu';
+/** manda il mio stato agli altri (quando cambia) */
+function presTell(){const s=presMe();if(PRES.room&&PRES.act&&s!==presTell.s){presTell.s=s;nsend(PRES.act,{s},undefined)}presDraw()}
+function presOff(){presOn.want=0;presTell.s=null;if(PRES.room){const r=PRES.room;PRES.room=null;PRES.act=null;PRES.peers.clear();netQuit(r)}}
 const ONT='RANKED: set al meglio di 3 incontri, conta per punti e classifica. PARTITA FOR FUN: senza punti.';
 const NETV=2,NETD=6,NETH=60,NETAPP='superrissa-picchiaduro',NETK='lrudbpkhs',NETTO=8000;
+/* server Nostr per trovarsi: tutti usano la stessa lista intera (senza, la libreria ne sceglie 5 a caso
+   tra server poco noti in base al nome del gioco). Bastano uno o due server vivi in comune */
+const NETRELAYS=['wss://nos.lol','wss://relay.damus.io','wss://nostr.mom','wss://relay.primal.net',
+ 'wss://relay.nostr.dev.br','wss://nostr.stakey.net','wss://relay.flashapp.me','wss://nostrcity-club.fly.dev',
+ 'wss://nostr.christiansass.de','wss://relay.nostr.blockhenge.com'];
+const NETCFG=window.NETCFG/* solo per i test */||{appId:NETAPP,relayConfig:{urls:NETRELAYS}};
+/** stanza Trystero; la ricerca puo' essere ripresa subito dopo averla lasciata: si riusa la stanza ancora aperta */
+const NETROOMS={};
+function netJoin(L,id){const o=NETROOMS[id];if(o&&o.leaving){clearTimeout(o.leaving);o.leaving=0;return o.room}
+const room=L.joinRoom(NETCFG,id);NETROOMS[id]={room};return room}
+function netQuit(room,ms){for(const[id,o]of Object.entries(NETROOMS))if(o.room===room){clearTimeout(o.leaving);
+ const go=()=>{if(NETROOMS[id]===o){delete NETROOMS[id];try{room.leave()}catch(e){}}};if(ms)o.leaving=setTimeout(go,ms);else go();return}try{room.leave()}catch(e){}}
 let NET=null,NETLIB=null;
 const netEnc=i=>{let v=0;for(let j=0;j<9;j++)if(i[NETK[j]])v|=1<<j;return v};
 const netDec=v=>{const i={};for(let j=0;j<9;j++)if(v>>j&1)i[NETK[j]]=1;return i};
@@ -834,7 +854,7 @@ function netSt(t){$('#on-st').textContent=t}
 function netUI(busy,code){$('#on-rk').innerHTML='RANKED: '+rkBadge(SAVE.rk);$('#on-m').style.display=busy?'none':'';$('#on-i').style.display=busy?'none':'';
 $('#on-code').style.display=code?'':'none';if(code)$('#on-c').textContent=code;$('#on-x').textContent=busy?'ANNULLA':'INDIETRO';focusFirst()}
 /** esce da stanze e ricerca */
-function netLeave(){if(!NET)return;const n=NET;clearInterval(n.pi);if(n.rk&&n.set&&!n.rkDone)rkEnd(n,false);/* lasciare un set classificato = sconfitta */NET=null;clearTimeout(n.nx);clearInterval(n.ti);clearTimeout(n.to);for(const r of[n.lobby,n.room])try{r&&r.leave()}catch(e){}}
+function netLeave(){if(!NET)return;const n=NET;clearInterval(n.pi);if(n.rk&&n.set&&!n.rkDone)rkEnd(n,false);/* lasciare un set classificato = sconfitta */NET=null;clearTimeout(n.nx);clearInterval(n.ti);clearTimeout(n.to);for(const r of[n.lobby,n.room])if(r)netQuit(r);setTimeout(presTell,0)}
 /** errore o fine collegamento: torna alla schermata ONLINE con un messaggio */
 function netFail(t){netLeave();G=null;pl=false;sh('s-online');netUI(0);netSt(t)}
 /** apre il collegamento e poi fa fn. Mentre la libreria si scarica si vede subito COLLEGAMENTO... con ANNULLA;
@@ -849,19 +869,22 @@ netOpen.tok=0;
    distanza accettata parte da 150 e cresce di 10 al secondo di attesa); con RKNEAR=0, finche' i giocatori
    sono pochi, va bene chiunque sia in coda */
 const RKNEAR=0;
-function netCerca(rk){netOpen(()=>{const N=NET,me=SAVE.rk.e,lobby=N.lobby=N.L.joinRoom({appId:NETAPP},(rk?'rank-v':'lobby-v')+NETV),t0=performance.now(),pre=rk?'k-':'m-';
+function netCerca(rk){netOpen(()=>{const N=NET,me=SAVE.rk.e,lobby=N.lobby=netJoin(N.L,(rk?'rank-v':'lobby-v')+NETV),t0=performance.now(),pre=rk?'k-':'m-';
 const win=()=>150+(performance.now()-t0)/100,near=e=>!rk||!RKNEAR||Math.abs((typeof e=='number'?e:1000)-me)<=win();
-const st=()=>netSt(rk&&RKNEAR?'RANKED: CERCO UN AVVERSARIO TRA '+Math.max(0,me-win()|0)+' E '+(me+win()|0)+' PUNTI...':rk?'RANKED: CERCO UN AVVERSARIO...':'CERCO UN AVVERSARIO...');
+N.rkq=!!rk;presTell();
+const other=()=>{const v=[...PRES.peers.values()],k=v.filter(x=>x==(rk?'fun':'rank')).length;return k?' · '+k+' IN CODA '+(rk?'FOR FUN':'RANKED')+': per giocare con loro scegliete la stessa modalità':''};
+const st=()=>{const q=Object.keys(lobby.getPeers?lobby.getPeers():{}).length;
+ netSt((rk&&RKNEAR?'RANKED: CERCO UN AVVERSARIO TRA '+Math.max(0,me-win()|0)+' E '+(me+win()|0)+' PUNTI...':rk?'RANKED: CERCO UN AVVERSARIO...':'FOR FUN: CERCO UN AVVERSARIO...')+(q?' ('+q+' IN CODA CON TE)':'')+other())};
 netUI(1);st();
 const ann=lobby.makeAction('ann'),prop=lobby.makeAction('prop'),free=()=>NET===N&&!N.room&&!N.pend;
 const say=p=>{if(free())ann.send({v:NETV,e:me},p?{target:p}:undefined)};
-lobby.onPeerJoin=p=>say(p);N.ti=setInterval(()=>{say();if(rk&&free())st()},3000);
+lobby.onPeerJoin=p=>{say(p);if(free())st()};lobby.onPeerLeave=()=>{if(free())st()};N.ti=setInterval(()=>{say();if(free())st()},3000);N.retry=()=>netCerca(rk);
 ann.onMessage=(d,{peerId:p})=>{if(!free()||!d||d.v!==NETV||!(N.me<p)||!near(d.e))return;
- N.pend=p;N.code=netCode();prop.send({code:N.code,e:me},{target:p});N.to=setTimeout(()=>{if(N.pend==p)N.pend=null},5000)};
+ N.pend=p;N.code=netCode();nsend(prop,{code:N.code,e:me},p);N.to=setTimeout(()=>{if(N.pend==p)N.pend=null},5000)};
 prop.onMessage=(d,{peerId:p})=>{if(NET!==N||!d)return;
  if(d.ok){if(N.pend==p&&d.code==N.code)netMatch(pre+d.code,'TROVATO! COLLEGAMENTO...',0,rk);return}
  if(d.no){if(N.pend==p)N.pend=null;return}
- if(d.code&&free()&&near(d.e)){prop.send({ok:1,code:d.code},{target:p});netMatch(pre+d.code,'TROVATO! COLLEGAMENTO...',0,rk)}else prop.send({no:1},{target:p})}})}
+ if(d.code&&free()&&near(d.e)){nsend(prop,{ok:1,code:d.code},p);netMatch(pre+d.code,'TROVATO! COLLEGAMENTO...',0,rk)}else nsend(prop,{no:1},p)}})}
 /* stanza privata */
 function netCrea(){netOpen(()=>{const c=netCode();netMatch('r-'+c,'Manda questo codice all\'avversario e aspetta che entri:',c)})}
 function netEntra(){const c=$('#on-i').value.trim().toUpperCase();if(!/^[A-Z]{4}$/.test(c)){netSt(c?'Il codice è di 4 lettere.':'Scrivi qui sopra il codice di 4 lettere che ti ha mandato l\'avversario.');$('#on-i').focus();return}
@@ -869,9 +892,10 @@ netOpen(()=>netMatch('r-'+c,'ENTRO NELLA STANZA '+c+'...'))}
 /** stanza della partita (dalla ricerca o col codice): saluto, scelta dei dipendenti, partite */
 function netMatch(id,msg,code,rk){const N=NET;clearInterval(N.ti);N.pend=null;N.rk=!!rk;
 /* la ricerca si chiude un po' dopo: cosi' la risposta 'ok' fa in tempo a partire */
-if(N.lobby){const l=N.lobby;N.lobby=null;setTimeout(()=>{try{l.leave()}catch(e){}},2000)}
-const room=N.room=N.L.joinRoom({appId:NETAPP},id);sh('s-online');netUI(1,code);netSt(msg);
-if(!code){clearTimeout(N.to);N.to=setTimeout(()=>{if(NET===N&&!N.peer)netFail('Nessuna risposta: riprova.')},15000)}
+if(N.lobby){const l=N.lobby;N.lobby=null;netQuit(l,2000)}
+const room=N.room=netJoin(N.L,id);presTell();sh('s-online');netUI(1,code);netSt(msg);
+if(!code){clearTimeout(N.to);N.to=setTimeout(()=>{if(NET!==N||N.peer)return;/* l'avversario trovato non si e' collegato: si torna a cercare da soli */
+ const re=N.retry;netLeave();if(re&&$('#s-online').classList.contains('on')){re();netSt('Collegamento non riuscito con l\'avversario trovato: cerco ancora...')}else netFail('Nessuna risposta: riprova.')},25000)}
 const A=k=>room.makeAction(k);N.a={hi:A('hi'),rdy:A('rdy'),go:A('go'),inp:A('in'),hs:A('hs'),re:A('re'),lb:A('lb'),pg:A('pg')};N.rtt=[];N.rx={};
 const mine=p=>{if(!N.peer){N.peer=p;N.host=N.me<p}return p==N.peer};
 room.onPeerJoin=p=>{if(NET!==N||(N.peer&&N.peer!=p))return;/* stanza gia' in uso: il terzo resta fuori */mine(p);N.a.hi.send({v:NETV,n:SAVE.n,rk:N.rk?1:0,e:SAVE.rk.e},{target:p});rkShare(30).then(t=>{if(NET===N&&t.length)N.a.lb.send(t,{target:p})})};
@@ -899,7 +923,7 @@ if(N.rtt.length<4&&!N.gw){/* aspetta qualche misura del ping (al massimo 2 s) pe
 if(N.rtt.length<4&&performance.now()-N.gw<2000){clearTimeout(N.gt);N.gt=setTimeout(netGo,200);return}
 const P={m:N.m+1,d:netDelay(),ar:Math.random()*ARENAS.length|0,zp:Math.max(N.my.zp||1,N.prdy.zp||1),a:N.my,b:N.prdy};N.a.go.send(P);netStart(P)}
 /** invio che non lascia errori in giro se l'altro se n'e' gia' andato (Trystero: send restituisce una Promise) */
-function nsend(a,d,p){try{const r=a.send(d,{target:p});if(r&&r.catch)r.catch(()=>{})}catch(e){}}
+function nsend(a,d,p){try{const r=a.send(d,p?{target:p}:undefined);if(r&&r.catch)r.catch(()=>{})}catch(e){}}
 /** ping del collegamento (ms): il valore alto tra gli ultimi (la variazione conta), null se non ancora misurato */
 function netPing(N,q){if(!N||!N.rtt||!N.rtt.length)return null;const a=N.rtt.slice().sort((x,y)=>x-y);return a[Math.min(a.length-1,Math.floor(a.length*q))]}
 /** fotogrammi di ritardo dei comandi per il prossimo incontro (lo sceglie l'host) */
