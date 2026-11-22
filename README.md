@@ -137,6 +137,7 @@ collegamento diretto: in quel caso servirebbe un server TURN.
 | COMINZ | sprite disegnati (`assets/characters/cominz/`) | Falce e martello (corpo a corpo) |
 | ASTREA (mini boss) | sprite disegnati (`assets/characters/astrea/`) | Rotolo di scontrino che vola e si srotola (proiettile) |
 | PORTE | sprite disegnati (`assets/characters/porte/`) | Lancio della scatola (proiettile che ruota) |
+| KARMA | sprite disegnati (`assets/characters/karma/`) | Lancio della cassa (registratore di cassa che vola ruotando e perde monete) |
 
 Skin in vendita nel negozio: **MATTEO SHALOM** (1500 cedolini, `assets/characters/matteo/skin-israele/`) e
 **LUIS EL MARIACHI** (1500 cedolini, `assets/characters/luis/skin-mariachi/`: speciale con le maracas, stessa onda)
@@ -193,6 +194,7 @@ assets/
     cominz/                    cominz-<animazione>.png (speciale corpo a corpo con falce e martello)
     astrea/                    astrea-<animazione>.png, astrea-receipt.png (rotolo di scontrino)
     porte/                     porte-<animazione>.png, porte-box.png (scatola che ruota)
+    karma/                   karma-<animazione>.png, karma-cassa.png (proiettile); sorgenti/: tavola, foglio-A/B/C, speciale, occhiali-foto
       sorgenti/                tavola IMG_5494, fogli pose IMG_5495–5497, speciale IMG_5498
     luis/skin-mariachi/        skin LUIS EL MARIACHI; sorgenti/: tavola IMG_5500, fogli IMG_5501–5504
                                (fuori griglia: pose scelte a mano con tools/build_figure_map.py)
@@ -212,6 +214,7 @@ tools/
   build_hela_special.py      speciale di HELA: busto col telefono sulle gambe della guardia, onda della risata
   build_fabio_special.py       speciale di FABIO: pose col sollevatore (forche a meta' montante) e onda d'urto
   fix_zanna_mask.py             toglie la mascherina a ZANNA: trapianta la testa senza mascherina nelle pose che l'avevano
+  build_throw_special.py       speciale "lancio di un oggetto" da un foglio a due righe (pose + oggetto in volo)
   build_vlad_pump_special.py   speciale e manubrio della skin VLAD IN PUMP
   rename_sign.py               riscrive il nome del gioco sull'insegna appesa negli sfondi delle arene
   replace_g_logo.py            sostituisce la G del logo sulle divise con la S di SUPERRISSA in tutti gli sprite
