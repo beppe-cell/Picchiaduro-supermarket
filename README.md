@@ -75,6 +75,33 @@ rosso sopra 220 ms). Se l'avversario chiude o non risponde per 8
 secondi la partita si interrompe. Alcune reti (aziendali, alcuni operatori mobili) non permettono il
 collegamento diretto: in quel caso servirebbe un server TURN.
 
+## Sicurezza
+
+- **Cosa viene pubblicato**: il workflow mette sul sito solo `index.html` e gli asset che il gioco carica (WebP,
+  sfondi, librerie, font, licenze); sorgenti, PNG di lavoro, documenti e strumenti restano solo nel repository
+  (che però è pubblico: niente foto o dati personali nei commit).
+- **Content-Security-Policy** in `index.html`: codice, stili e font solo dal sito; rete solo verso i relay `wss:`.
+- **Font** Press Start 2P servito dal sito (`assets/fonts/`, licenza OFL): nessuna richiesta a Google.
+- **Dati dagli altri giocatori** (online): i nomi passano da `cleanName` (solo lettere, numeri, spazi) e tutto
+  ciò che finisce in HTML da `esc`; personaggio, skin, arena e comandi ricevuti si controllano (`netPick`,
+  controlli sui messaggi `in`/`go`); in RANKED non si accettano mini boss e boss; messaggi al massimo 256 KB.
+- **Classifica**: righe firmate (Nostr, Schnorr) e verificate prima di mostrarle; la firma impedisce di cambiare
+  la riga di un altro, non di truccare la propria (i punti si calcolano nel browser di ciascuno).
+- **Librerie** (`assets/vendor/`): versioni fisse, ricostruibili con `tools/vendor_trystero.sh` e
+  `tools/vendor_nostr.sh` (stesso file byte per byte); nessun `eval`, nessun accesso a cookie o dati salvati;
+  le uniche connessioni sono i relay Nostr e i server STUN di Google e Cloudflare.
+- **Niente segreti nei commit** (il repository è pubblico: i bot cercano chiavi e file `.env` in pochi minuti):
+  `tools/check_secrets.py` blocca il commit se trova file sensibili (`.env`, chiavi, credenziali), chiavi o token
+  riconoscibili (GitHub, OpenAI, Anthropic, AWS, Google, ...), foto con GPS o dati della fotocamera, file oltre
+  20 MB. Parte da solo: come hook di git (`.githooks/pre-commit`; da attivare una volta per clone con
+  `git config core.hooksPath .githooks`), come hook di Claude Code prima di ogni `git commit`
+  (`.claude/hooks/check-secrets.sh`) e nella pubblicazione del sito, che si ferma se trova qualcosa. `.gitignore`
+  esclude già `.env*`, chiavi e credenziali. Consigliato anche: GitHub, Settings → Code security → attivare
+  *Secret Protection* e *Push protection* (gratis per i repository pubblici).
+- **Limiti noti**: l'online è da giocatore a giocatore, quindi l'avversario vede il tuo indirizzo IP (come in
+  ogni gioco P2P); profili, cedolini e punti stanno nel browser e chi sa usare gli strumenti del browser può
+  modificarli.
+
 ## Profili, cedolini e negozio
 
 - **Profili**: al primo avvio si sceglie un nome. Ogni profilo ha i suoi cedolini e le sue skin, salvati
@@ -194,7 +221,7 @@ assets/
     cominz/                    cominz-<animazione>.png (speciale corpo a corpo con falce e martello)
     astrea/                    astrea-<animazione>.png, astrea-receipt.png (rotolo di scontrino)
     porte/                     porte-<animazione>.png, porte-box.png (scatola che ruota)
-    karma/                   karma-<animazione>.png, karma-cassa.png (proiettile); sorgenti/: tavola, foglio-A/B/C, speciale, occhiali-foto
+    karma/                   karma-<animazione>.png, karma-cassa.png (proiettile); sorgenti/: tavola, foglio-A/B/C, speciale
       sorgenti/                tavola IMG_5494, fogli pose IMG_5495–5497, speciale IMG_5498
     luis/skin-mariachi/        skin LUIS EL MARIACHI; sorgenti/: tavola IMG_5500, fogli IMG_5501–5504
                                (fuori griglia: pose scelte a mano con tools/build_figure_map.py)
