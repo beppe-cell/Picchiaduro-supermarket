@@ -33,14 +33,19 @@ jobs:
         with:
           enablement: true
 
-      # si pubblica solo cio' che il gioco carica: index.html e gli asset (WebP, sfondi JPEG, librerie,
+      # si pubblica solo cio' che il gioco carica: index.html, css/, src/ e gli asset (WebP, sfondi JPEG, librerie,
       # font, licenze), senza sorgenti, PNG di lavoro, documenti e strumenti del repository
       - name: Prepare game files only
         run: |
           mkdir -p _site
           cp index.html _site/
+          cp -r css src _site/
           find assets -path '*/sorgenti' -prune -o -type f \( -name '*.webp' -o -name '*.jpeg' -o -name '*.mjs' -o -name '*.woff2' -o -name 'LICENSES.txt' \) -print |
             while read -r f; do mkdir -p "_site/$(dirname "$f")"; cp "$f" "_site/$f"; done
+          # ogni pubblicazione ha la sua etichetta sui file di codice: il browser non mescola versioni vecchie e nuove
+          V="${GITHUB_SHA::8}"
+          sed -i -E "s#(src=\"src/[^\"?]+\.js)\"#\1?v=$V\"#g; s#href=\"css/style\.css\"#href=\"css/style.css?v=$V\"#" _site/index.html
+          grep -c "?v=$V" _site/index.html
           echo "file pubblicati: $(find _site -type f | wc -l)"
 
       - name: Upload site artifact
