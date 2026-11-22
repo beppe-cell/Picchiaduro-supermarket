@@ -6,9 +6,14 @@ Each agent owns a specific domain, enforcing separation of concerns and quality.
 ## Technology Stack
 
 - **Engine**: Web (no bundler: the files as they are — HTML5 Canvas 2D and Web Audio, no library)
-- **Language**: JavaScript (plain, in `index.html`)
+- **Language**: JavaScript (plain scripts, no modules, loaded in order by `index.html`; shared global scope)
+- **Code layout**: `index.html` = markup + `<script>` list; `css/style.css`; `src/core/` (base, loader, audio),
+  `src/characters/` (ONE FILE PER CHARACTER registered with `character({...})`, see `registry.js`; their order
+  in `index.html` is the character list order used online — append only), `src/game/` (rules, AI, torneo,
+  economia), `src/render/`, `src/ui/`, `src/save/` (profili), `src/net/` (online, rollback, ranked).
+  To change a character read only its file; open other folders only when the task is about them.
 - **Version Control**: Git with trunk-based development
-- **Build System**: none — `index.html` and `assets/` are served as static files (GitHub Pages, `.github/workflows/deploy-pages.yml`); no npm, no `package.json`
+- **Build System**: none — `index.html`, `css/`, `src/` and `assets/` are served as static files (GitHub Pages, `.github/workflows/deploy-pages.yml`); no npm, no `package.json`
 - **Asset Pipeline**: sprite sheets `assets/characters/<name>/<name>-<anim>.png` generated from the source boards in `sorgenti/` (magenta background) by `tools/build_*_sprites.py` (Python: Pillow, NumPy, SciPy); backgrounds in `assets/backgrounds/`
 
 > **Note**: the Web engine reference (`docs/engine-reference/web/`) pins the Vite + TypeScript

@@ -23,14 +23,14 @@ prima che i suoi due lottatori siano pronti compare una breve schermata di caric
 - **Arcade**: un incontro contro un collega a caso, al meglio dei 3 round.
 - **Torneo**: prima tutti i colleghi con la felpa rossa tranne quello scelto (in ordine casuale), poi i
   mini boss FABIO, ANGEL, ASTREA ed HELA e per finire il boss BIGBOSS. Mini boss e boss vanno sempre affrontati,
-  anche se li hai scelti tu (tabelle `BOSSES` e `TBL` in `index.html`).
+  anche se li hai scelti tu (campo `boss` nei file in `src/characters/`).
 - **Online**: sfida un altro giocatore in rete (vedi sotto).
 - **Impostazioni**: volume di musica ed effetti, controlli touch, vibrazione.
 
 ## Online (senza server)
 
 - **RANKED** (online competitivo): abbina chiunque sia in coda RANKED (per ora i giocatori sono pochi; con
-  `RKNEAR=1` in `index.html` si abbinano solo punti vicini: distanza da 150 punti che si allarga di 10 al
+  `RKNEAR=1` in `src/net/online.js` si abbinano solo punti vicini: distanza da 150 punti che si allarga di 10 al
   secondo di attesa). Si gioca un **set al meglio di 3 incontri**, ognuno al
   meglio di 3 round; tra un incontro e l'altro si riparte da soli con gli stessi dipendenti. Regole uguali per
   tutti: solo i dipendenti normali (niente mini boss e boss, anche se comprati), con **velocità e potenza uguali
@@ -45,7 +45,7 @@ prima che i suoi due lottatori siano pronti compare una breve schermata di caric
     Divisione e punti si vedono nella schermata ONLINE e nei profili; punti e set sono nel codice di salvataggio.
   - **CLASSIFICA GLOBALE**: i migliori 50 di tutti i giocatori, con divisione, punti, set vinti/persi e
     personaggio più usato. Non c'è un server nostro: ogni giocatore pubblica la sua riga come evento Nostr
-    firmato (kind 30078) su sei relay pubblici (`RKR` in `index.html`), che la conservano; aprendo la
+    firmato (kind 30078) su sei relay pubblici (`RKR` in `src/net/ranked.js`), che la conservano; aprendo la
     classifica si leggono le righe di tutti da quei relay, e a fine set la propria si ripubblica. Ognuno
     tiene anche una copia per quando la rete manca. Firma e verifica con `assets/vendor/nostr-pure.mjs`
     (nostr-tools 2.25.4, da `tools/vendor_nostr.sh`). La firma impedisce di modificare la riga di un altro,
@@ -110,7 +110,7 @@ collegamento diretto: in quel caso servirebbe un server TURN.
 - **Codice di salvataggio**: PROFILI > IL MIO CODICE mostra un codice (`SPR1-...`) da copiare;
   sull'altro dispositivo PROFILI > INSERISCI CODICE (o HO UN CODICE al primo avvio) ricrea il profilo.
   Il gioco non ha un server: senza il codice, cancellare i dati del browser cancella i progressi.
-- **Cedolini** (la moneta del gioco), a fine incontro, tabella `REW` in `index.html`:
+- **Cedolini** (la moneta del gioco), a fine incontro, tabella `REW` in `src/game/economia.js`:
 
   | Voce | Cedolini |
   |---|---|
@@ -122,7 +122,7 @@ collegamento diretto: in quel caso servirebbe un server TURN.
 
 - **Mini boss e boss da comprare**: FABIO, ANGEL, ASTREA, HELA e BIGBOSS si affrontano (in ARCADE e nel
   TORNEO) ma per sceglierli vanno comprati nel negozio con i cedolini: FABIO 2000, ANGEL 2500, ASTREA 3000,
-  HELA 4000, BIGBOSS 5000 (tabella `PRZ` in `index.html`); poi sono giocabili in tutte le modalità
+  HELA 4000, BIGBOSS 5000 (campo `price` nei file in `src/characters/`); poi sono giocabili in tutte le modalità
   (tranne RANKED, dove si usano solo i dipendenti normali). Chi li aveva già sbloccati li tiene.
 - **Negozio**: come la scelta del dipendente, un articolo per schermata (frecce, trascinamento o tasti
   ←/→): prima i mini boss e il boss da comprare (anteprima visibile, prezzo e COMPRA),
@@ -142,7 +142,7 @@ collegamento diretto: in quel caso servirebbe un server TURN.
    assets/characters/<nome>/skin-<id>` (aggiungi `--tieni-blu` se la skin ha parti blu, come kippah e
    stella di MATTEO SHALOM: altrimenti la pulizia delle linee guida azzurre le buca); vista per la selezione: aggiungi la tavola in `BOARDS` di
    `tools/build_fronts.py` (chiave `<nome>/skin-<id>`) e lancia `build_fronts.py <nome>/skin-<id>`.
-2. Aggiungi la skin in `SKINS` dentro `index.html`, es. `BEPPE:[{id:'natale',n:'BABBO BEPPE',p:400}]`
+2. Aggiungi la skin in `skins:[...]` nel file del personaggio (`src/characters/<nome>.js`), es. `{id:'natale',n:'BABBO BEPPE',p:1500}`
    (`n` nome nel negozio, `p` prezzo in cedolini; `ms` nome della speciale se la skin la cambia;
    `ov` valori di SPRSET da cambiare, es. il proiettile; `nf` se un'animazione ha un numero di fotogrammi
    diverso dall'originale, es. `nf:{fall:2,win:2}`) e aumenta `VER`.
@@ -271,8 +271,21 @@ tools/
    `<nome>-<animazione>.png`, frame affiancati a larghezza uguale, piedi sul bordo inferiore,
    personaggio in piedi alto circa 400 px.
 3. `python3 -B tools/to_webp.py` crea i `.webp` che il gioco carica davvero.
-4. Registra il personaggio in `SPRSET` dentro `index.html` (cartella, numero di frame per
-   animazione, proiettile) e aumenta `VER` per svuotare la cache dei browser.
+4. Crea `src/characters/<nome>.js` copiando un personaggio simile (per un lancio: `karma.js`; corpo a
+   corpo: `zanna.js`) e cambia nome, statistiche, sprite e speciale:
+   ```js
+   character({
+     n:'NOME', ms:'NOME DELLA SPECIALE', sp:1.5, pw:1,           // velocità e potenza
+     sprites:{d:'nome', n:{idle:1,walk:2,...}, pj:'nome-oggetto', pjn:3, pjh:25, pjy:-12, pjo:[40,-68], spT:[5,11]},
+     skins:[],            // facoltativo: skin in vendita
+     price:2000,          // facoltativo: si compra nel negozio
+     boss:{order:1,lv:4}  // facoltativo: mini boss del torneo (final:1 = boss finale)
+   })
+   ```
+5. Aggiungi `<script src="src/characters/<nome>.js"></script>` in `index.html` **in fondo all'elenco dei
+   personaggi** (l'ordine è quello dell'elenco e la partita online identifica i personaggi per posizione:
+   non spostare quelli esistenti), aumenta `VER` in `src/core/loader.js` e, se aggiungi un personaggio,
+   `NETV` in `src/net/online.js` (le versioni vecchie non si collegano alle nuove).
 
 Animazioni riconosciute: `idle`, `walk`, `punch`, `kick`, `heavy`, `special`, `jump`, `block`,
 `crouch`, `fall`, `ko`; facoltative `hit` (colpito) e `win` (vittoria).
