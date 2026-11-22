@@ -54,3 +54,9 @@ Unlicense: software di pubblico dominio (https://unlicense.org).
 == @noble/curves 2.0.1, @noble/hashes 2.0.1 ==
 MIT License, Copyright (c) 2022 Paul Miller (https://paulmillr.com)
 (stesso testo della licenza MIT riportato sopra)
+
+assets/fonts/press-start-2p-*.woff2 contengono:
+
+== Press Start 2P (CodeMan38), da Google Fonts ==
+SIL Open Font License 1.1 (https://openfontlicense.org): uso, copia e ridistribuzione liberi,
+anche insieme a un programma; il font non si vende da solo.

@@ -140,6 +140,23 @@ node_modules/
 *.key
 credentials.json
 secrets.json
+# altri file con chiavi o credenziali (controllati anche da tools/check_secrets.py prima di ogni commit)
+.env*
+!.env.example
+*.p12
+*.pfx
+*.jks
+*.keystore
+id_rsa*
+id_ed25519*
+*.ovpn
+.npmrc
+.netrc
+.pypirc
+.git-credentials
+*credentials*.json
+service-account*.json
+*.tfstate
 
 # === Large Binary Assets (use Git LFS instead) ===
 # Uncomment and configure with Git LFS for your project:
@@ -173,3 +190,6 @@ $RECYCLE.BIN/
 # the project root. Anchored so a reports/ folder elsewhere stays tracked.
 /reports/
 /test-results/
+
+# sito preparato dal workflow di pubblicazione
+_site/
