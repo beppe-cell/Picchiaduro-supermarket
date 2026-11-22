@@ -28,6 +28,7 @@ BOARDS = {   # personaggio -> tavola di riferimento
     'cominz': 'cominz/sorgenti/tavola.jpeg',
     'astrea': 'astrea/sorgenti/tavola.jpeg',
     'porte': 'porte/sorgenti/tavola.jpeg',
+    'karma': 'karma/sorgenti/tavola.jpeg',
     'matteo/skin-israele': 'matteo/skin-israele/sorgenti/IMG_5489.jpeg',
     'luis/skin-mariachi': 'luis/skin-mariachi/sorgenti/IMG_5500.jpeg',
     'vlad/skin-pump': 'vlad/skin-pump/sorgenti/tavola.jpeg',
