@@ -7,10 +7,15 @@ Each agent owns a specific domain, enforcing separation of concerns and quality.
 
 - **Engine**: Web (no bundler: the files as they are — HTML5 Canvas 2D and Web Audio, no library)
 - **Language**: JavaScript (plain scripts, no modules, loaded in order by `index.html`; shared global scope)
-- **Code layout**: `index.html` = markup + `<script>` list; `css/style.css`; `src/core/` (base, loader, audio),
-  `src/characters/` (ONE FILE PER CHARACTER registered with `character({...})`, see `registry.js`; their order
-  in `index.html` is the character list order used online — append only), `src/game/` (rules, AI, torneo,
-  economia), `src/render/`, `src/ui/`, `src/save/` (profili), `src/net/` (online, rollback, ranked).
+- **Code layout**: `index.html` = markup + `<script>` list; `css/style.css`; `src/core/` (base, loader, audio,
+  input, loop), `src/characters/` (ONE FILE PER CHARACTER registered with `character({...})`, see `registry.js`;
+  specials are Strategy classes built with `lancio()` / `corpoACorpo()` in `specials.js`; their order
+  in `index.html` is the character list order used online — append only), `src/game/` (fighter = `Fighter`
+  class + AI, partita, arena, torneo, economia), `src/render/` (render, sprite, luci), `src/ui/` (schermi,
+  selezione, negozio, profili, impostazioni), `src/save/` (profili), `src/net/` (online, rollback, ranked),
+  `src/main.js` (startup). Match state stays plain data (rollback copies it); behavior lives in classes.
+  The simulation runs at a fixed 60 steps/s with no delta time: a deliberate exception to the gameplay-code
+  delta-time rule, required so rollback replays identically on both devices.
   To change a character read only its file; open other folders only when the task is about them.
 - **Version Control**: Git with trunk-based development
 - **Build System**: none — `index.html`, `css/`, `src/` and `assets/` are served as static files (GitHub Pages, `.github/workflows/deploy-pages.yml`); no npm, no `package.json`
