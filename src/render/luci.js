@@ -1,3 +1,4 @@
+/* render/luci.js - Luci e atmosfera (solo estetica): polvere, nebbia, neon, ombre. */
 /* ---------- luci e atmosfera (solo estetica) ----------
    I lottatori vengono disegnati su un livello a parte e "illuminati" come l'arena: luce fredda dei
    neon dall'alto, dominante verde-azzurra, riflesso caldo della macchia di luce sul pavimento e
@@ -43,44 +44,3 @@ c.save();c.setTransform(1,0,0,1,0,0);c.drawImage(LYR,bx0,by0,bw,bh,bx0,by0,bw,bh
 /* ombra morbida sotto i piedi */
 function shadow(f){const k=Math.max(.35,1+f.y/90);c.save();c.imageSmoothingEnabled=true;c.globalAlpha=.32*k;c.fillStyle='#000';
 c.beginPath();c.ellipse(f.x,FY+1,19*k,3.6*k,0,0,6.283);c.fill();c.restore()}
-function render(){c.save();
-const WH=cv.height/2;
-c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,cv.width,cv.height);c.imageSmoothingEnabled=false;
-let s2=2,tx=0,ty=0;const shx=G&&G.sh>0?(Math.random()-.5)*G.sh*.6:0,shy=G&&G.sh>0?(Math.random()-.5)*G.sh*.3:0;
-if(WH>352){
-/* verticale: camera zoomata (ZP), piedi sopra il pannello dei comandi */
-s2=2*ZP;const gyRef=cv.height*.85,gy=$('#tc').classList.contains('on')?Math.min(gyRef,cv.height-.52*cv.width):gyRef;ty=gy-FY*s2;
-if(!G||G.ph=='intro'||Math.abs(ARH-(FY+ty/s2+2)/.87)>40)arenaFit((FY+ty/s2+2)/.87)}/* si ridimensiona solo fuori dal combattimento o se cambia molto (rotazione) */
-else{
-/* orizzontale: arena alta 192 con margini sopra/sotto se lo schermo e' piu' alto */
-const bot=WH>192?Math.min(WH-192,WH*.16):0,top=WH-192-bot;ty=2*top;if(ARH!=208)arenaFit(208)}
-/* telecamera orizzontale: segue il punto medio dei lottatori senza uscire dal fondale */
-const hw=352/s2;CAMHW=hw;if(!G)CAMX=176;else CAMX=Math.max(ARL+hw,Math.min(ARR-hw,CAMX));if(ARR-ARL<2*hw)CAMX=176;
-tx=352-CAMX*s2;
-c.setTransform(s2,0,0,s2,tx,ty);c.imageSmoothingEnabled=false;c.translate(shx,shy);
-/* fondale nel mondo: macchia di luce sul pavimento (87% dell'immagine) sotto i piedi; sopra e sotto
-   l'immagine il colore medio del soffitto e del pavimento */
-if(ARI.complete&&ARI.naturalWidth){const vt=-ty/s2-4,vb=(cv.height-ty)/s2+4,vl=CAMX-hw-4;
-c.fillStyle=ARC.top;c.fillRect(vl,vt,2*hw+8,ARY-vt+1);c.fillStyle=ARC.bot;c.fillRect(vl,ARY+ARH-1,2*hw+8,vb-ARY-ARH+1);
-c.drawImage(ARI,ARL,ARY,ARR-ARL,ARH)}
-else{c.fillStyle='#0b0d14';c.fillRect(-W,-2*H,3*W,5*H)}/* arena non ancora caricata */
-dustPass(false);
-const TR2=[s2,0,0,s2,tx+shx*s2,ty+shy*s2];
-if(!G){if($('#s-sel').classList.contains('on')||$('#s-shop').classList.contains('on')){fogPass();c.restore();return}/* in selezione: solo lo sfondo, il protagonista e' il dipendente scelto */
-const f=[...demo];f[0].x=176-88/ZP;f[1].x=176+88/ZP;for(const d of f){d.t++;d.st='idle';d.y=0;shadow(d)}litLayer(()=>{draw(f[0],176-88/ZP,FY);draw(f[1],176+88/ZP,FY)},TR2,[f[0].x,f[1].x]);fogPass();dustPass(true);c.restore();return}
-const a=G.a,b=G.b;for(const f of[a,b])shadow(f);
-const order=a.y<b.y?[b,a]:[a,b];for(const f of order)spFx(f);/* onda della speciale dietro ai lottatori: non copre l'animazione */litLayer(()=>{for(const f of order)draw(f,f.x,FY+f.y)},TR2,[a.x,b.x]);
-fogPass();dustPass(true);
-for(const p of PJ){const x=p.x,y=FY+(p.y==null?-30:p.y),d=p.vx>0?1:-1;c.save();c.translate(x,y);c.scale(d,1);c.imageSmoothingEnabled=false;
-const ps=p.o.ss||SPRSET[p.o.L.n]||{},PI=ps.pi;
-if(PI&&PI.complete&&PI.naturalWidth){if(ps.pjn>1){const n=ps.pjn,fw=PI.width/n,ph=ps.pjh||48,fi=ps.pjf!=null?ps.pjf:ps.pjg?Math.min(n-1,Math.max(0,p.t)/6|0):ps.pji?(p.t<5?0:1+((p.t/8|0)%(n-1))):(p.t/6|0)%n,k2=ph/PI.height;if(ps.pjs){const k3=SPRK*ps.pjs*(ps.sc||1);c.drawImage(PI,fi*fw,0,fw,PI.height,-2*k3,-PI.height*k3/2,fw*k3,PI.height*k3)}else c.drawImage(PI,fi*fw,0,fw,PI.height,ps.pjr!=null?-ps.pjr*k2:-fw*k2/2,ps.pjy||-18,fw*k2,ph)}
-else{/* bancale di BEPPE: dritto, senza ruotare, largo come quello che tiene in mano */const ph=ps.pjh||30,pw=ps.pjw||PI.width*ph/PI.height;c.drawImage(PI,-pw/2,-ph/2,pw,ph)}}
-c.restore()}
-for(const p of PS){c.fillStyle=p.col;c.fillRect(p.x,FY+p.y,p.s||3,p.s||3)}
-if(G.slow>0){const k=G.slow/60;c.save();c.setTransform(1,0,0,1,0,0);c.fillStyle='rgba(255,255,255,'+(k>.85?(k-.85)*4:0)+')';c.fillRect(0,0,cv.width,cv.height);/* lampo bianco iniziale e bordi scuri durante il rallentatore */
-const g=c.createRadialGradient(cv.width/2,cv.height/2,cv.height*.3,cv.width/2,cv.height/2,cv.width*.7);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,'+(.55*Math.min(1,k*3))+')');c.fillStyle=g;c.fillRect(0,0,cv.width,cv.height);c.restore()}
-c.setTransform(2,0,0,2,0,0);
-hud();SPB.classList.toggle('ready',G.a.sp>=100);
-announce(WH);
-c.restore()}
-function loop(ts){requestAnimationFrame(loop);acc+=Math.min(50,ts-last);last=ts;while(acc>=16.67){if(G&&G.net&&!netCan()){acc=Math.min(acc,33.4);break}acc-=16.67;if(G&&G.net){netStep();acc-=netLag()}else step()}render();selAnim()}

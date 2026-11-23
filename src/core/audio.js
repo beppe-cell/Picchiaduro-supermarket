@@ -1,4 +1,4 @@
-/* ---------- audio ---------- */
+/* core/audio.js - Audio: musica e effetti sonori sintetizzati (Web Audio), opzioni O. */
 let AC,pl=false,mst=0,O={mus:70,sfx:80,touch:0,vib:1};
 function au(){if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();if(AC.state=='suspended')AC.resume()}
 function tone(f,d,ty,v,sl){if(!AC||v<=0)return;const o=AC.createOscillator(),g=AC.createGain(),n=AC.currentTime;o.type=ty;o.frequency.setValueAtTime(f,n);if(sl)o.frequency.exponentialRampToValueAtTime(sl,n+d);g.gain.setValueAtTime(v,n);g.gain.exponentialRampToValueAtTime(.001,n+d);o.connect(g).connect(AC.destination);o.start();o.stop(n+d)}

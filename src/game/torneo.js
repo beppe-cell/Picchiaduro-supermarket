@@ -1,3 +1,4 @@
+/* game/torneo.js - Torneo: ordine degli avversari, mini boss e boss. */
 /* TORNEO: prima tutti i dipendenti "normali" tranne quello scelto (in ordine casuale, CPU di livello 2-3),
    poi i mini boss e il boss in quest'ordine (BOSSES, livello TBL), anche se il giocatore ha scelto uno di loro */
 let TOR=[],TLV=[];

@@ -1,3 +1,4 @@
+/* net/ranked.js - RANKED: punti Elo, divisioni, classifica globale firmata sui relay Nostr. */
 /* ---------- RANKED (online competitivo) ----------
    Punti Elo per profilo (SAVE.rk: e punti, w/l set vinti/persi, top divisione piu' alta raggiunta, ch set
    per personaggio, nk/pk chiave Nostr del profilo (segreta/pubblica, esadecimale), pend set in corso). Un set = al meglio di 3 incontri contro
@@ -58,100 +59,19 @@ const rkTop=n=>Object.values(RKB).filter(x=>Date.now()-x.t<90*864e5).sort((a,b)=
 /** righe da mandare a un altro giocatore: le migliori n piu' la mia */
 async function rkShare(n){const m=await rkMine(),t=rkTop(n);if(m&&!t.some(x=>x.k==m.k))t.push(m);return t.map(x=>x.ev).filter(Boolean)}
 const rkBadge=r=>{const d=rkDiv(r.e),nx=RKD[d+1];return'<span style="color:'+RKD[d].c+'">'+RKD[d].n+'</span> · '+r.e+' PUNTI · '+r.w+'V '+r.l+'S'+(nx?' · '+nx.n+' A '+nx.m:'')};
-/* nome valido: 1-12 tra lettere, numeri e spazi, diverso dagli altri profili; restituisce un errore o '' */
-function nameErr(n,skip){if(!/^[A-Z0-9ÀÈÉÌÒÙ ]{1,12}$/.test(n))return'Da 1 a 12 lettere o numeri';if(Object.entries(PF.list).some(([k,p])=>k!=skip&&p.n==n))return'Esiste già un profilo con questo nome';return''}
-function newProfile(data){const id='p'+Date.now().toString(36)+(Math.random()*1e6|0).toString(36);PF.list[id]=norm(data);PF.cur=id;SAVE=PF.list[id];save();return id}
-function useProfile(id){if(PF.list[id]){PF.cur=id;SAVE=PF.list[id];save()}}
-function delProfile(id){delete PF.list[id];if(PF.cur==id){PF.cur=Object.keys(PF.list)[0]||null;SAVE=PF.cur?PF.list[PF.cur]:norm({})}
-try{localStorage.setItem(PFK,JSON.stringify(PF))}catch(e){}}
-/* codice di salvataggio: SPR1-<controllo>-<dati in base64> (si leggono anche i vecchi GRS1-); il controllo scarta codici copiati male */
-const ck=t=>{let h=7;for(const ch of t)h=(h*31+ch.charCodeAt(0))%1679616;return h.toString(36).toUpperCase().padStart(4,'0')};
-function exportCode(){const b=btoa(unescape(encodeURIComponent(JSON.stringify({n:SAVE.n,c:SAVE.ced,o:SAVE.own,e:SAVE.eq,g:SAVE.prog,u:SAVE.unl,r:SAVE.rk})))).replace(/=+$/,'');return'SPR1-'+ck(b)+'-'+b}
-function importCode(code){const m=String(code).replace(/\s+/g,'').match(/^(?:SPR1|GRS1)-([0-9A-Z]{4})-([A-Za-z0-9+/]+)$/i);if(!m||ck(m[2])!=m[1].toUpperCase())return null;
-try{const d=JSON.parse(decodeURIComponent(escape(atob(m[2]))));return norm({n:d.n,ced:d.c,own:d.o,eq:d.e,prog:d.g,unl:d.u,rk:d.r})}catch(e){return null}}
-/* personaggi da comprare nel negozio con i cedolini (mini boss e boss, in ordine di grado): prezzo.
-   Si gioca con loro solo dopo l'acquisto (SAVE.unl); chi li aveva gia' sbloccati li tiene */
-const locked=n=>!!PRZ[n]&&!SAVE.unl[n];
-const skinsOf=n=>[{id:'base',n:'ORIGINALE',p:0},...(SKINS[n]||[])];
-const owns=(n,id)=>id=='base'||(SAVE.own[n]||[]).includes(id);
-/* skin indossata (torna ORIGINALE se quella salvata non esiste piu') */
-const eqSkin=n=>{const id=SAVE.eq[n];return id&&owns(n,id)&&skinsOf(n).some(k=>k.id==id)?id:'base'};
-/** compra una skin (si indossa dalla selezione, pulsante SKIN); false se gia' posseduta, inesistente o cedolini insufficienti */
-function buy(n,id){const k=skinsOf(n).find(k=>k.id==id);if(!k||owns(n,id)||SAVE.ced<k.p)return false;SAVE.ced-=k.p;(SAVE.own[n]=SAVE.own[n]||[]).push(id);save();return true}
-function equip(n,id){if(owns(n,id)){SAVE.eq[n]=id;save()}}
-/* set di sprite di una skin: copia dell'originale (stesse misure e mosse) con le immagini della cartella
-   skin-<id>, caricato alla prima richiesta; ogni file mancante ricade su quello originale */
-const SKC={};
-function skinSet(n,id){const base=SPRSET[n];if(!base||id=='base')return base;const key=n+'/'+id;if(SKC[key])return SKC[key];
-const sk=(SKINS[n]||[]).find(k=>k.id==id)||{},ss=SKC[key]={...base,...(sk.ov||{}),n:{...base.n,...(sk.nf||{})},im:{},left:0,skin:id},P='assets/characters/'+base.d+'/';
-const one=(file,set,a)=>{ss.left++;const im=new Image();let fb=0;im.onload=()=>{ss.left--;set&&set(im)};
-im.onerror=()=>{if(fb++)ss.left--;else{if(a)ss.n[a]=base.n[a];im.src=P+file+'.webp?v='+VER}};im.src=P+'skin-'+id+'/'+file+'.webp?v='+VER;return im};
-ss.front=one(base.d+'-front');for(const a of Object.keys(base.n))one(base.d+'-'+a,im=>{ss.im[a]=im},a);if(base.pj)ss.pi=one(base.pj);return ss}
-const wal=()=>{document.querySelectorAll('.wallet').forEach(e=>e.textContent=SAVE.ced+' CEDOLINI');const pc=$('#pchip');if(pc)pc.textContent=SAVE.n};
-for(const [k,ss] of Object.entries(SPRSET)){const fase=DEMO.includes(k)?1:2,P='assets/characters/'+ss.d+'/';ss.im={};ss.left=0;
-const add=(src,set)=>{ss.left++;return ldImg(P+src+'.webp',fase,ok=>{ss.left--;if(ok&&set)set()})};
-/* vista frontale per la selezione (tools/build_fronts.py) */
-ss.front=ldImg(P+ss.d+'-front.webp',fase);
-for(const a of Object.keys(ss.n)){const im=add(ss.d+'-'+a,()=>{ss.im[a]=im})}
-if(ss.pj)ss.pi=add(ss.pj)}
-/* arena: fondale orizzontale unico (11:6) per entrambi gli orientamenti, in coordinate di gioco.
-   ARH = altezza nel mondo, la macchia di luce sul pavimento (87% dell'immagine) cade sui piedi (FY).
-   In verticale la telecamera scorre (CAMX) e mostra i bordi quando i lottatori ci si avvicinano. */
-/* le arene: f = file, fy = altezza (frazione dell'immagine) del centro della macchia di luce dove poggiano
-   i piedi; luci per i lottatori: mul (multiply, dominante), top (luce dall'alto), fl (riflesso dal pavimento),
-   side ([lato -1 sinistra/1 destra/0 entrambi, colore]), dust (colore del pulviscolo), dn/fg (quantita'
-   di pulviscolo e fumo), nf (tremolio dei neon) */
-const ARENAS=[
-{n:'CORSIA CENTRALE',f:'arena-orizzontale',fy:.87,mul:'232,245,240',top:'110,160,148',ta:.22,fl:'110,85,35',fa:.26,side:[-1,'40,120,140'],dust:'220,255,240',dn:1,fg:1,nf:1},
-{n:'MAGAZZINO',f:'arena-magazzino',fy:.87,mul:'246,238,220',top:'150,118,55',ta:.24,fl:'120,90,35',fa:.28,side:null,dust:'255,230,180',dn:1.6,fg:1.1,nf:0},
-{n:'ZONA CASSE',f:'arena-casse',fy:.86,mul:'246,243,236',top:'150,140,115',ta:.2,fl:'120,95,45',fa:.24,side:null,dust:'255,245,225',dn:.5,fg:.4,nf:1},
-{n:'REPARTO ORTOFRUTTA',f:'arena-ortofrutta',fy:.865,mul:'242,246,232',top:'120,150,80',ta:.22,fl:'125,95,40',fa:.26,side:[1,'60,120,90'],dust:'235,255,220',dn:.8,fg:.6,nf:0},
-{n:'REPARTO SURGELATI',f:'arena-surgelati',fy:.84,mul:'205,226,238',top:'70,140,165',ta:.3,fl:'50,130,150',fa:.3,side:[0,'50,140,170'],dust:'200,240,255',dn:1.2,fg:1.8,nf:1},
-{n:'PARCHEGGIO SUL TETTO',f:'arena-parcheggio',fy:.875,mul:'246,228,226',top:'130,85,125',ta:.22,fl:'135,85,30',fa:.3,side:[-1,'120,60,110'],dust:'255,220,200',dn:.6,fg:.5,nf:0}];
-ARENAS.forEach((A,i)=>{A.c={top:'#1a2624',bot:'#3a3a30'};
-A.im=ldImg('assets/backgrounds/'+A.f+'.jpeg',i?2:1,ok=>{if(!ok)return;const t=document.createElement('canvas');t.width=A.im.naturalWidth;t.height=A.im.naturalHeight;const g=t.getContext('2d');g.drawImage(A.im,0,0);
-const avg=(y,h)=>{const d=g.getImageData(0,y,t.width,h).data;let r=0,gg=0,b=0,n=d.length/4;for(let i=0;i<d.length;i+=4){r+=d[i];gg+=d[i+1];b+=d[i+2]}return'rgb('+(r/n|0)+','+(gg/n|0)+','+(b/n|0)+')'};
-A.c.top=avg(0,6);A.c.bot=avg(t.height-6,6)})});
-let ARA=ARENAS[0],ARI=ARA.im,ARC=ARA.c;let CAMX=176,CAMHW=176,ARH,ARY,ARL,ARR;
-/* sceglie l'arena dell'incontro (a caso tra quelle caricate) */
-function pickArena(){const ok=ARENAS.filter(A=>A.im.complete&&A.im.naturalWidth);ARA=ok.length?ok[Math.random()*ok.length|0]:ARENAS[0];ARI=ARA.im;ARC=ARA.c;arenaFit(ARH||208)}
-/* dimensiona il fondale: alto almeno h (mondo); in verticale abbastanza da arrivare in cima allo schermo.
-   Il campo di gioco (XMIN..XMAX) e' sempre tutto il fondale meno un margine */
-function arenaFit(h){ARH=Math.max(208,h);ARY=FY-(ARA?ARA.fy:.87)*ARH;const hw2=ARH*1408/768/2;ARL=176-hw2;ARR=176+hw2;XMIN=ARL+22;XMAX=ARR-22;
-if(G&&G.net){XMIN=G.net.xmin;XMAX=G.net.xmax}}/* online il campo e' lo stesso per tutti e due, qualunque schermo */
-/* zoom che conta per il gioco (distanze fra i lottatori): online quello concordato all'inizio */
-const gz=()=>G&&G.net?G.net.zp:ZP;
-
-{const v=document.getElementById('ver');if(v)v.textContent='v'+VER}
-const SPR_H=0.55*384/2, SPRK=SPR_H/SPRB; /* altezza sprite ~55% del canvas, in coordinate mondo */
-function draw(f,x,y,pose,sc){const L=f.L,s=pose||f.st,t=f.t,e=f.ext||0;const ss=f.ss||SPRSET[L.n],SPR=ss&&ss.im,SPRN=ss&&ss.n;sc=(sc||1)*(L.big?1.12:1)*(ss&&ss.sc||1);
-if(!(SPR&&SPR.idle))return;/* niente sprite (ancora in caricamento): non si disegna nulla */
-let name='idle',fi=0;
-if(s=='walk'){name='walk';fi=(t/12|0)%SPRN.walk}
-else if(s=='idle')fi=(t/20|0)%SPRN.idle;
-else if(s=='jump'){name='jump';fi=f.vy<-3?0:f.vy<3?1:2}
-else if(s=='block')name='block';
-else if(s=='crouch')name='crouch';
-else if(s=='hit'&&SPR.hit)name='hit';
-else if(s=='atk'){name=f.atk=='s'?'special':f.atk=='p'?'punch':f.atk=='k'?'kick':'heavy';if(!SPR[name])name='idle';else if(name=='special'&&ss.spT)fi=ss.spT.filter(v=>t>=v).length;else{const m=MV[f.atk];fi=Math.min(t<m.su-2?0:t<m.su?1:t<m.su+m.ac?2:t<m.su+m.ac+2?3:4,SPRN[name]-1)}}
-else if(s=='ko'){if(t<35&&SPR.fall){name='fall';fi=Math.min(t/12|0,SPRN.fall-1)}else if(SPR.ko){name='ko';fi=0}}
-if(G&&G.ph=='ko'&&G.w===f&&SPR.win&&(s=='idle'||s=='walk')){name='win';fi=Math.min(SPRN.win-1,(150-G.pt)/14|0)}
-if(!SPR[name])name='idle';
-const src=SPR[name],fw=src.width/SPRN[name],fh=src.height,k=SPRK;
-c.save();c.imageSmoothingEnabled=false;c.translate(x|0,y|0);c.scale(f.face*sc,sc);
-if(s=='hit'&&name!='hit')c.rotate(-.08);
-if(name=='idle'&&SPRN.idle==1)c.scale(1,1+Math.sin(t/14)*.012);
-if(s=='atk'&&f.atk=='s'){c.fillStyle='rgba(255,210,63,.3)';c.fillRect(-34,-fh*k-6,68,fh*k+6)}
-c.drawImage(src,fi*fw,0,fw,fh,-fw*k/2,-fh*k,fw*k,fh*k);c.restore()}
-/* onda d'urto luminosa della mossa speciale (solo grafica, dipende da f.t; disegnata DIETRO ai lottatori): un primo anello quando parte
-   la mossa, poi un anello piu' grande con lampo e cerchio a terra quando colpisce (tick su della mossa) */
-function spFx(f){if(f.st!='atk'||f.atk!='s')return;const ss=f.ss||SPRSET[f.L.n]||{},m=ss.mv||MV.s,t=f.t,sc=(f.L.big?1.12:1)*(ss.sc||1),cy=FY+f.y-52*sc;
-c.save();c.globalCompositeOperation='lighter';c.shadowColor='rgba(255,220,120,.9)';c.shadowBlur=10;
-const ring=(age,dur,r0,r1,w,col)=>{if(age<0||age>dur)return;const q=age/dur,r=r0+(r1-r0)*(1-(1-q)*(1-q)),al=1-q;
- c.lineWidth=w*(1-q*.6);c.strokeStyle='rgba('+col+','+al+')';c.beginPath();c.ellipse(f.x,cy,r,r*.78,0,0,6.283);c.stroke();
- c.lineWidth=w*2.2*(1-q*.6);c.strokeStyle='rgba('+col+','+al*.25+')';c.stroke()};
-ring(t,16,10,58*sc,5,'255,236,140');
-const a2=t-m.su;ring(a2,22,14,100*sc,8,'255,250,210');ring(a2-3,22,8,74*sc,5,'255,170,60');ring(a2-7,20,6,50*sc,3,'255,255,255');
-if(a2>=0&&a2<10){const g=c.createRadialGradient(f.x,cy,0,f.x,cy,60*sc);g.addColorStop(0,'rgba(255,245,200,'+(.35*(1-a2/10))+')');g.addColorStop(1,'rgba(255,200,80,0)');c.fillStyle=g;c.fillRect(f.x-60*sc,cy-60*sc,120*sc,120*sc)}
-if(a2>=0&&a2<24){const q=a2/24;c.lineWidth=2;c.strokeStyle='rgba(255,230,150,'+(1-q)+')';c.beginPath();c.ellipse(f.x,FY+1,12+q*80*sc,3+q*9,0,0,6.283);c.stroke()}
-c.restore()}
+/** fine di un set classificato: punti, premi, riga della classifica aggiornata (anche all'avversario) */
+function rkEnd(N,win){N.rkDone=1;const R=rkApply(SAVE.rk,win,N.pe,N.my?CH[N.my.c].n:null);if(win)R.bonus+=RKSET;SAVE.ced+=R.bonus;save();wal();
+rkMine().then(x=>{if(!x)return;try{if(N.a)nsend(N.a.lb,[x.ev],N.peer)}catch(e){}rkRelays(x.ev,0)});return R}
+const rkRes=R=>{const d=R.e-R.old;return'PUNTI '+R.old+' → <b>'+R.e+'</b> ('+(d>=0?'+':'')+d+')'+(R.bonus?' · +'+R.bonus+' CEDOLINI':'')+
+ (R.up.length?'<br><b style="color:'+RKD[rkDiv(R.e)].c+'">NUOVA DIVISIONE: '+R.up[R.up.length-1]+'!</b>':'')+'<br>'+rkBadge(SAVE.rk)};
+/* schermata CLASSIFICA: la copia locale subito, poi si aggiorna con chi e' collegato (stanza 'board') */
+const RK={room:null};
+const rkRow=(i,x,me)=>{const d=RKD[rkDiv(x.e)];return'<div class="rkr'+(me?' on':'')+'"><b>'+i+'</b><span>'+esc(x.n)+'</span><em style="color:'+d.c+'">'+d.n+'</em><i>'+x.e+'</i><small>'+x.w+'V '+x.l+'S'+(x.c?' · '+x.c:'')+'</small></div>'};
+function rkDraw(){const me=rkId(),T=rkTop(50);let h=T.map((x,i)=>rkRow(i+1,x,x.k==me)).join('');
+if(me&&RKB[me]&&!T.some(x=>x.k==me))h+=rkRow(rkTop(1e4).findIndex(x=>x.k==me)+1,RKB[me],1);
+$('#rkl').innerHTML=h||'<div class="small">Ancora nessuno in classifica: gioca una partita RANKED per entrarci.</div>';$('#rk-me').innerHTML=esc(SAVE.n)+' · '+rkBadge(SAVE.rk)}
+function rkClose(){if(RK.room){const r=RK.room;RK.room=null;try{r.leave()}catch(e){}}}
+function rkShow(){rkClose();sh('s-rank');rkDraw();focusFirst();const st=$('#rk-st'),my=++rkShow.n;st.textContent='CARICO LA CLASSIFICA GLOBALE...';
+rkMine().then(x=>{rkDraw();return rkRelays(x&&x.ev,1,()=>{if(rkShow.n==my)rkDraw()})}).then(k=>{if(rkShow.n!=my)return;rkDraw();
+ const n=rkTop(1e4).length;st.textContent=k?'CLASSIFICA GLOBALE · '+n+' GIOCATORI · '+k+'/'+RKR.length+' SERVER':'Rete non disponibile: questa è l\'ultima classifica salvata ('+n+' giocatori).'})}
+rkShow.n=0;

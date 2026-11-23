@@ -1,8 +1,8 @@
-/* ---------- fighter ---------- */
+/* core/loader.js - Caricamento delle immagini in due fasi (LD, ldImg) e degli sprite di tutti i personaggi. */
 /* sprite dei personaggi: 1 riga per animazione in assets/characters/<nome>/, corpo in piedi normalizzato a 400px, piedi sul bordo inferiore, rivolti a destra.
    n = frame per animazione; pj = proiettile dello speciale (pjn frame); spT = soglie (tick) dei frame dello speciale se diverse dallo standard.
    hit/win sono opzionali: se mancano si usa la posa idle (inclinata quando colpito). */
-const SPRB=400,VER=73;
+const SPRB=400,VER=74;
 /* proiettile a più frame: pjh altezza e pjy bordo superiore (rispetto alla linea del proiettile), pji = il 1o frame è solo l'avvio;
    pjg = l'effetto cresce frame dopo frame e resta sull'ultimo (onda di LUIS);
    pjf = fotogramma fisso (carrello di MATTEO dritto, senza ruotare); pjt = corre sempre sul pavimento, anche se lanciato in salto;
@@ -19,3 +19,10 @@ im.onload=()=>fine(1);im.onerror=()=>fine(0);(fase==1?LD.q1:LD.q2).push(()=>{im.
 function ldShow(){const b=$('#s-title .blink');if(b)b.textContent=LD.p1>0?'CARICAMENTO '+(100*(LD.t1-LD.p1)/LD.t1|0)+'%':'TOCCA O PREMI UN TASTO';
 const lp=$('#ld-p');if(lp)lp.textContent=(100*LD.n/LD.t|0)+'%'}
 const ready=ss=>!ss||!ss.left;
+for(const [k,ss] of Object.entries(SPRSET)){const fase=DEMO.includes(k)?1:2,P='assets/characters/'+ss.d+'/';ss.im={};ss.left=0;
+const add=(src,set)=>{ss.left++;return ldImg(P+src+'.webp',fase,ok=>{ss.left--;if(ok&&set)set()})};
+/* vista frontale per la selezione (tools/build_fronts.py) */
+ss.front=ldImg(P+ss.d+'-front.webp',fase);
+for(const a of Object.keys(ss.n)){const im=add(ss.d+'-'+a,()=>{ss.im[a]=im})}
+if(ss.pj)ss.pi=add(ss.pj)}
+{const v=document.getElementById('ver');if(v)v.textContent='v'+VER}

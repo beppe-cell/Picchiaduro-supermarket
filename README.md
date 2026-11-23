@@ -276,12 +276,16 @@ tools/
    ```js
    character({
      n:'NOME', ms:'NOME DELLA SPECIALE', sp:1.5, pw:1,           // velocità e potenza
-     sprites:{d:'nome', n:{idle:1,walk:2,...}, pj:'nome-oggetto', pjn:3, pjh:25, pjy:-12, pjo:[40,-68], spT:[5,11]},
-     skins:[],            // facoltativo: skin in vendita
+     sprites:{d:'nome', n:{idle:1,walk:2,...}},                  // cartella e fotogrammi per animazione
+     special:lancio({oggetto:'nome-oggetto', fotogrammi:3, alto:25, y:-12, uscita:[40,-68], tempi:[5,11]}),
+     // oppure: special:corpoACorpo({portata:46, scatto:4.2, tempi:[4,9,13]})
+     skins:[],            // facoltativo: skin in vendita (una skin può avere la sua special:lancio({...}))
      price:2000,          // facoltativo: si compra nel negozio
      boss:{order:1,lv:4}  // facoltativo: mini boss del torneo (final:1 = boss finale)
    })
    ```
+   I parametri della speciale sono spiegati in `src/characters/specials.js` (un parametro sbagliato dà
+   errore subito). Un tipo nuovo di speciale è una classe che estende `Special` in quel file.
 5. Aggiungi `<script src="src/characters/<nome>.js"></script>` in `index.html` **in fondo all'elenco dei
    personaggi** (l'ordine è quello dell'elenco e la partita online identifica i personaggi per posizione:
    non spostare quelli esistenti), aumenta `VER` in `src/core/loader.js` e, se aggiungi un personaggio,

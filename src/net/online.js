@@ -1,4 +1,4 @@
-/* ---------- multigiocatore online ---------- */
+/* net/online.js - Online: giocatori presenti, ricerca avversario, stanze, scelta, avvio delle partite, pulsanti della schermata. */
 /* Nessun server nostro: i giocatori si trovano tramite i relay pubblici Nostr (libreria Trystero in
    assets/vendor/trystero-nostr.mjs, caricata solo quando si apre ONLINE) e poi giocano collegati
    direttamente (WebRTC). Le due copie del gioco simulano la stessa partita e si scambiano solo i
@@ -148,3 +148,23 @@ if(N.rk){if(!N.set||N.rkDone){N.set={me:0,op:0};N.rkDone=0;SAVE.rk.pend={e:N.pe}
  G.net.rk=1;G.net.set=N.host?[N.set.me,N.set.op]:[N.set.op,N.set.me]}
 N.li={};N.ri=N.buf[P.m]||(N.buf[P.m]={});for(let f=1;f<=N.d;f++){N.li[f]=0;N.ri[f]=0}N.lh={};N.rh={};N.wait=0;N.ra=null;
 newRound();N.sn={0:snapTake()};N.cf=0;N.pu={};N.rbs=0;sh('');pl=true;sfx('ui')}
+/** l'avversario se n'e' andato (o non risponde da NETTO ms) */
+function netGone(){const N0=NET,n=N0&&N0.pn,R=N0&&N0.rk&&N0.set&&!N0.rkDone?rkEnd(N0,true):null;/* l'avversario abbandona il set: vittoria */netLeave();
+if(G&&G.net&&G.ph!='end'){G.ph='end';pl=false;$('#e-t').className='lose';$('#e-t').textContent='PARTITA INTERROTTA';$('#e-s').textContent=(n||'L\'avversario')+' si è disconnesso.';$('#e-c').innerHTML='';$('#b-nx').style.display='none';if(R){$('#e-t').className='win';$('#e-t').textContent='VITTORIA A TAVOLINO';$('#e-s').innerHTML=esc(n||'L\'avversario')+' ha abbandonato il set.<br>'+rkRes(R)}sh('s-end')}
+else if(R)netFail((n||'L\'avversario')+' ha abbandonato il set: vittoria a tavolino! PUNTI '+R.old+' → '+R.e+(R.bonus?' · +'+R.bonus+' CEDOLINI':''));
+else if(n)netFail(n+' si è disconnesso.');else if($('#s-online').classList.contains('on')||$('#s-wait').classList.contains('on'))netFail('Collegamento perso.')}
+/** fine incontro online: rivincita (serve il si' di tutti e due) o menu */
+function netEnd(win){const N=NET,bn=$('#b-nx');$('#e-s').textContent=N?'contro '+N.pn:'';bn.style.display=N?'':'none';bn.textContent='RIVINCITA';
+if(N&&N.rk&&N.set&&!N.rkDone){if(win)N.set.me++;else N.set.op++;const sc=N.set.me+'-'+N.set.op;
+ if(N.set.me<2&&N.set.op<2){/* set non finito: il prossimo incontro parte da solo, stessi dipendenti */
+  $('#e-s').textContent='SET '+sc+' contro '+N.pn+' · prossimo incontro fra poco...';bn.style.display='none';
+  clearTimeout(N.nx);N.nx=setTimeout(()=>{if(NET!==N||!G||!G.net)return;N.mre=1;N.a.re.send({m:G.net.m});netGo()},3500);return}
+ const R=rkEnd(N,N.set.me>N.set.op);$('#e-t').className=R.win?'win':'lose';$('#e-t').textContent=R.win?'SET VINTO!':'SET PERSO';
+ $('#e-s').innerHTML='SET '+sc+' contro '+esc(N.pn)+'<br>'+rkRes(R);bn.textContent='ALTRO SET'}
+bn.onclick=()=>{if(!NET)return;NET.mre=1;NET.a.re.send({m:G.net.m});$('#e-s').textContent='IN ATTESA DI '+NET.pn+'...';netGo()}}
+$('#on-q').onclick=()=>{au();sfx('ui');netCerca()};$('#on-rq').onclick=()=>{au();sfx('ui');netCerca(1)};$('#on-lb').onclick=()=>{au();sfx('ui');rkShow()};
+$('#rk-x').onclick=()=>{sfx('ui');rkClose();GO.online()};$('#on-cr').onclick=()=>{au();sfx('ui');netCrea()};$('#on-j').onclick=()=>{au();sfx('ui');netEntra()};
+$('#on-x').onclick=()=>{sfx('ui');if(NET||netOpen.busy){netOpen.tok++;netOpen.busy=0;netLeave();netUI(0);netSt(ONT)}else GO.menu()};
+$('#w-x').onclick=()=>{sfx('ui');netFail('Partita annullata.')};
+$('#on-cp').onclick=()=>{const t=$('#on-c').textContent;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>netSt('Codice copiato: mandalo all\'avversario.'),()=>{})};
+$('#on-i').addEventListener('input',e=>{const v=e.target.value.toUpperCase().replace(/[^A-Z]/g,'');if(v!=e.target.value)e.target.value=v});

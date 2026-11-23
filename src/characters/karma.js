@@ -4,5 +4,6 @@
    (--scala 0.9 --sc .9 --largo 160: nel foglio della speciale Gemini l'ha disegnata piu' grande): la cassa parte dalle mani tese e vola ruotando. Bassa (sc) */
 character({
   n:'KARMA',ms:'LANCIO DELLA CASSA',sp:1.55,pw:1.05,
-  sprites:{d:'karma',sc:.9,n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:2,ko:1,win:2},pj:'karma-cassa',pjn:3,pjh:25.4,pjy:-12.7,pjw:36,pjo:[40,-68],spT:[5,11]}
+  sprites:{d:'karma',sc:.9,n:{idle:1,walk:2,punch:5,kick:5,heavy:5,jump:3,block:1,crouch:1,special:3,hit:1,fall:2,ko:1,win:2}},
+  special:lancio({oggetto:'karma-cassa', fotogrammi:3, alto:25.4, y:-12.7, largo:36, uscita:[40,-68], tempi:[5,11]})
 })
