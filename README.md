@@ -268,32 +268,23 @@ tools/
 
 ## Aggiungere un personaggio con sprite
 
-1. Genera con Gemini i 3 fogli pose seguendo `docs/sprite-guide/PROMPT.md` e mettili in
-   `assets/characters/<nome>/sorgenti/`.
-2. `python3 -B tools/build_character.py <nome> <A> <B> <C>` (richiede `pip install pillow numpy
-   scipy`) crea tutte le animazioni tranne la speciale, che si fa a parte. Formato: un PNG per animazione,
-   `<nome>-<animazione>.png`, frame affiancati a larghezza uguale, piedi sul bordo inferiore,
-   personaggio in piedi alto circa 400 px.
-3. `python3 -B tools/to_webp.py` crea i `.webp` che il gioco carica davvero.
-4. Crea `src/characters/<nome>.js` copiando un personaggio simile (per un lancio: `karma.js`; corpo a
-   corpo: `zanna.js`) e cambia nome, statistiche, sprite e speciale:
-   ```js
-   character({
-     n:'NOME', ms:'NOME DELLA SPECIALE', sp:1.5, pw:1,           // velocità e potenza
-     sprites:{d:'nome', n:{idle:1,walk:2,...}},                  // cartella e fotogrammi per animazione
-     special:lancio({oggetto:'nome-oggetto', fotogrammi:3, alto:25, y:-12, uscita:[40,-68], tempi:[5,11]}),
-     // oppure: special:corpoACorpo({portata:46, scatto:4.2, tempi:[4,9,13]})
-     skins:[],            // facoltativo: skin in vendita (una skin può avere la sua special:lancio({...}))
-     price:2000,          // facoltativo: si compra nel negozio
-     boss:{order:1,lv:4}  // facoltativo: mini boss del torneo (final:1 = boss finale)
-   })
+1. Con Gemini crea 5 immagini (prompt pronti in `docs/sprite-guide/PROMPT.md`): `tavola`, `foglio-A`,
+   `foglio-B`, `foglio-C`, `speciale`. Mettile in `assets/characters/<nome>/sorgenti/` (per una skin:
+   `assets/characters/<personaggio>/skin-<id>/sorgenti/`).
+2. Un comando fa tutto: sprite, speciale, vista per la selezione, WebP, file del personaggio, riga in
+   `index.html`, `VER` e `NETV`, prova nel gioco e un'immagine di controllo
+   (`production/qa/evidence/nuovo-<nome>.png`):
    ```
-   I parametri della speciale sono spiegati in `src/characters/specials.js` (un parametro sbagliato dà
-   errore subito). Un tipo nuovo di speciale è una classe che estende `Special` in quel file.
-5. Aggiungi `<script src="src/characters/<nome>.js"></script>` in `index.html` **in fondo all'elenco dei
-   personaggi** (l'ordine è quello dell'elenco e la partita online identifica i personaggi per posizione:
-   non spostare quelli esistenti), aumenta `VER` in `src/core/loader.js` e, se aggiungi un personaggio,
-   `NETV` in `src/net/online.js` (le versioni vecchie non si collegano alle nuove).
+   python3 -B tools/nuovo.py personaggio karma --nome KARMA --mossa "LANCIO DELLA CASSA" --oggetto cassa --sc .9
+   python3 -B tools/nuovo.py skin vlad pump --nome "VLAD IN PUMP" --mossa "LANCIO DEL MANUBRIO" --prezzo 1500
+   ```
+   Serve Python con `pip install pillow numpy scipy` e, per la prova, Node con Playwright.
+   `python3 -B tools/nuovo.py -h` spiega tutte le opzioni (altezza, velocità, prezzo, punto di lancio...).
+   Rilanciarlo con opzioni diverse rifà tutto: è il modo per correggere.
+3. A mano, solo se serve qualcosa di speciale: il file `src/characters/<nome>.js` si può ritoccare
+   (parametri della speciale spiegati in `src/characters/specials.js`). Un tipo nuovo di speciale è una
+   classe che estende `Special` in quel file. I personaggi vanno sempre **in fondo** all'elenco di
+   `index.html`: la partita online li identifica per posizione.
 
 Animazioni riconosciute: `idle`, `walk`, `punch`, `kick`, `heavy`, `special`, `jump`, `block`,
 `crouch`, `fall`, `ko`; facoltative `hit` (colpito) e `win` (vittoria).

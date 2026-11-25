@@ -1,4 +1,57 @@
-# Nuovo personaggio con Gemini: 3 immagini
+# Nuovo personaggio con Gemini
+
+**In breve:** 5 immagini con i nomi fissi in `assets/characters/<nome>/sorgenti/` (per una skin:
+`assets/characters/<nome>/skin-<id>/sorgenti/`), poi un solo comando:
+
+| File | Cos'è | Prompt |
+|---|---|---|
+| `tavola` | il personaggio di fronte, di profilo e di schiena | [Tavola](#prompt-tavola-di-riferimento) |
+| `foglio-A`, `foglio-B`, `foglio-C` | le pose | [Fogli](#prompt-fogli-pose) |
+| `speciale` | la mossa speciale | [Speciale](#prompt-mossa-speciale-lancio) |
+
+```
+python3 -B tools/nuovo.py personaggio <nome> --nome NOME --mossa "NOME DELLA MOSSA" --oggetto <oggetto>
+python3 -B tools/nuovo.py skin <personaggio> <id> --nome "NOME SKIN" --mossa "NOME DELLA MOSSA" --prezzo 1500
+```
+
+Estensione libera (`.jpeg`, `.png`). L'ordine giusto è: prima la tavola, poi i fogli e la speciale
+allegando la tavola, tutto nella **stessa chat** di Gemini.
+
+## Prompt: tavola di riferimento
+
+Allega una foto o descrivi il personaggio al posto di `[DESCRIZIONE]`.
+
+```
+Disegna in pixel art, stile picchiaduro arcade anni '90, la tavola di riferimento di un personaggio:
+[NOME], [DESCRIZIONE]. Dipendente di un supermercato: maglia rossa con la lettera S bianca sul petto,
+pantaloni neri da lavoro.
+Tre figure intere in piedi affiancate, stessa altezza, che non si toccano: a sinistra di profilo
+(guarda a destra), al centro di fronte, a destra di schiena.
+Sfondo magenta pieno (#FF00FF), senza ombre, pavimento, scritte o cornici.
+Immagine orizzontale, alla risoluzione più alta che puoi.
+```
+
+Per una **skin** scrivi cosa cambia (es. "senza maglietta, più muscoloso, fascia in testa") e allega la
+tavola dell'originale: "Ridisegna questa tavola con [CAMBIAMENTI], stesso viso e stesse proporzioni".
+
+## Prompt: mossa speciale (lancio)
+
+Allega la tavola. Sostituisci `[NOME]` e `[OGGETTO]` (es. "un registratore di cassa").
+
+```
+Pixel art come la tavola allegata, sfondo magenta pieno (#FF00FF). Due righe:
+IN ALTO 3 figure intere di [NOME] rivolto verso DESTRA, che lancia [OGGETTO]:
+  1) tiene [OGGETTO] con tutte e due le mani; 2) lo carica indietro; 3) braccia tese in avanti, mani vuote.
+IN BASSO 3 volte [OGGETTO] da solo, in volo verso destra: dritto, inclinato, capovolto, con qualche
+linea di movimento a sinistra.
+Le figure non si toccano e non escono dall'immagine; niente scritte, cornici, ombre o pavimento.
+Immagine orizzontale, alla risoluzione più alta che puoi.
+```
+
+Per una speciale **corpo a corpo** (tools/nuovo.py ... `--corpo`) usa solo la riga in alto, con 3 pose
+del colpo (carica, colpo, ritorno), e niente riga in basso.
+
+## Prompt: fogli pose
 
 Ogni personaggio richiede **3 generazioni**, una per foglio. Ogni foglio ha 6 caselle con le pose di
 Matteo: Gemini le ridisegna con il nuovo personaggio, senza doverle inventare.
@@ -9,9 +62,7 @@ Matteo: Gemini le ridisegna con il nuovo personaggio, senza doverle inventare.
 | B | `esempio-B-attacchi.png` | pugno, calcio, colpo forte (carica e colpo) |
 | C | `esempio-C-reazioni.png` | colpito, cade, KO disteso, 2 vittorie |
 
-**La mossa speciale non è nei fogli**: è unica per ogni personaggio e si fa a parte, come per Beppe
-(bancale), Matteo (carrello) e Vlad (spruzzino). Finché non c'è, in gioco il personaggio la esegue in
-posa di guardia, con il proiettile generico.
+**La mossa speciale non è nei fogli**: ha la sua immagine (`speciale`, prompt sopra).
 
 ## Come fare
 
@@ -22,8 +73,8 @@ posa di guardia, con il proiettile generico.
 3. Incolla il prompt qui sotto, sostituendo `[NOME]`.
 4. Se un foglio esce con un errore (pose tagliate, gambe in più, personaggio girato), rigenera **solo
    quel foglio**.
-5. Carica le 3 immagini in `assets/characters/<nome>/sorgenti/` e dimmi quale è A, B e C (o chiamale
-   `foglio-A`, `foglio-B`, `foglio-C`). Il resto lo fa `tools/build_character.py`.
+5. Salva le 3 immagini in `assets/characters/<nome>/sorgenti/` come `foglio-A`, `foglio-B`, `foglio-C`.
+   Il resto lo fa `tools/nuovo.py`.
 
 ## Prompt (uguale per tutti i fogli)
 

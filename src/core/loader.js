@@ -2,7 +2,7 @@
 /* sprite dei personaggi: 1 riga per animazione in assets/characters/<nome>/, corpo in piedi normalizzato a 400px, piedi sul bordo inferiore, rivolti a destra.
    n = frame per animazione; pj = proiettile dello speciale (pjn frame); spT = soglie (tick) dei frame dello speciale se diverse dallo standard.
    hit/win sono opzionali: se mancano si usa la posa idle (inclinata quando colpito). */
-const SPRB=400,VER=74;
+const SPRB=400,VER=75;
 /* proiettile a più frame: pjh altezza e pjy bordo superiore (rispetto alla linea del proiettile), pji = il 1o frame è solo l'avvio;
    pjg = l'effetto cresce frame dopo frame e resta sull'ultimo (onda di LUIS);
    pjf = fotogramma fisso (carrello di MATTEO dritto, senza ruotare); pjt = corre sempre sul pavimento, anche se lanciato in salto;

@@ -226,19 +226,17 @@ Queste regole proteggono il gioco. Se una va infranta, prima si capisce perché 
 
 ## 9. Ricette
 
-### Aggiungere un personaggio
-Vedi il `README.md`, sezione "Aggiungere un personaggio con sprite". In breve: sprite con
-`tools/build_character.py`, un file in `src/characters/`, una riga **in fondo** all'elenco in
-`index.html`, poi si salgono `VER` e `NETV`.
-
-### Aggiungere una skin
-Nel file del personaggio, in `skins`:
+### Aggiungere un personaggio o una skin
+Un comando: `python3 -B tools/nuovo.py personaggio ...` o `... skin ...` (vedi `README.md`, sezione
+"Aggiungere un personaggio con sprite"). Crea gli sprite, scrive il file in `src/characters/` (o la skin
+nel file del personaggio), aggiunge la riga **in fondo** a `index.html`, sale `VER` e `NETV`, prova il
+personaggio nel gioco e crea un'immagine di controllo. Il formato a mano di una skin è questo:
 ```js
 skins:[{id:'pump', n:'VLAD IN PUMP', ms:'LANCIO DEL MANUBRIO', p:1500,
         special:lancio({fotogrammi:3, alto:35, y:-17.5, uscita:[52,-78]})}]
 ```
-Gli sprite vanno in `assets/characters/<personaggio>/skin-<id>/`. La `special` è facoltativa: senza,
-la skin usa la speciale del personaggio.
+Gli sprite di una skin stanno in `assets/characters/<personaggio>/skin-<id>/` (un file che manca resta
+quello originale). La `special` è facoltativa: senza, la skin usa la speciale del personaggio.
 
 ### Un tipo nuovo di mossa speciale
 In `src/characters/specials.js`:

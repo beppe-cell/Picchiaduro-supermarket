@@ -9,8 +9,8 @@ class Fighter {
     Object.assign(this, {L, x, y: 0, vx: 0, vy: 0, face, hp: 100, tr: 100, sp: 0, st: 'idle', t: 0, atk: null, did: 0, stun: 0, blk: 0, cr: 0,
       rep: {m: '', n: 0, t: -999}, ai, lv, ob: 0, hd: {}, wins: 0, ext: 0});
   }
-  /** la mossa speciale del personaggio (strategia condivisa, non fa parte dello stato) */
-  get special() { return (SPRSET[this.L.n] || {}).spc || DEFAULT_SPECIAL }
+  /** la mossa speciale (strategia del personaggio o della sua skin; non fa parte dello stato) */
+  get special() { return specialSet(this).spc || DEFAULT_SPECIAL }
   /** un fotogramma: o avversario, i comandi {l,r,u,d,b,p,k,h,s} */
   update(o, i) { upd(this, o, i) }
 }
@@ -30,7 +30,7 @@ function upd(f,o,i){f.t++;
 if(f.st=='ko'){f.vx*=.92;f.x+=f.vx;f.vy+=.5;f.y=Math.min(0,f.y+f.vy);if(f.y>=0)f.vy=0;return}
 const gr=f.y>=0&&f.vy>=0;
 if(f.stun>0){f.stun--;f.vx*=.85;f.st=f.stun>0?'hit':'idle'}
-else if(f.st=='atk'){const m=f.atk=='s'&&(f.ss||SPRSET[f.L.n]||{}).mv||MV[f.atk],t=f.t;/* mv: speciale con tempi propri (FABIO) */f.ext=t<m.su?t/m.su:t<m.su+m.ac?1:Math.max(0,1-(t-m.su-m.ac)/m.re);f.vx*=.8;
+else if(f.st=='atk'){const m=f.atk=='s'&&specialSet(f).mv||MV[f.atk],t=f.t;/* mv: speciale con tempi propri (FABIO) */f.ext=t<m.su?t/m.su:t<m.su+m.ac?1:Math.max(0,1-(t-m.su-m.ac)/m.re);f.vx*=.8;
 if(f.atk=='s')f.special.tick(f,o,t,m);/* la speciale la fa la sua strategia (lancio, corpo a corpo...) */
 else if(t>=m.su&&t<m.su+m.ac&&!f.did)hitchk(f,o,m);
 if(t>=m.su+m.ac+m.re){f.st='idle';f.atk=null;f.ext=0}}

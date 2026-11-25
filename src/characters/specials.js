@@ -9,6 +9,10 @@
    Tempi: la speciale dura MV.s (o 'fasi' se il personaggio ha tempi propri): su = carica, ac = attiva, re = ritorno,
    in fotogrammi a passo fisso (60 al secondo: niente delta time, serve al rollback per avere la stessa partita
    su due dispositivi). */
+/** numeri della speciale per il lottatore f: quelli della sua skin, ma in RANKED quelli del personaggio
+    (le skin sono solo estetiche) */
+const specialSet = f => (G && G.net && G.net.rk ? null : f.ss) || SPRSET[f.L.n] || {};
+
 class Special {
   /** @param {object} fields campi dello sprite set (nomi corti usati dal motore e dal disegno) */
   constructor(fields) { this.fields = fields }
@@ -22,8 +26,7 @@ class Special {
 class ProjectileSpecial extends Special {
   tick(f, o, t, m) {
     if (t != m.su) return;
-    /* RANKED: le skin non cambiano il punto di lancio */
-    const ps0 = (G.net && G.net.rk ? SPRSET[f.L.n] : f.ss) || SPRSET[f.L.n] || {}, po = ps0.pjo, bs = (f.L.big ? 1.12 : 1) * (ps0.sc || 1);
+    const ps0 = specialSet(f), po = ps0.pjo, bs = (f.L.big ? 1.12 : 1) * (ps0.sc || 1);
     /* nasce fermo sul punto di uscita (BEPPE: davanti alle mani, all'altezza delle spalle) e vola dritto */
     PJ.push({x: f.x + f.face * (po ? po[0] * bs : 22) - f.face * 3.6, y: (po ? po[1] * bs : -30) + (ps0.pjt ? 0 : f.y), fy: ps0.pjt ? 0 : f.y, vx: f.face * 3.6, o: f, a: f.atk, t: -1});
     if (ps0.shk) G.sh = ps0.shk;
@@ -36,7 +39,7 @@ class ProjectileSpecial extends Special {
 class MeleeSpecial extends Special {
   get closeRange() { return true }
   tick(f, o, t, m) {
-    const sm = SPRSET[f.L.n];
+    const sm = specialSet(f);
     if (sm.dash && t >= 4 && t < m.su + m.ac) f.vx = f.face * sm.dash;
     if (sm.hop && t == 4 && f.y >= 0) f.vy = -sm.hop;
     if (t == m.su) sfx('sp');

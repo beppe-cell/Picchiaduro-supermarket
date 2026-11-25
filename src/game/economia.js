@@ -27,5 +27,5 @@ function skinSet(n,id){const base=SPRSET[n];if(!base||id=='base')return base;con
 const sk=(SKINS[n]||[]).find(k=>k.id==id)||{},ss=SKC[key]={...base,...(sk.special?{...sk.special.fields,spc:sk.special}:{}),...(sk.ov||{}),/* la skin puo cambiare la speciale (special) o singoli valori (ov) */n:{...base.n,...(sk.nf||{})},im:{},left:0,skin:id},P='assets/characters/'+base.d+'/';
 const one=(file,set,a)=>{ss.left++;const im=new Image();let fb=0;im.onload=()=>{ss.left--;set&&set(im)};
 im.onerror=()=>{if(fb++)ss.left--;else{if(a)ss.n[a]=base.n[a];im.src=P+file+'.webp?v='+VER}};im.src=P+'skin-'+id+'/'+file+'.webp?v='+VER;return im};
-ss.front=one(base.d+'-front');for(const a of Object.keys(base.n))one(base.d+'-'+a,im=>{ss.im[a]=im},a);if(base.pj)ss.pi=one(base.pj);return ss}
+ss.front=one(base.d+'-front');for(const a of Object.keys(base.n))one(base.d+'-'+a,im=>{ss.im[a]=im},a);if(ss.pj)ss.pi=one(ss.pj);/* proiettile: quello della skin (special con oggetto proprio) o dell'originale */return ss}
 const wal=()=>{document.querySelectorAll('.wallet').forEach(e=>e.textContent=SAVE.ced+' CEDOLINI');const pc=$('#pchip');if(pc)pc.textContent=SAVE.n};
