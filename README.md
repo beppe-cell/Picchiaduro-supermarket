@@ -191,8 +191,12 @@ Ripetere lo stesso colpo fa sempre meno danno: conviene alternare le mosse.
 
 ## Struttura
 
+Come è fatto il codice (cartelle, ciclo di gioco, online, regole fisse, ricette): **[ARCHITETTURA.md](ARCHITETTURA.md)**.
+
 ```
-index.html                     gioco completo (HTML + CSS + JS)
+index.html                     pagina: schermate + elenco degli script (in quest'ordine)
+css/style.css                  aspetto delle schermate
+src/                           codice del gioco, diviso per argomento (vedi ARCHITETTURA.md)
 assets/
   backgrounds/
     arena-orizzontale.jpeg     corsia centrale; con arena-magazzino, -casse, -ortofrutta, -surgelati,
