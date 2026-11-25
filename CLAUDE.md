@@ -17,6 +17,7 @@ Each agent owns a specific domain, enforcing separation of concerns and quality.
   The simulation runs at a fixed 60 steps/s with no delta time: a deliberate exception to the gameplay-code
   delta-time rule, required so rollback replays identically on both devices.
   To change a character read only its file; open other folders only when the task is about them.
+  New character or skin: skill `nuovo-personaggio` (one command, `tools/nuovo.py`) — do not read the code for it.
 - **Version Control**: Git with trunk-based development
 - **Build System**: none — `index.html`, `css/`, `src/` and `assets/` are served as static files (GitHub Pages, `.github/workflows/deploy-pages.yml`); no npm, no `package.json`
 - **Asset Pipeline**: sprite sheets `assets/characters/<name>/<name>-<anim>.png` generated from the source boards in `sorgenti/` (magenta background) by `tools/build_*_sprites.py` (Python: Pillow, NumPy, SciPy); backgrounds in `assets/backgrounds/`

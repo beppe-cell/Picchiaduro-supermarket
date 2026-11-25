@@ -4,7 +4,9 @@ e la porta all'altezza dello sprite da fermo del personaggio, cosi' i rapporti d
 personaggi restano quelli del gioco. Chi non ha la tavola (Beppe) in selezione usa la guardia.
 Le skin hanno la loro tavola: chiave '<nome>/skin-<id>', vista scritta nella cartella della skin e
 portata all'altezza della guardia della skin.
+Per un personaggio o una skin nuovi basta la tavola in <chiave>/sorgenti/tavola.<estensione>.
 Uso: python3 -B tools/build_fronts.py [chiave ...]   (senza chiavi: tutte; es. andrei matteo/skin-israele)"""
+import glob
 import os
 import sys
 import numpy as np
@@ -50,10 +52,20 @@ def white_key(path):
     return np.concatenate([a, al[..., None]], -1)
 
 
+
+
+def find_board(k):
+    """tavola di un personaggio o skin nuovo: <chiave>/sorgenti/tavola.<estensione> (non serve registrarla)"""
+    found = sorted(glob.glob(CH + k + '/sorgenti/tavola.*'))
+    return found[0][len(CH):] if found else None
+
+
 keys = sys.argv[1:] or list(BOARDS)
 for k in keys:
     if k not in BOARDS:
-        sys.exit('%s: tavola non registrata in BOARDS' % k)
+        BOARDS[k] = find_board(k)
+        if not BOARDS[k]:
+            sys.exit('%s: manca la tavola (%s%s/sorgenti/tavola.jpeg)' % (k, CH, k))
 for dest in keys:
     board, name = BOARDS[dest], dest.split('/')[0]
     o = white_key(CH + board) if name in WHITE_BG else key(CH + board)
