@@ -22,14 +22,14 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # il repository e' pubblico: se nel codice c'e' un segreto o un file sensibile non si pubblica nulla
       - name: Check for secrets
         run: python3 -B tools/check_secrets.py --tutti
 
       - name: Enable and configure GitHub Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
         with:
           enablement: true
 
@@ -49,10 +49,10 @@ jobs:
           echo "file pubblicati: $(find _site -type f | wc -l)"
 
       - name: Upload site artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: '_site'
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
